@@ -1,0 +1,919 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0043)http://neitsabes.free.fr/ASM/KMD/kmd04.html -->
+<HTML><HEAD><TITLE>Le sous-système d'E/S</TITLE>
+<META 
+content="KMD kernel mode driver programmation programmeur assembleur MASM asm" 
+name=keywords>
+<META content="Assembly programming" name=DESRIPTION>
+<META content=http://neitsabes.online.fr name=Identifier-URL>
+<META content="7 Days" name=revisit-after>
+<META content=FR name=language>
+<META content="Assembly programming" name=abstract>
+<META content=Document name=resource-type>
+<META http-equiv=CACHE-CONTROL content=NO-CACHE>
+<META content=General name=rating>
+<META content=Document name=VW96.object-type>
+<META lang=fr content=Neitsa name=Author>
+<META content="copyright Neitsa" name=COPYRIGHT>
+<META content=index,follow,all name=ROBOTS>
+<META http-equiv=Expires content=never>
+<META content=20040913 name=Date-Creation-yyyymmdd>
+<META content=20040918 name=Date-Revision-yyyymmdd>
+<META http-equiv=Content-Type content="text/html; charset=ISO-8859-1">
+<SCRIPT src="Le sous-système d'E-S_fichiers/color.js"></SCRIPT>
+<LINK href="Le sous-système d'E-S_fichiers/KmdTut.css" type=text/css 
+rel=stylesheet>
+<META content="MSHTML 6.00.2900.2912" name=GENERATOR></HEAD>
+<BODY>
+<TABLE cellSpacing=0 cellPadding=0 width="96%">
+  <TBODY>
+  <TR class=logo>
+    <TD class=logo width="100%" 
+    background="Le sous-système d'E-S_fichiers/img1px.jpg"><IMG height=110 
+      alt="KmdTut Logo" src="Le sous-système d'E-S_fichiers/imgLogo.jpg" 
+      width=350></TD>
+    <TD class=logo width="100%" 
+    background="Le sous-système d'E-S_fichiers/img1px.jpg"><IMG height=110 
+      src="Le sous-système d'E-S_fichiers/imgLogoRight.jpg" 
+  width=100></TD></TR></TBODY></TABLE>
+<P><A href="http://neitsabes.free.fr/ASM/KMD/KMDindex.htm">Retour menu KMD</A> / 
+<A href="http://neitsabes.free.fr/ASM.html">Retour menu assembleur</A></P>
+<H1>Le sous-système d'E/S</H1>
+<DIV align=center>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TD class=contents vAlign=top><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd04.html#k4d1"><B>4.1 Le 
+      Gestionnaire d'E/S</B></A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd04.html#k4d2"><B>4.2 Le 
+      programme de contrôle pour le driver VirtToPhys</B></A> 
+      <DIV style="MARGIN-LEFT: 2em"><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd04.html#k4d2d1">4.2.1 Code 
+      source du programme de contrôle</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd04.html#k4d2d2">4.2.2 Objet de 
+      périphérique</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd04.html#k4d2d3">4.2.3 Objet de 
+      driver</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd04.html#k4d2d4">4.2.4 Objet de 
+      lien symbolique</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd04.html#k4d2d5">4.2.5 Objet de 
+      fichier</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd04.html#k4d2d6">4.2.6 
+      Communiquer avec le périphérique</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd04.html#k4d2d7">4.2.7 Codes de 
+      contrôle d'E/S</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd04.html#k4d2d8">4.2.8 Echange de 
+      données</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd04.html#k4d2d9">4.2.9 
+      Nettoyage</A><BR></DIV></TD></TR></TBODY></TABLE></DIV>
+<DIV class=src><IMG height=22 src="Le sous-système d'E-S_fichiers/src.gif" 
+width=18>&nbsp;<B>Code source :</B> KmdKit\examples\simple\VirtToPhys</DIV>
+<H2>4.1 Le gestionnaire d'E/S <A name=k4d1></A></H2>
+<P>A la différence du mode utilisateur, où nous pouvons appeler des fonctions 
+directement depuis des dll, simplement en utilisant leurs adresses, en mode 
+kernel un tel scénario serait extrêmement dangereux du point de vue de la 
+stabilité du système. Ainsi, le système fournit un moyen intermédiaire pour 
+communiquer avec le mode kernel. Un tel moyen est un <EM><I>Gestionnaire 
+d'E/S</I></EM> (Entrée/Sortie) qui est un des composants du <EM><I>sous-système 
+d'E/S</I></EM>. Ce gestionnaire d'E/S relit les applications et les composants 
+système avec les périphériques, et défnii l'infrastructure qui supporte les 
+modules de gestion de périphérique.</P>
+<P>Un schéma simplifié de la façon dont le Gestionnaire d'E/S interagit avec les 
+applications en mode utilisateur et les modules de gestion de périphérique est 
+donné en Figure 4-1. </P>
+<P></P>
+<CENTER><IMG 
+src="Le sous-système d'E-S_fichiers/imgkmd4-1.gif"><BR><BR><B>Figure 4-1</B>. 
+Architecture simplifiée du sous-système d'E/S </CENTER>
+<P></P>
+<P>De la figure ci-dessus découle le fait qu'absolument tous les appels des 
+applications en mode utilisateur vers les périphériques et, par la même, vers 
+les modules de gestions de périphériques sont sous le contrôle du Gestionnaire 
+d'E/S.</P>
+<P>Le code en mode utilisateur est obligé de demander les opérations d'E/S au 
+périphérique. Seulement et uniquement le périphérique. Le driver doit créer un 
+périphériques (ou plusieurs) à contrôler. Dans notre cas, ce périphérique est un 
+périphérique virtuel. Bien sûr créer un périphérique ne signifie pas la création 
+d'un nouveau périphérique réel. Cela veut simplement dire qu'un nouvel objet va 
+être créer en mémoire (nommément un objet de périphérique) représentant un 
+périphérique physique ou virtuel sur le système et décrivant ses 
+caractéristiques. </P>
+<P>Lors de la création du périphérique, le driver dit au Gestionnaire d'E/S 
+:"Voilà le périphérique que je dois contrôler. Si tu reçois des requêtes d'E/S 
+vers ce périphérique, envoie-les moi et je m'occuperais du reste." Le driver 
+sait seulement comment gérer les requêtes d'E/S pour son (ou ses) 
+périphérique(s). La seule responsabilité du Gestionnaire d'E/S est de créer et 
+diriger les requêtes d'E/S vers le périphérique approprié. Le code en mode 
+utilisateur ne sait (et ne devrait) pas du tout savoir quel driver prend en 
+charge tel ou tel périphérique(s) particulier(s).</P>
+<H2>4.2 Le programme de contrôle pour le driver VirtToPhys<A name=k4d2></A></H2>
+<H3>4.2.1 Code source du programme de contrôle<A name=k4d2d1></A></H3>
+<P>A strictement parler ce code combine le programme de contrôle du service, 
+responsable de l'enregistrement et du démarrage du driver, et le programme 
+client pour communiquer avec le périphérique. </P>
+<P>&nbsp;</P><PRE><SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>; VirtToPhys.asm - Programme de contrôle du driver VirtToPhys  </SPAN><SPAN class=CMT>                                     </SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>.386</SPAN>
+<SPAN class=INC>.model</SPAN> flat, stdcall
+<SPAN class=INC>option</SPAN> casemap:none
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                              I N C L U D E   F I L E S                                            </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>include</SPAN> \masm32\include\windows.inc
+
+<SPAN class=INC>include</SPAN> \masm32\include\kernel32.inc
+<SPAN class=INC>include</SPAN> \masm32\include\user32.inc
+<SPAN class=INC>include</SPAN> \masm32\include\advapi32.inc
+
+<SPAN class=INC>includelib</SPAN> \masm32\lib\kernel32.lib
+<SPAN class=INC>includelib</SPAN> \masm32\lib\user32.lib
+<SPAN class=INC>includelib</SPAN> \masm32\lib\advapi32.lib
+
+<SPAN class=INC>include</SPAN> \masm32\include\winioctl.inc
+
+<SPAN class=INC>include</SPAN> \masm32\Macros\Strings.mac
+
+<SPAN class=INC>include</SPAN> common.inc
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                        C O D E                                                    </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>.code</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                      BigNumToString                                               </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=FN>BigNumToString</SPAN> <SPAN class=PROC>proc</SPAN> uNum:UINT, pszBuf:LPSTR
+
+<SPAN class=CMT>; Cette fonction accèpte un nombre et le convertit en</SPAN>
+<SPAN class=CMT>; un chaîne de caractères, insérant les guillemets à la bonne place. </SPAN>
+
+<SPAN class=GB>local</SPAN> acNum[32]:CHAR
+<SPAN class=GB>local</SPAN> nf:NUMBERFMT
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>wsprintf</SPAN>, <SPAN class=GB>addr</SPAN> acNum, $CTA0(<SPAN class=STRING>"%u"</SPAN>), uNum
+
+    and nf.NumDigits, 0
+    and nf.LeadingZero, <SPAN class=NL>FALSE</SPAN>
+    mov nf.Grouping, 3
+    mov nf.lpDecimalSep, $CTA0(<SPAN class=STRING>"."</SPAN>)
+    mov nf.lpThousandSep, $CTA0(<SPAN class=STRING>" "</SPAN>)
+    and nf.NegativeOrder, 0
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetNumberFormat</SPAN>, LOCALE_USER_DEFAULT, 0, <SPAN class=GB>addr</SPAN> acNum, <SPAN class=GB>addr</SPAN> nf, pszBuf, 32
+
+    <SPAN class=GB>ret</SPAN>
+
+<SPAN class=FN>BigNumToString</SPAN> <SPAN class=PROC>endp</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                       start                                                       </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=START>start</SPAN> <SPAN class=PROC>proc</SPAN> <SPAN class=GB>uses</SPAN> esi edi
+
+<SPAN class=GB>local</SPAN> hSCManager:HANDLE
+<SPAN class=GB>local</SPAN> hService:HANDLE
+<SPAN class=GB>local</SPAN> acModulePath[MAX_PATH]:CHAR
+<SPAN class=GB>local</SPAN> _ss:SERVICE_STATUS
+<SPAN class=GB>local</SPAN> hDevice:HANDLE
+
+<SPAN class=GB>local</SPAN> adwInBuffer[NUM_DATA_ENTRY]:DWORD
+<SPAN class=GB>local</SPAN> adwOutBuffer[NUM_DATA_ENTRY]:DWORD
+<SPAN class=GB>local</SPAN> dwBytesReturned:DWORD
+
+<SPAN class=GB>local</SPAN> acBuffer[256+64]:CHAR
+<SPAN class=GB>local</SPAN> acThis[64]:CHAR
+<SPAN class=GB>local</SPAN> acKernel[64]:CHAR
+<SPAN class=GB>local</SPAN> acUser[64]:CHAR
+<SPAN class=GB>local</SPAN> acAdvapi[64]:CHAR
+
+<SPAN class=GB>local</SPAN> acNumber[32]:CHAR
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>OpenSCManager</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, SC_MANAGER_ALL_ACCESS
+    <SPAN class=IF>.if</SPAN> eax != <SPAN class=NL>NULL</SPAN>
+        mov hSCManager, eax
+
+        push eax
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetFullPathName</SPAN>, $CTA0(<SPAN class=STRING>"VirtToPhys.sys"</SPAN>), \
+                                <SPAN class=GB>sizeof</SPAN> acModulePath, <SPAN class=GB>addr</SPAN> acModulePath, esp
+        pop eax
+
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CreateService</SPAN>, hSCManager, $CTA0(<SPAN class=STRING>"VirtToPhys"</SPAN>), \
+                              $CTA0(<SPAN class=STRING>"Virtual To Physical Address Converter"</SPAN>), \
+                              SERVICE_START + SERVICE_STOP + DELETE, SERVICE_KERNEL_DRIVER, \
+                              SERVICE_DEMAND_START, SERVICE_ERROR_IGNORE, <SPAN class=GB>addr</SPAN> acModulePath, \
+                              <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>
+
+        <SPAN class=IF>.if</SPAN> eax != <SPAN class=NL>NULL</SPAN>
+            mov hService, eax
+
+            <SPAN class=CMT>; La procedure DriverEntry du driver va être appelée</SPAN>
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>StartService</SPAN>, hService, 0, <SPAN class=NL>NULL</SPAN>
+            <SPAN class=IF>.if</SPAN> eax != 0
+
+                <SPAN class=CMT>; Le driver va recevoir de packet de requête d'E/S [I/O request packet (IRP)]de type IRP_MJ_CREATE </SPAN>
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CreateFile</SPAN>, $CTA0(<SPAN class=STRING>"\\\\.\\slVirtToPhys"</SPAN>), GENERIC_READ + GENERIC_WRITE, \
+                                0, <SPAN class=NL>NULL</SPAN>, OPEN_EXISTING, 0, <SPAN class=NL>NULL</SPAN>
+
+                <SPAN class=IF>.if</SPAN> eax != INVALID_HANDLE_VALUE
+                    mov hDevice, eax
+
+                    lea esi, adwInBuffer
+                    <SPAN class=GB>assume</SPAN> esi:ptr DWORD
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetModuleHandle</SPAN>, <SPAN class=NL>NULL</SPAN>
+                    mov [esi][0*(<SPAN class=GB>sizeof</SPAN> DWORD)], eax
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetModuleHandle</SPAN>, $CTA0(<SPAN class=STRING>"kernel32.dll"</SPAN>, szKernel32)
+                    mov [esi][1*(<SPAN class=GB>sizeof</SPAN> DWORD)], eax
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetModuleHandle</SPAN>, $CTA0(<SPAN class=STRING>"user32.dll"</SPAN>, szUser32)
+                    mov [esi][2*(<SPAN class=GB>sizeof</SPAN> DWORD)], eax
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetModuleHandle</SPAN>, $CTA0(<SPAN class=STRING>"advapi32.dll"</SPAN>, szAdvapi32)
+                    mov [esi][3*(<SPAN class=GB>sizeof</SPAN> DWORD)], eax
+
+                    lea edi, adwOutBuffer
+                    <SPAN class=GB>assume</SPAN> edi:ptr DWORD
+                    <SPAN class=CMT>; Le driver va recevoir des IRP de type IRP_MJ_DEVICE_CONTROL </SPAN>
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DeviceIoControl</SPAN>, hDevice, IOCTL_GET_PHYS_ADDRESS, \
+                                            esi, <SPAN class=GB>sizeof</SPAN> adwInBuffer, \
+                                            edi, <SPAN class=GB>sizeof</SPAN> adwOutBuffer, \
+                                            <SPAN class=GB>addr</SPAN> dwBytesReturned, <SPAN class=NL>NULL</SPAN>
+
+                    <SPAN class=IF>.if</SPAN> ( eax != 0 ) &amp;&amp; ( dwBytesReturned != 0 )
+
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetModuleFileName</SPAN>, [esi][0*(<SPAN class=GB>sizeof</SPAN> DWORD)], \
+                                                  <SPAN class=GB>addr</SPAN> acModulePath, <SPAN class=GB>sizeof</SPAN> acModulePath
+
+                        lea ecx, acModulePath[eax-5]
+                        <SPAN class=IF>.repeat</SPAN>
+                            dec ecx
+                            mov al, [ecx]
+                        <SPAN class=IF>.until</SPAN> al == <SPAN class=STRING>'\'</SPAN>
+                        inc ecx
+                        push ecx
+
+                        CTA0 <SPAN class=STRING>"%s \t%08Xh\t%08Xh   ( %s )\n"</SPAN>, szFmtMod
+
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>BigNumToString</SPAN>, [edi][0*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+                        pop ecx
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>wsprintf</SPAN>, <SPAN class=GB>addr</SPAN> acThis, <SPAN class=GB>addr</SPAN> szFmtMod, ecx, \
+                                         [esi][0*(<SPAN class=GB>sizeof</SPAN> DWORD)], \
+                                         [edi][0*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>BigNumToString</SPAN>, [edi][1*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>wsprintf</SPAN>, <SPAN class=GB>addr</SPAN> acKernel, <SPAN class=GB>addr</SPAN> szFmtMod, <SPAN class=GB>addr</SPAN> szKernel32, \
+                                         [esi][1*(<SPAN class=GB>sizeof</SPAN> DWORD)], \
+                                         [edi][1*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>BigNumToString</SPAN>, [edi][2*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>wsprintf</SPAN>, <SPAN class=GB>addr</SPAN> acUser, <SPAN class=GB>addr</SPAN> szFmtMod, <SPAN class=GB>addr</SPAN> szUser32, \
+                                         [esi][2*(<SPAN class=GB>sizeof</SPAN> DWORD)], \
+                                         [edi][2*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>BigNumToString</SPAN>, [edi][3*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>wsprintf</SPAN>, <SPAN class=GB>addr</SPAN> acAdvapi, <SPAN class=GB>addr</SPAN> szFmtMod, <SPAN class=GB>addr</SPAN> szAdvapi32, \
+                                         [esi][3*(<SPAN class=GB>sizeof</SPAN> DWORD)], \
+                                         [edi][3*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>wsprintf</SPAN>, <SPAN class=GB>addr</SPAN> acBuffer, \
+                                         $CTA0(<SPAN class=STRING>"Module:\t\tVirtual:\t\tPhysical:\n\n%s\n%s%s%s"</SPAN>), \
+                                         <SPAN class=GB>addr</SPAN> acThis, <SPAN class=GB>addr</SPAN> acKernel, <SPAN class=GB>addr</SPAN> acUser, <SPAN class=GB>addr</SPAN> acAdvapi
+
+                        <SPAN class=GB>assume</SPAN> esi:nothing
+                        <SPAN class=GB>assume</SPAN> edi:nothing
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=GB>addr</SPAN> acBuffer, $CTA0(<SPAN class=STRING>"Modules Base Address"</SPAN>), \
+                                           MB_OK + MB_ICONINFORMATION
+                    <SPAN class=IF>.else</SPAN>
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, $CTA0(<SPAN class=STRING>"Can't send control code to device."</SPAN>), <SPAN class=NL>NULL</SPAN>, \
+                                           MB_OK + MB_ICONSTOP
+                    <SPAN class=IF>.endif</SPAN>
+                    <SPAN class=CMT>; Le driver va recevoir des IRP de type IRP_MJ_CLOSE </SPAN>
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CloseHandle</SPAN>, hDevice
+                <SPAN class=IF>.else</SPAN>
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, $CTA0(<SPAN class=STRING>"Device is not present."</SPAN>), <SPAN class=NL>NULL</SPAN>, MB_ICONSTOP
+                <SPAN class=IF>.endif</SPAN>
+                <SPAN class=CMT>; La procédure de déchargement (Unload) de notre driver va être appeléé.</SPAN>
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>ControlService</SPAN>, hService, SERVICE_CONTROL_STOP, <SPAN class=GB>addr</SPAN> _ss
+            <SPAN class=IF>.else</SPAN>
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, $CTA0(<SPAN class=STRING>"Can't start driver."</SPAN>), <SPAN class=NL>NULL</SPAN>, MB_OK + MB_ICONSTOP
+            <SPAN class=IF>.endif</SPAN>
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DeleteService</SPAN>, hService
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CloseServiceHandle</SPAN>, hService
+        <SPAN class=IF>.else</SPAN>
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, $CTA0(<SPAN class=STRING>"Can't register driver."</SPAN>), <SPAN class=NL>NULL</SPAN>, MB_OK + MB_ICONSTOP
+        <SPAN class=IF>.endif</SPAN>
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CloseServiceHandle</SPAN>, hSCManager
+    <SPAN class=IF>.else</SPAN>
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, $CTA0(<SPAN class=STRING>"Can't connect to Service Control Manager."</SPAN>), <SPAN class=NL>NULL</SPAN>, \
+                           MB_OK + MB_ICONSTOP
+    <SPAN class=IF>.endif</SPAN>
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>ExitProcess</SPAN>, 0
+
+<SPAN class=START>start</SPAN> <SPAN class=PROC>endp</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=START>end start</SPAN>
+</PRE>
+<P>Sans considérer le code qui prépare les données à être envoyées vers le 
+périphérique, et le code responsable de formatage et de l'affichage de la sortie 
+du périphérique, il y une chose nouvelle ici - seulement trois appels : 
+<EM>CreateFile</EM>, <EM>DeviceIoControl</EM> et <EM>CloseHandle</EM>. Toutes 
+ces fonctions acceptent le handle du périphérique (Je répète, pas le driver) 
+comme argument. </P>
+<H3>4.2.2 Objet de périphérique<A name=k4d2d2></A></H3>
+<P>Après son chargement, le driver VirToPhys créé un périphérique nommé 
+"devVirtToPhys" (Le préfixe "dev" n'est pas nécessaire, mais je l'ai ajouté avec 
+raison - je vous dirais pourquoi plus tard). </P>
+<P>Le nom du périphérique est placé dans l'espace de nom du Gestionnaire d'objet 
+(<EM><I>Object Manager namespace</I></EM>). Le Gestionnaire d'objet est un 
+composant système protégeant et surveillant les objets. Par convention, les 
+objets de périphérique sont placés dans le répertoire \Device, non accessible 
+par les applications utilisant l'API Win32.</P>
+<P>Pour avoir une vision de l'espace de nom maintenu par le Gestionnaire 
+d'objet, vous pouvez utiliser mon <EM>Windows Object Explorer (WinObjEx)</EM> 
+(disponible sur ce site) ou <EM>Object Viewer</EM> par Mark Russinovich ( <A 
+href="http://www.sysinternals.com/">http://www.sysinternals.com/</A> ). </P>
+<P>Pour voir les objets créés par VirToPhys sur votre ordinateur, faites 
+simplement fonctionner VirtToPhys.exe, mais ne fermez pas la fenêtre de 
+dialogue. </P>
+<P></P>
+<CENTER><IMG 
+src="Le sous-système d'E-S_fichiers/imgkmd4-2.png"><BR><BR><B>Figure 4-2</B>. 
+Objet de périphérique devVirtToPhys dans l'espace de nom du Gestionnaire d'objet 
+</CENTER>
+<P></P>
+<P></P>
+<CENTER><IMG 
+src="Le sous-système d'E-S_fichiers/imgkmd4-3.png"><BR><BR><B>Figure 4-3</B>. 
+Propriétés d'objet de périphérique de VirtToPhys </CENTER>
+<P></P>
+<H3>4.2.3 Objet driver<A name=k4d2d3></A></H3>
+<P>L'objet de driver VirtToPhys (Je n'utilise pas de préfixe pour le nom) est 
+situé dans le répertoire \Driver.</P>
+<P></P>
+<CENTER><IMG src="Le sous-système d'E-S_fichiers/imgkmd4-4.png"> 
+<BR><BR><B>Figure 4-4</B>. Objet de driver VirtToPhys dans l'espace de nom du 
+Gestionnaire d'objet </CENTER>
+<P></P>
+<H3>4.2.4 Objet de lien symbolique<A name=k4d2d4></A></H3>
+<P>Les noms de périphériques internes ne peuvent être utilisés par les 
+applications Win32 (tous les répertoires exceptés "\BaseNamedObjects" et "\??", 
+sont invisible aux programmes utilisateurs) - au lieu de cela le nom du 
+périphérique apparaîtra dans un répertoire spécial situé dans l'espace de nom du 
+Gestionnaire d'objet, "\??'. Ce répertoire contient des <EM><I>liens 
+symboliques</I></EM> au nom du périphérique interne réel. Les modules de gestion 
+de périphérique sont responsables de la création de ces liens dans le 
+répertoire, ainsi leurs périphériques seront accessibles aux applications Win32. 
+</P>
+<P>Donc notre driver doit rendre possible, à un code en mode utilisateur, 
+l'ouverture vers un objet de périphérique, pour cela il doit créer un lien 
+symbolique dans le répertoire "\??" qui pointe sur l'objet de périphérique situé 
+dans le répertoire "\Device". Par la suite, quand le programme appelant veut un 
+handle de périphérique, le Gestionnaire d'E/S peut retrouver l'objet de 
+périphérique directement. </P>
+<P>Vous pouvez examiner ou même changer ces liens depuis le mode utilisateur 
+avec les fonction Win32 <EM>QueryDosDevice</EM> et <EM>DefineDosDevice</EM> </P>
+<P>Une fois ouvert le répertoire "\??", vous verrez qu'il comporte de nombreux 
+liens symboliques. Avant Windows NT 4, ce répertoire s'appelait \DosDevices : il 
+fut renommé en "\??" pour des raisons de performances - ce nom vient en première 
+place dans l'ordre alphabétique. </P>
+<P>Pour des raisons de compatibilité ascendante vous trouverez, à la racine du 
+répertoire de l'espace de nom du Gestionnaire d'objet, un lien "\DosDevice". 
+Celui -ci est un lien vers le répertoire "\??". </P>
+<P>Le driver VirtToPhys créé un lien symbolique "slVirtToPhys" vers le 
+périphérique "devVirtToPhys" dans le répertoire "\??" , dont la valeur est la 
+chaîne de caractère "\Device\devVirtToPhys". Ici j'ai utilisé le préfixe "dev". 
+</P>
+<P></P>
+<CENTER><IMG src="Le sous-système d'E-S_fichiers/imgkmd4-5.png"> 
+<BR><BR><B>Figure 4-5</B>. Lien symbolique slVirtToPhys dans l'epcace de nom du 
+Gestionnaire d'objet </CENTER>
+<P></P>
+<P></P>
+<CENTER><IMG src="Le sous-système d'E-S_fichiers/imgkmd4-6.png"> 
+<BR><BR><B>Figure 4-6</B>. Propriétés du lien symbolique slVirtToPhys </CENTER>
+<P></P>
+<P>J'ai ajouté les préfixes uniquement pour distinguer les différents types 
+d'objet. Ceci pour montrer qu'il n'est pas nécessaire pour le nom de 
+périphérique et pour le lien symbolique (bien que soit le cas d'habitude) de 
+coïncider avec le nom du driver. La chose importante ici est que le nom du lien 
+symbolique doit spécifier un nom de périphérique valide. Encore un autre point 
+important - Il ne peut y avoir deux objets avec les mêmes nom dans un répertoire 
+d'objet unique, comme il est impossible d'avoir deux noms de fichiers identiques 
+dans un seul et même répertoire. </P>
+<P>Ainsi, à la sortie de la fonction StartService nous avons trois nouveaux 
+objets: </P>
+<UL>
+  <LI>le driver: "\Driver\VirtToPhys" 
+  <LI>le périphérique: "\Device\devVirtToPhys" 
+  <LI>Le lien symbolique vers le périphérique : "\??\slVirtToPhys" </LI></UL>
+<P>Si vous vous rappelez, dans la seconde partie de ce document, je vous ais 
+promis de vous dire ce qu'était "\??" comme dans "\??\C:\masm32\...". Donc 
+"\??\C:" est un lien symbolique a un périphérique interne nommé 
+"\Device\HarddiskVolume1", qui est le premier disque dur sur le système. </P>
+<P>&nbsp;</P>
+<H3>4.2.5 Objet de fichier<A name=k4d2d5></A></H3>
+<P>Revenons à notre code source. Une fois que le driver est démarré nous voulons 
+bien sûr l'appeler. Pour ce faire, nous devons simplement ouvrir un handle de 
+fichier vers le driver en appelant la fonction <EM>CreateFile</EM>:</P>
+<P>La description de <EM>CreateFile</EM> prend une place importante au niveau de 
+la documentation. Seulement une petite partie nous concernant à propos des 
+drivers sera présentée. </P><PRE><SPAN class=FN>CreateFile</SPAN> <SPAN class=GB>proto stdcall</SPAN>     lpFileName:LPCSTR,            dwDesiredAccess:DWORD, \
+                             dwShareMode:DWORD,            lpSecurityAttributes:LPVOID, \
+                             dwCreationDistribution:DWORD, dwFlagsAndAttributes:DWORD, \
+                             hTemplateFile:HANDLE
+</PRE>
+<P>Malgré son nom la fonction peut créer ou ouvrir (beaucoup de fonctions 
+Create* fonctionne de cette façon) des fichiers, mais aussi des objets. 
+Microsoft aurait du nommer cette fonction CreateObject. Le périphérique peut en 
+effet apparaître comme un objet. </P>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Paramètre</TH>
+    <TH colSpan=2>Description</TH></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpFileName</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>Pointe vers une chaîne de caractère terminée par NULL qui spécifie le 
+      nom du périphérique à ouvrir. Le lien symbolique pointant vers l'objet de 
+      périphérique pour être plus exact. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100 rowSpan=4>
+      <P><EM><I>dwDesiredAccess</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>Spécifie le type d'accès au périphérique </P>
+      <P>&nbsp;</P>
+      <P>Nous aurons besoin de deux valeurs:</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=200>
+      <P>GENERIC_READ</P></TD>
+    <TD>
+      <P>Spécifie un accès en lecture. Des données peuvent être lues depuis le 
+      périphérique.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=200>
+      <P>GENERIC_WRITE</P></TD>
+    <TD>
+      <P>Spécifie un accès en écriture. Des données peuvent être écrites sur le 
+      périphérique.</P></TD></TR>
+  <TR vAlign=top>
+    <TD colSpan=2>
+      <P>Ces drapeaux (flags) peuvent être combinés ensemble.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100 rowSpan=5>
+      <P><EM><I>dwShareMode</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>Un jeu de drapeaux de bits spécifiant la façon dont le périphérique 
+      peut être partagé.</P>
+      <P>Trois valeurs peuvent nous être utiles :</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=200>
+      <P>0</P></TD>
+    <TD>
+      <P>Le driver ne peut être partagé. Toute opération sur le driver échouera, 
+      jusqu'a ce que le handle soit fermé. Bien que la documentation dise cela, 
+      je n'ai pu le réaliser en utilisant 0. </P></TD></TR>
+  <TR vAlign=top>
+    <TD colSpan=2>
+      <P>Si vous devez partage le périphérique, utilisez les valeurs suivantes 
+      :</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=200>
+      <P>FILE_SHARE_READ</P></TD>
+    <TD>
+      <P>Toute opération en ouverture sur le périphérique réussira seulement si 
+      un accès en lecture est demandé. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=200>
+      <P>FILE_SHARE_WRITE</P></TD>
+    <TD>
+      <P>Toute opération en écriture sur le périphérique réussira seulement si 
+      un accès en écriture est demandé.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpSecurityAttributes</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>Pointeur vers une structure SECURITY_ATTRIBUTES.</P>
+      <P>Comme aucune protection spéciale n'est nécessaire dans notre cas, et 
+      comme nous ne voulons pas que le handle retourné soit hérité par un 
+      processus enfant, nous spécifions NULL.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>dwCreationDistribution</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>Spécifie l'action à prendre pour les fichiers qui existent et quelle 
+      action prendre pour les fichiers qui n'existent pas.</P>
+      <P>Pour les périphériques, ce paramètre doit toujours être 
+      OPEN_EXISTING.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>dwFlagsAndAttributes</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>Spécifie les attributs et les drapeaux.</P>
+      <P>Ce paramètre doit toujours être égale à 0.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>hTemplateFile</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>Spécifie un handle vers un fichier template .</P>
+      <P>Pour les périphériques ce paramètre doit toujours être 
+  NULL.</P></TD></TR></TBODY></TABLE>
+<P>Si <EM>CreateFile</EM> crée ou ouvre avec succès le périphérique spécifié, un 
+handle vers ce périphérique est retourné ; Autrement, INVALID_HANDLE_VALUE est 
+retourné.</P>
+<P>La plupart des fonctions de Windows qui retourne un handle retourne NULL 
+quand elles n'ont pas fonctionnées correctement. A la différence,<EM> CreateFile 
+</EM>retourne INVALID_HANDLE_VALUE défini comme étant -1. </P>
+<P>Nous appelons <EM>CreateFile</EM> comme suit:</P><PRE>                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CreateFile</SPAN>, $CTA0(<SPAN class=STRING>"\\\\.\\slVirtToPhys"</SPAN>), GENERIC_READ + GENERIC_WRITE, \
+                                0, <SPAN class=NL>NULL</SPAN>, OPEN_EXISTING, 0, <SPAN class=NL>NULL</SPAN>
+</PRE>
+<P>J'espère que tout est clair pour les cinq derniers paramètres. Le second 
+paramètre est une combinaison des drapeaux GENERIC_READ + GENERIC_WRITE, car 
+nous voulons à la fois envoyer des données au périphérique mais aussi recevoir 
+le résultat de son travail. </P>
+<P>Examinons à présent le premier paramètre. C'est un pointeur vers le nom du 
+lien symbolique, de la forme "\\.\slVirtToPhys". Le "\\.\" est un alias Win32 
+défini pour l'ordinateur local. La fonction <EM>CreateFile</EM> est une 
+enveloppe autour de l'autre fonction <EM>NtCreateFile</EM> (qui ce situe dans 
+\%SystemRoot%\System32\ntdll.dll), qui à son tour accède au service système 
+correspondant (ne confondez pas avec les processus de services Win32). </P>
+<P class=note>Un service système est un point d'entrée dans le kernel depuis un 
+sous-système d'environnement. Un "<I>dispatch</I>" de service système est 
+déclenché lors de l'exécution d'une int 2Eh (Windows NT/2000) ou de 
+l'instruction sysenter (Windows XP/2003) sur les processeurs X86. Exécuter cette 
+instruction résulte en une "<I>trap</I>" (interruption) provoquant la transition 
+du thread s'exécutant dans le mode kernel et l'entrée dans le <I>dispatcher</I> 
+de service système. </P>
+<P><EM>NtCreateFile</EM> substitue un alias pour l'ordinateur local "\\.\" avec 
+"\??" (Ainsi "\\.\slVirtToPhys" devient "\?? \slVirtToPhys") et appel la 
+fonction du kernel <EM>ObOpenObjectByName</EM>. Au trvaers du lien symbolique 
+<EM>ObOpenObjectByName</EM> trouve l'objet "\Device\devVirtToPhys" et retourne 
+un pointeur vers celui-ci (ainsi le lien symbolique visible depuis le code en 
+mode utilisateur est utilisé par le Gestionnaire d'objet pour une conversion en 
+un nom interne). En utilisant ce pointeur <EM>NtCreateFile</EM> crée le nouveau 
+fichier objet représentant le périphérique et retourne son handle. </P>
+<P class=note>Le système d'exploitation abstrait toutes les requêtes d'E/S comme 
+des opérations sur des fichiers virtuels, cachant le fait que la cible d'une 
+opération d'E/S n'est peut être pas un périphérique avec une structure de 
+fichier. Le driver convertit les requêtes depuis un fichier virtuel en requêtes 
+matérielles spécifiques. Toute donnée lu ou écrite est vue comme un simple flux 
+d'octets dirigé vers ces fichiers virtuels. </P>
+<P>Avant que <EM>CreateFile</EM> ne retourne, le gestionnaire d'E/S crée une IRP 
+de type IRP_MJ_CREATE et l'envoi vers le driver pour traitement. La routine 
+définie pour procéder à ce genre d'opération sur les IRP exécutera le même 
+contexte de thread que l'initiateur des requêtes d'E/S (celui qui appel 
+<EM>CreateFile</EM>) à IRQL = PASSIVE_LEVEL. Si cette routine de driver retourne 
+avec succès, le Gestionnaire d'objet crée un handle pour l'objet de fichier dans 
+la table des handles du processus, et le handle se propage à rebours de la 
+chaîne (logique) appelante, pour finalement atteindre l'application comme une 
+valeur de retour pour <EM>CreateFile</EM>. </P>
+<P>Le nouvel objet de fichier est l'objet exécutif et n'entre pas de l'espace de 
+nom du Gestionnaire d'objet. Vous pouvez utiliser <EM>Process Explorer</EM> par 
+Mark Russinovich ( <A 
+href="http://www.sysinternals.com/">http://www.sysinternals.com/</A> ) pour 
+explorer de tels objets.</P>
+<P></P>
+<CENTER><IMG 
+src="Le sous-système d'E-S_fichiers/imgkmd4-7.png"><BR><BR><B>Figure 4-7</B>. 
+Objets de fichier </CENTER>
+<P></P>
+<P></P>
+<CENTER><IMG 
+src="Le sous-système d'E-S_fichiers/imgkmd4-8.png"><BR><BR><B>Figure 4-8</B>. 
+Propriétés de l'objet de fichier. </CENTER>
+<P></P>
+<P>Résumons nous. Donc "\\.\slVirtToPhys" devient un lien symbolique 
+"\??\slVirtToPhys" et est finalement utilisé pour trouver le périphérique 
+approprié "\Device\devVirtToPhys". Depuis l'objet de périphérique DEVICE_OBJECT 
+on extrait l'information pour savoir quel driver est responsable de la gestion 
+de ce périphérique. Alors le Gestionnaire d'E/S envoi des requêtes IRP_MJ_CREATE 
+directement au driver. De cette façon le driver sait qu'un morceau de code essai 
+d'accéder à son périphérique. Si le driver veut autoriser l'accès il retourne 
+"succès". Maintenant le Gestionnaire d'objet crée un handle pour l'objet 
+"fichier virtuel" représentant le périphérique et le retourne au code en mode 
+utilisateur. </P>
+<P class=note>Les Handles et les liens symboliques servent de pointeurs 
+indirects pour les ressources systèmes; cette indirection empêche les programmes 
+applicatifs de jouer directement avec les structures de donnée du système.</P>
+<H3>4.2.6 Communiquer avec le périphérique<A name=k4d2d6></A></H3><PRE>                <SPAN class=IF>.if</SPAN> eax != INVALID_HANDLE_VALUE
+                    mov hDevice, eax
+</PRE>
+<P>Si <EM>CreateFile</EM> retourne un handle de périphérique valide, nous 
+sauvons ce dernier dans la variable hDevice. A présent nous pouvons communiquer 
+avec les périphériques en appelant <EM>ReadFile</EM>, <EM>WriteFile</EM>, et 
+<EM>DeviceIoControl</EM>. <EM>DeviceIoControl</EM> est une fonction universelle 
+pour communiquer avec les périphériques. En voici le prototype : </P><PRE><SPAN class=FN>DeviceIoControl</SPAN> <SPAN class=GB>proto stdcall</SPAN> hDevice:HANDLE,         dwIoControlCode:DWORD, \
+                              lpInBuffer:LPVOID,      nInBufferSize:DWORD, \
+                              lpOutBuffer:LPVOID,     nOutBufferSize:DWORD, \
+                              lpBytesReturned:LPVOID, lpOverlapped:LPVOID
+</PRE>
+<P>Cette fonction accepte même plus de paramètre que <EM>CreateFile</EM>, mais 
+elle est somme toute assez simple. </P>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Paramètre</TH>
+    <TH>Description</TH></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>hDevice</I></EM></P></TD>
+    <TD>
+      <P>Handle vers le périphérique ;</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>dwIoControlCode</I></EM></P></TD>
+    <TD>
+      <P>-Code de contrôle indiquant quelle opération de contrôle faire ;</P>
+      <P>Nous discuterons de ceci un peu plus tard.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpInBuffer</I></EM></P></TD>
+    <TD>
+      <P>Pointeur vers un buffer contenant les données requises pour faire 
+      l'opération. Ce paramètre peut être NULL si le paramètre dwIoControlCode 
+      spécifie une opération que ne requière aucune donnée en entrée ; 
+</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>nInBufferSize</I></EM></P></TD>
+    <TD>
+      <P>Spécifie la taille, en octets, du buffer pointé par lpInBuffer 
+  ;</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpOutBuffer</I></EM></P></TD>
+    <TD>
+      <P>Pointeur vers un buffer recevant les données de sortie de l'opération. 
+      Ce paramètre peut être NULL si le paramètre dwIoControlCode spécifie une 
+      opération qui ne produit aucune donnée en sortie. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>nOutBufferSize</I></EM></P></TD>
+    <TD>
+      <P>Spécifie la taille, en octets, du buffer pointé par 
+  lpOutBuffer;</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpBytesReturned</I></EM></P></TD>
+    <TD>
+      <P>Pointeur vers une variable qui reçoit la taille, en octets, des données 
+      stockées dans le buffer pointé par lpOutBuffer;</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpOverlapped</I></EM></P></TD>
+    <TD>
+      <P>Pointeur vers une structure OVERLAPPED.</P>
+      <P>Cette structure est requise pour aider à contrôler une opération 
+      asynchrone. Comme nous voulons seulement appeler notre driver de manière 
+      synchrone (DeviceIoControl ne retournera pas tant que la routine du driver 
+      appropriée ne soit complétée), nous passons NULL.</P></TD></TR></TBODY></TABLE>
+<H3>4.2.7 Codes de contrôle d'E/S<A name=k4d2d7></A></H3>
+<P>Un module de gestion de périphérique peut être considéré un ensemble de 
+fonction en mode kernel. Un code de contrôle d'E/S défini quel fonction sera 
+appelée. L'argument dwIoControlCode de la fonction <EM>DeviceIoControl</EM> est 
+utilisé à cette fin. Il indique l'opération de contrôle que nous voulons 
+réalisée et de quelle façon elle doit l'être.</P>
+<P>Le code de contrôle est une contant numérique sur 32 bits pouvant être 
+définie en utilisant la macro CTL_CODE, partie intégrante des fichiers include 
+winioctl.inc et ntddk.inc.</P>
+<P></P>
+<CENTER><IMG 
+src="Le sous-système d'E-S_fichiers/imgkmd4-9.gif"><BR><BR><B>Figure 4-9</B>. 
+Disposition du code de contrôle d'E/S </CENTER>
+<P></P>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Champ de bit</TH>
+    <TH colSpan=2>Description</TH></TR>
+  <TR vAlign=top>
+    <TD width=80>
+      <P><EM><I>DeviceType</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>Le champ device type (16 bits) [type de périphérique] indique le type 
+      de périphérique qui implémente cette opération de contrôle.</P>
+      <P>Les valeurs dans la fourchette 0 - 7FFFh sont réservées par Microsoft. 
+      Les valeurs allant de 8000h - 0FFFFh sont utilisables pour les 
+      développeurs de nouveau type de driver en mode kernel.</P>
+      <P>Dans \include\w2k\ntddk.inc vous pourrez trouver un jeu de constantes 
+      symboliques FILE_DEVICE_XXX dont les valeurs sont dans la fourchette 
+      réservée par Microsoft. Nous utiliserons FILE_DEVICE_UNKNOWN. Cependant 
+      vous pouvez définir une autre FILE_DEVICE_XXX.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=80 rowSpan=5>
+      <P><EM><I>Access</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>Le code d'accès (2 bits) indique les droits d'accès qu'une application 
+      requière sur le handle de périphérique pour effectuer l'opération de 
+      contrôle.</P>
+      <P>Comme ce champ est de seulement d'une taille de deux bits, nous avons 4 
+      possibilités : </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=180>
+      <P>FILE_ANY_ACCESS (0)</P></TD>
+    <TD>
+      <P>Droits d'accès maximum. Le driver procédera à l'opération demandée pour 
+      tout programme appelant qui posséderait un handle pour son 
+      périphérique.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=180>
+      <P>FILE_READ_ACCESS (1)</P></TD>
+    <TD>
+      <P>Droits d'accès en lecture. Avec ce droit d'accès, le driver de 
+      périphérique transfère des données depuis le périphérique vers le buffer 
+      mémoire.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=180>
+      <P>FILE_WRITE_ACCESS (2)</P></TD>
+    <TD>
+      <P>Droits d'accès en écriture. Avec ce droit d'accès, le driver de 
+      périphérique transfère des données depuis le buffer mémoire vers le 
+      périphérique.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=180>
+      <P>FILE_READ_ACCESS or FILE_WRITE_ACCESS (3)</P></TD>
+    <TD>
+      <P>Droits d'accès à la fois en lecture et en écriture. Avec ce droit 
+      d'accès, le driver de périphérique transfère des données entre le buffer 
+      mémoire et le périphérique (dans les deux sens).</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=80>
+      <P><EM><I>Function</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>Le code de fonction (12 bits) indique précisément quelle opération de 
+      contrôle ce code décrit.</P>
+      <P>Il peut prendre des valeurs entre 800h - 0FFFh pour les codes de 
+      contrôle privés d'E/S. Les valeurs dans la fourchette 0 - 7FFh sont 
+      réservés par Microsoft pour les codes de contrôles publics 
+d'E/S.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=80 rowSpan=5>
+      <P><EM><I>Method</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>La méthode de "buffering" (2 bits) indique comment le Gestionnaire 
+      d'E/S va s'occuper des buffers d'entrée et de sortie fournis par 
+      l'application.</P>
+      <P>Ce champ est de seulement d'une taille de deux bits, nous avons donc 4 
+      possibilités (définies en tant que constantes) : </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=180>
+      <P>METHOD_BUFFERED (0)</P></TD>
+    <TD>
+      <P>buffered E/S;</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=180>
+      <P>METHOD_IN_DIRECT (1)</P></TD>
+    <TD vAlign=center rowSpan=2>
+      <P>E/S directe ;</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=180>
+      <P>METHOD_OUT_DIRECT (2)</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=180>
+      <P>METHOD_NEITHER (3)</P></TD>
+    <TD>
+      <P>neither E/S. =&gt; E/S sans gestion </P></TD></TR></TBODY></TABLE>
+<P>Nous aborderons un peu plus tard, et plus en détail, la gestion des buffers. 
+A présent la chose importante est de savoir que la méthode de "buffered E/S" est 
+la plus sûre car c'est le système qui supervise la gestion des buffers, celui ci 
+gérant les opérations de copie en mémoire. Les drivers utilisent communément les 
+E/S par buffers quand le programme appelant requière de petit transfères de 
+mémoire (quelques pages), pour des raisons complexes dues à la gestion mémoire 
+(à ce sujet voir MDL "<I>Memory descriptor list</I>"). Nous utiliserons la 
+méthode de "buffered E/S" dans le driver VirtToPhys. </P>
+<P>Vous pouvez former des codes de contrôle d'E/S manuellement, mais il est plus 
+pratique d'utiliser la macro CTL_CODE, qui offre un mécanisme pour générer des 
+valeurs IOCTL. La voici : </P><PRE>CTL_CODE <SPAN class=MACRO>MACRO</SPAN> DeviceType:=&lt;0&gt;, Function:=&lt;0&gt;, Method:=&lt;0&gt;, Access:=&lt;0&gt;
+    EXITM %(((DeviceType) SHL 16) OR ((Access) SHL 14) OR ((Function) SHL 2) OR (Method))
+<SPAN class=MACRO>ENDM</SPAN>
+</PRE>
+<P>Comme je m'ai déjà dit, la macro CTL_CODE est définie à la fois dans 
+winioctl.inc, qui est inclue dans le code source du programme de contrôle de 
+service, et dans ntddk.inc, inclus dans le code source du driver. </P>
+<P>Comme nous utilisons les constantes NUM_DATA_ENTRY et DATA_SIZE, ainsi que 
+code de contrôle d'E/S IOCTL_GET_PHYS_ADDRESS à la fois dans le programme de 
+contrôle de service et dans le driver, ils sont placés dans un fichier include 
+nommé common.inc. Ainsi, tout changement dans ce fichier sera répercuté dans les 
+deux codes source. </P><PRE>NUM_DATA_ENTRY         <SPAN class=GB>equ</SPAN> 4
+DATA_SIZE              <SPAN class=GB>equ</SPAN> (<SPAN class=GB>sizeof</SPAN> DWORD) * NUM_DATA_ENTRY
+IOCTL_GET_PHYS_ADDRESS <SPAN class=GB>equ</SPAN> CTL_CODE(FILE_DEVICE_UNKNOWN, 800h, METHOD_BUFFERED, FILE_READ_ACCESS + FILE_WRITE_ACCESS)
+</PRE>
+<H3>4.2.8 Echange de données<A name=k4d2d8></A></H3>
+<P>Retournons à présent au code source du driver.</P><PRE>                    lea esi, adwInBuffer
+                    <SPAN class=GB>assume</SPAN> esi:ptr DWORD
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetModuleHandle</SPAN>, <SPAN class=NL>NULL</SPAN>
+                    mov [esi][0*(<SPAN class=GB>sizeof</SPAN> DWORD)], eax
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetModuleHandle</SPAN>, $CTA0(<SPAN class=STRING>"kernel32.dll"</SPAN>, szKernel32)
+                    mov [esi][1*(<SPAN class=GB>sizeof</SPAN> DWORD)], eax
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetModuleHandle</SPAN>, $CTA0(<SPAN class=STRING>"user32.dll"</SPAN>, szUser32)
+                    mov [esi][2*(<SPAN class=GB>sizeof</SPAN> DWORD)], eax
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetModuleHandle</SPAN>, $CTA0(<SPAN class=STRING>"advapi32.dll"</SPAN>, szAdvapi32)
+                    mov [esi][3*(<SPAN class=GB>sizeof</SPAN> DWORD)], eax
+</PRE>
+<P>Ici nous remplissons le buffer adwInBuffer avec les adresses virtuelles à 
+convertir.</P><PRE>                    lea edi, adwOutBuffer
+                    <SPAN class=GB>assume</SPAN> edi:ptr DWORD
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DeviceIoControl</SPAN>, hDevice, IOCTL_GET_PHYS_ADDRESS, \
+                                            esi, <SPAN class=GB>sizeof</SPAN> adwInBuffer, \
+                                            edi, <SPAN class=GB>sizeof</SPAN> adwOutBuffer, \
+                                            <SPAN class=GB>addr</SPAN> dwBytesReturned, <SPAN class=NL>NULL</SPAN>
+</PRE>
+<P>En appelant <EM>DeviceIoControl</EM> nous passons un buffer au driver qui 
+convertira chaque adresse virtuelle en adresse physique.</P><PRE>                    <SPAN class=IF>.if</SPAN> ( eax != 0 ) &amp;&amp; ( dwBytesReturned != 0 )
+
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetModuleFileName</SPAN>, [esi][0*(<SPAN class=GB>sizeof</SPAN> DWORD)], \
+                                                  <SPAN class=GB>addr</SPAN> acModulePath, <SPAN class=GB>sizeof</SPAN> acModulePath
+
+                        lea ecx, acModulePath[eax-5]
+                        <SPAN class=IF>.repeat</SPAN>
+                            dec ecx
+                            mov al, [ecx]
+                        <SPAN class=IF>.until</SPAN> al == <SPAN class=STRING>'\'</SPAN>
+                        inc ecx
+                        push ecx
+
+                        CTA0 <SPAN class=STRING>"%s \t%08Xh\t%08Xh   ( %s )\n"</SPAN>, szFmtMod
+
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>BigNumToString</SPAN>, [edi][0*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+                        pop ecx
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>wsprintf</SPAN>, <SPAN class=GB>addr</SPAN> acThis, <SPAN class=GB>addr</SPAN> szFmtMod, ecx, \
+                                         [esi][0*(<SPAN class=GB>sizeof</SPAN> DWORD)], \
+                                         [edi][0*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>BigNumToString</SPAN>, [edi][1*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>wsprintf</SPAN>, <SPAN class=GB>addr</SPAN> acKernel, <SPAN class=GB>addr</SPAN> szFmtMod, <SPAN class=GB>addr</SPAN> szKernel32, \
+                                         [esi][1*(<SPAN class=GB>sizeof</SPAN> DWORD)], \
+                                         [edi][1*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>BigNumToString</SPAN>, [edi][2*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>wsprintf</SPAN>, <SPAN class=GB>addr</SPAN> acUser, <SPAN class=GB>addr</SPAN> szFmtMod, <SPAN class=GB>addr</SPAN> szUser32, \
+                                         [esi][2*(<SPAN class=GB>sizeof</SPAN> DWORD)], \
+                                         [edi][2*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>BigNumToString</SPAN>, [edi][3*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>wsprintf</SPAN>, <SPAN class=GB>addr</SPAN> acAdvapi, <SPAN class=GB>addr</SPAN> szFmtMod, <SPAN class=GB>addr</SPAN> szAdvapi32, \
+                                         [esi][3*(<SPAN class=GB>sizeof</SPAN> DWORD)], \
+                                         [edi][3*(<SPAN class=GB>sizeof</SPAN> DWORD)], <SPAN class=GB>addr</SPAN> acNumber
+
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>wsprintf</SPAN>, <SPAN class=GB>addr</SPAN> acBuffer, \
+                                         $CTA0(<SPAN class=STRING>"Module:\t\tVirtual:\t\tPhysical:\n\n%s\n%s%s%s"</SPAN>), \
+                                         <SPAN class=GB>addr</SPAN> acThis, <SPAN class=GB>addr</SPAN> acKernel, <SPAN class=GB>addr</SPAN> acUser, <SPAN class=GB>addr</SPAN> acAdvapi
+
+                        <SPAN class=GB>assume</SPAN> esi:nothing
+                        <SPAN class=GB>assume</SPAN> edi:nothing
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=GB>addr</SPAN> acBuffer, $CTA0(<SPAN class=STRING>"Modules Base Address"</SPAN>), \
+                                           MB_OK + MB_ICONINFORMATION
+                    <SPAN class=IF>.else</SPAN>
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, $CTA0(<SPAN class=STRING>"Can't send control code to device."</SPAN>), <SPAN class=NL>NULL</SPAN>, \
+                                           MB_OK + MB_ICONSTOP
+                    <SPAN class=IF>.endif</SPAN>
+</PRE>
+<P>Si <EM>DeviceIoControl</EM> retourne avec succès dwBytesReturned est égale au 
+nombre d'octets dont le buffer adwOutBuffer aura été rempli par le driver. 
+Ensuite il nous faut prendre les données et les afficher à l'utilisateur. Je 
+suis sûr que vous êtes assez futé pour comprendre ce qui se passe ici. Les 
+séquences d'échappement utilisées dans $CTA0 sont des séquences communes (voir 
+\Macros\Strings.mac pour les détails) </P>
+<P></P>
+<CENTER><IMG 
+src="Le sous-système d'E-S_fichiers/imgkmd4-10.png"><BR><BR><B>Figure 4-10</B>. 
+La sortie de VirtToPhys.exe </CENTER>
+<P></P>
+<H3>4.2.9 Nettoyage <A name=k4d2d9></A></H3><PRE>                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CloseHandle</SPAN>, hDevice
+</PRE>
+<P>A présent nous avons juste à fermer le handle ouvert sur le périphérique. A 
+ce point, le Gestionnaire d'E/S envoi deux IRP au driver de périphérique. Dans 
+un premier temps il s'agit de IRP_MJ_CLEANUP pour dire au driver que le handle 
+de périphérique va être fermé. Ensuite vient IRP_MJ_CLOSE, pour dire au driver 
+que le handle de périphérique a bien été fermé. Vous pouvez aussi évitez la 
+fermeture du handle de périphérique en retournant un code d'erreur depuis la 
+routine responsable de la gestion de la requête IRP_MJ_CLEANUP. La routine du 
+driver définie à cet effet (gestion de ce type d'IRP) exécutera le même contexte 
+de thread que l'initiateur des requêtes d'E/S (celui qui appelle 
+<EM>CloseHandle</EM>) à IRQL = PASSIVE_LEVEL. </P>
+<P>Nous parlerons dans la prochaine partie de la façon dont le driver gère les 
+IRP. </P>
+<P>Pour faire fonctionner le driver sur des environnements précédent les 
+dernières versions de Windows NT (donc NT 4) vous devrez changer "\??" en 
+"\DosDevices" et recompiler le driver, car comme il à été mentionné, sur Windows 
+NT4 le répertoire "\??" s'appelait "\DosDevices". </P>
+<HR width="100%" color=#8088a0 SIZE=1>
+
+<DIV>
+<P>Copyright © 2002-2004 Four-F, <A 
+href="mailto:four-f@mail.ru">four-f@mail.ru</A></P>
+<P>Traduction par Neitsa , <A 
+href="mailto:tzcorporation@hotmail.com">tzcorporation@hotmail.com</A></P></DIV></BODY></HTML>

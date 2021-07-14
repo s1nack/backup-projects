@@ -1,0 +1,77 @@
+@font-face {
+	font-family: Tolkien;
+	src:url(http://silverstr.ufies.org/lotr0/TOLKIEN0.eot);
+}
+@font-face {
+	font-family: Ringbearer;
+	src:url(http://silverstr.ufies.org/lotr0/RINGBEA0.eot);
+}
+BODY {
+	BACKGROUND: url(http://silverstr.ufies.org/lotr0/images/green-bg.jpg); MARGIN: 10px 20px 20px 15px
+}
+A {
+	COLOR: #dfb85d; TEXT-DECORATION: none
+}
+A:link {
+	FONT-WEIGHT: bold; COLOR: #dfb85d; TEXT-DECORATION: none
+}
+A:visited {
+	FONT-WEIGHT: bold; COLOR: #dfb85d; TEXT-DECORATION: none
+}
+A:active {
+	FONT-WEIGHT: bold; COLOR: #dfb85d
+}
+A:hover {
+	FONT-WEIGHT: bold; COLOR: #ffb85d
+}
+H1 {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; FONT-FAMILY: Ringbearer, tahoma, arial 
+		color:#CAB85D
+}
+H2 {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; FONT-FAMILY: Ringbearer, tahoma, arial 
+		color:#CAB85D
+}
+H3 {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px; FONT-FAMILY: Ringbearer, tahoma, arial 
+		color:#CAB85D
+}
+.title {
+	PADDING-RIGHT: 5px; PADDING-LEFT: 5px; FONT-WEIGHT: bold; FONT-SIZE: 14pt; PADDING-BOTTOM: 5px; COLOR: #cab85d; PADDING-TOP: 5px; FONT-FAMILY: Ringbearer, tahoma, arial, sans-serif; TEXT-ALIGN: justify
+}
+.subtitle {
+	PADDING-RIGHT: 5px; PADDING-LEFT: 5px; FONT-WEIGHT: bold; FONT-SIZE: 10pt; PADDING-BOTTOM: 5px; COLOR: #cab85d; PADDING-TOP: 5px; FONT-FAMILY: Ringbearer, tahoma, arial, sans-serif; TEXT-ALIGN: justify; TEXT-DECORATION: underline
+}
+.mainbody {
+	PADDING-RIGHT: 5px; PADDING-LEFT: 5px; FONT-WEIGHT: normal; FONT-SIZE: 12pt; PADDING-BOTTOM: 5px; COLOR: #afb85d; PADDING-TOP: 5px; FONT-FAMILY: tahoma, tahoma, arial, sans-serif; TEXT-ALIGN: justify
+}
+.psbody {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-WEIGHT: bold; FONT-SIZE: 14pt; PADDING-BOTTOM: 10px; COLOR: #afb85d; PADDING-TOP: 10px; FONT-FAMILY: Tolkien, tahoma, arial, sans-serif; TEXT-ALIGN: justify
+}
+.bootbody {
+	PADDING-LEFT: 30px; FONT-WEIGHT: normal; FONT-SIZE: 8pt; COLOR: #bfb85d; FONT-FAMILY: Courier, arial, sans-serif; TEXT-ALIGN: left
+}
+.submenu {
+	PADDING-RIGHT: 5px; PADDING-LEFT: 5px; FONT-WEIGHT: normal; FONT-SIZE: 10pt; PADDING-BOTTOM: 5px; COLOR: #bfb85d; PADDING-TOP: 5px; FONT-FAMILY: Tahoma, arial, sans-serif; TEXT-ALIGN: justify
+}
+#content {
+	FLOAT: left; MARGIN-BOTTOM: 20px; WIDTH: 75%; MARGIN-RIGHT: 15px
+}
+#links {
+	PADDING-RIGHT: 5px; PADDING-LEFT: 15px; FLOAT: right; PADDING-BOTTOM: 5px; PADDING-TOP: 5px
+}
+.mainbody A {
+	FONT-WEIGHT: normal; TEXT-DECORATION: underline
+}
+.mainbody A:link {
+	FONT-WEIGHT: normal; TEXT-DECORATION: underline
+}
+.mainbody A:visited {
+	FONT-WEIGHT: normal; TEXT-DECORATION: underline
+}
+.mainbody A:active {
+	FONT-WEIGHT: normal; TEXT-DECORATION: underline
+}
+.mainbody A:hover {
+	FONT-WEIGHT: normal; TEXT-DECORATION: underline
+}

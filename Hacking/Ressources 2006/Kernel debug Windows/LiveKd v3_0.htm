@@ -1,0 +1,379 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0075)http://www.microsoft.com/technet/sysinternals/SystemInformation/LiveKd.mspx -->
+<HTML dir=ltr><HEAD><TITLE>LiveKd v3.0</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content=en-us name=MS.LOCALE>
+<META 
+content="LiveKD allows you to run the Kd and Windbg Microsoft kernel debuggers, which are part of the Debugging Tools for Windows package, locally on a live system." 
+name=description>
+<META content=MNP2.GenericArticle name=search.mnp.template><LINK 
+href="LiveKd v3_0_fichiers/templatecss.css" type=text/css rel=Stylesheet>
+<SCRIPT language=Javascript 
+src="LiveKd v3_0_fichiers/menujs.xml&amp;clicktrax=False" 
+type=text/javascript></SCRIPT>
+<LINK href="LiveKd v3_0_fichiers/css.css" type=text/css rel=Stylesheet>
+<SCRIPT language=Javascript src="LiveKd v3_0_fichiers/js.aspx" 
+type=text/javascript></SCRIPT>
+<LINK href="E:\Driver\LiveKd v3_0_fichiers\css(1).css" type=text/css 
+rel=stylesheet>
+<SCRIPT language=JavaScript>var doImage=doImage;var TType=TType;
+function mhHover(tbl,idx,cls){var t,d;if(document.getElementById)t=document.getElementById(tbl);else t=document.all(tbl);if(t==null)return;if(t.getElementsByTagName)d=t.getElementsByTagName("TD");else d=t.all.tags("TD");if(d==null)return;if(d.length<=idx)return;d[idx].className=cls;}
+function footerjs(doc){if(doImage==null){var tt=TType==null?"PV":TType;doc.write('<layer visibility="hide"><div style="display:none"><img src="http://c.microsoft.com/trans_pixel.asp?source=www&TYPE=' + tt + '&p=technet_sysinternals_SystemInformation&URI=%2ftechnet%2fsysinternals%2fSystemInformation%2fLiveKd.mspx&GUID=1F4FC18C-F71E-47FB-8FC9-612F8EE59C61&lc=en-us" width=0 height=0 hspace=0 vspace=0 border=0 alt=""/></div></layer>');}}msvi_qllc = "en-us";msvi_qldir = "LTR";msvi_qlhost = "http://www.microsoft.com";</SCRIPT>
+
+<META content=_technet_ name=WT.sp>
+<SCRIPT language=JavaScript src="LiveKd v3_0_fichiers/broker.js"></SCRIPT>
+<LINK href="LiveKd v3_0_fichiers/ql.css" type=text/css rel=stylesheet>
+<SCRIPT src="LiveKd v3_0_fichiers/ql.js" type=text/javascript></SCRIPT>
+
+<SCRIPT language=Javascript>
+					if (self.name == "MNPMainFrame") top.location.href = self.location.href;
+				</SCRIPT>
+
+<META content=favorite name=save>
+<META content="MSHTML 6.00.2900.2995" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff leftMargin=0 topMargin=0 marginheight="0" marginwidth="0"><!--NOINDEX_START--><A name=top></A>
+<DIV id=msviMasthead>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD width="100%">
+      <TABLE height=22 cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR>
+          <TD id=msviRegionIdGraphic bgColor=#153d79></TD>
+          <TD id=msviRegionGradient1 
+          style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#153D79', endColorStr='#045CFB', gradientType='1')" 
+          width="50%"></TD>
+          <TD id=msviRegionGradient2 
+          style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#045CFB', endColorStr='#173B71', gradientType='1')" 
+          width="50%"></TD></TR></TBODY></TABLE></TD>
+    <TD id=msviGlobalToolbar dir=ltr noWrap align=left bgColor=#173b71 
+height=22>
+      <TABLE cellSpacing=0 cellPadding=0 border=0>
+        <TBODY>
+        <TR>
+          <TD class=gt0 id=panelTd noWrap><A 
+            href="http://go.microsoft.com/?linkid=4412889">Quick Links&nbsp;</A>
+            <SCRIPT>document.write('<img src="/library/mnp/2/gif/ql.gif" width="11px" height="4px" alt="">');</SCRIPT>
+
+            <DIV id=panelDiv 
+            style="Z-INDEX: 100; VISIBILITY: hidden; POSITION: absolute"></DIV></TD>
+          <TD class=gtsep>|</TD>
+          <TD class=gt0 onmouseover="this.className='gt1'" 
+          onmouseout="this.className='gt0'" noWrap><A 
+            href="http://go.microsoft.com/?linkid=4412890">Home</A></TD>
+          <TD class=gtsep>|</TD>
+          <TD class=gt0 onmouseover="this.className='gt1'" 
+          onmouseout="this.className='gt0'" noWrap><A 
+            href="http://go.microsoft.com/?linkid=4412891">Worldwide</A></TD>
+          <TD class=msviPPSpace></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="100%">
+      <TABLE height=42 cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR vAlign=top>
+          <TD id=msviBrandBanner bgColor=#e0e0e0><A 
+            href="http://www.microsoft.com/technet"><IMG title="" height=42 
+            alt="Microsoft TechNet" 
+            src="LiveKd v3_0_fichiers/TechNetB_masthead_ltr.gif" width=225 
+            border=0></A></TD>
+          <TD 
+          style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#E0E0E0', endColorStr='#FFFFFF', gradientType='1')" 
+          width="100%"></TD></TR></TBODY></TABLE></TD>
+    <TD id=msviGlobalSearch bgColor=#ffffff>Search Microsoft.com for:<BR>
+      <FORM id=msviSearchForm action=/library/toolbar/3.0/search.aspx 
+      target=_top><INPUT type=hidden value=en-us name=View><INPUT type=hidden 
+      value=iso-8859-1 name=charset><NOBR>
+      <DIV style="HEIGHT: 18px"><INPUT id=msviSearchBox maxLength=255 name=qu><INPUT id=msviGoButton type=submit value=Go></DIV></NOBR></FORM></TD></TR></TBODY></TABLE>
+<DIV id=msviLocalToolbar>
+<TABLE height=19 cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD id=msviHomePageLink noWrap><A 
+      href="http://technet.microsoft.com/">TechNet Home</A></TD>
+    <TD><SPAN class=ltsep>|</SPAN></TD>
+    <TD class=lt0 onmouseover="mhHover('msviLocalToolbar', 2, 'lt1')" 
+    onmouseout="mhHover('msviLocalToolbar', 2, 'lt0')" noWrap><A 
+      href="http://www.microsoft.com/technet/prodtechnol/default.mspx">TechCenters</A></TD>
+    <TD><SPAN class=ltsep>|</SPAN></TD>
+    <TD class=lt0 onmouseover="mhHover('msviLocalToolbar', 4, 'lt1')" 
+    onmouseout="mhHover('msviLocalToolbar', 4, 'lt0')" noWrap><A 
+      href="http://www.microsoft.com/technet/downloads/default.mspx">Downloads</A></TD>
+    <TD><SPAN class=ltsep>|</SPAN></TD>
+    <TD class=lt0 onmouseover="mhHover('msviLocalToolbar', 6, 'lt1')" 
+    onmouseout="mhHover('msviLocalToolbar', 6, 'lt0')" noWrap><A 
+      href="http://www.microsoft.com/technet/abouttn/default.mspx">TechNet 
+      Program</A></TD>
+    <TD><SPAN class=ltsep>|</SPAN></TD>
+    <TD class=lt0 onmouseover="mhHover('msviLocalToolbar', 8, 'lt1')" 
+    onmouseout="mhHover('msviLocalToolbar', 8, 'lt0')" noWrap><A 
+      href="http://technet.microsoft.com/subscriptions/">Subscriptions</A></TD>
+    <TD><SPAN class=ltsep>|</SPAN></TD>
+    <TD class=lt0 onmouseover="mhHover('msviLocalToolbar', 10, 'lt1')" 
+    onmouseout="mhHover('msviLocalToolbar', 10, 'lt0')" noWrap><A 
+      href="http://technet.microsoft.com/en-US/my/default.aspx">My 
+TechNet</A></TD>
+    <TD><SPAN class=ltsep>|</SPAN></TD>
+    <TD class=lt0 onmouseover="mhHover('msviLocalToolbar', 12, 'lt1')" 
+    onmouseout="mhHover('msviLocalToolbar', 12, 'lt0')" noWrap><A 
+      href="http://www.microsoft.com/technet/security/current.aspx">Security 
+      Bulletins</A></TD>
+    <TD><SPAN class=ltsep>|</SPAN></TD>
+    <TD class=lt0 onmouseover="mhHover('msviLocalToolbar', 14, 'lt1')" 
+    onmouseout="mhHover('msviLocalToolbar', 14, 'lt0')" noWrap><A 
+      href="http://www.microsoft.com/technet/archive/default.mspx" 
+      target=_blank>Archive</A></TD>
+    <TD width="100%"></TD></TR></TBODY></TABLE></DIV></DIV>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=top>
+    <TD style="OVERFLOW-X: hidden" width=181 height="100%">
+      <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR>
+          <TD class=mnpQuickSearch dir=ltr 
+          style="BACKGROUND: #cccccc; COLOR: #000000">
+            <FORM style="MARGIN: 0px" 
+            action=http://search.technet.microsoft.com/search/redirector/searchredir.aspx><NOBR><FONT 
+            color=#000000>Search for</FONT><BR>
+            <TABLE cellSpacing=0 cellPadding=0 border=0>
+              <TBODY>
+              <TR>
+                <TD class=mnpQuickSearch 
+                style="PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px"><SPAN 
+                  style="WIDTH: 137px"><INPUT class=mnpSearchBox id=qu 
+                  style="WIDTH: 100%" maxLength=255 name=qu></SPAN></TD>
+                <TD><INPUT class=mnpSearchButton type=submit value=Go><BR></TD></TR></TBODY></TABLE></NOBR></FORM></TD></TR></TBODY></TABLE>
+      <DIV class=mnpMenuTop id=mnpMenuTop dir=ltr 
+      style="OVERFLOW-X: hidden; WIDTH: 181px" 
+      parent="/technet/sysinternals/systeminformationutilities.mspx" 
+      url="/technet/sysinternals/systeminformation/livekd.mspx">
+      <DIV class=mnpInherit>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1"><IMG 
+      class=mnpMenuArrow title="" style="LEFT: 166px; VISIBILITY: hidden" 
+      height=7 alt=* src="LiveKd v3_0_fichiers/arrowLTR.gif" width=4 border=0><A 
+      href="http://www.microsoft.com/technet/sysinternals/default.mspx">Sysinternals 
+      Home</A></DIV>
+      <DIV class=mnpMenuLabel>Utilities</DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1"><IMG 
+      class=mnpMenuArrow title="" style="LEFT: 166px; VISIBILITY: hidden" 
+      height=7 alt=* src="LiveKd v3_0_fichiers/arrowLTR.gif" width=4 border=0><A 
+      href="http://www.microsoft.com/technet/sysinternals/fileanddiskutilities.mspx">File 
+      and Disk</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1"><IMG 
+      class=mnpMenuArrow title="" style="LEFT: 166px; VISIBILITY: hidden" 
+      height=7 alt=* src="LiveKd v3_0_fichiers/arrowLTR.gif" width=4 border=0><A 
+      href="http://www.microsoft.com/technet/sysinternals/networkingutilities.mspx">Networking</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1"><IMG 
+      class=mnpMenuArrow title="" style="LEFT: 166px; VISIBILITY: hidden" 
+      height=7 alt=* src="LiveKd v3_0_fichiers/arrowLTR.gif" width=4 border=0><A 
+      href="http://www.microsoft.com/technet/sysinternals/processesandthreadsutilities.mspx">Processes 
+      and Threads</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1"><IMG 
+      class=mnpMenuArrow title="" style="LEFT: 166px; VISIBILITY: hidden" 
+      height=7 alt=* src="LiveKd v3_0_fichiers/arrowLTR.gif" width=4 border=0><A 
+      href="http://www.microsoft.com/technet/sysinternals/securityutilities.mspx">Security</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #999999; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #999999; WIDTH: 176px; BORDER-TOP-COLOR: #999999; BORDER-RIGHT-COLOR: #999999"><IMG 
+      class=mnpMenuArrow title="" style="LEFT: 166px; VISIBILITY: hidden" 
+      height=7 alt=* src="LiveKd v3_0_fichiers/arrowLTR.gif" width=4 border=0><A 
+      href="http://www.microsoft.com/technet/sysinternals/systeminformationutilities.mspx">System 
+      Information</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1"><IMG 
+      class=mnpMenuArrow title="" style="LEFT: 166px; VISIBILITY: hidden" 
+      height=7 alt=* src="LiveKd v3_0_fichiers/arrowLTR.gif" width=4 border=0><A 
+      href="http://www.microsoft.com/technet/sysinternals/miscellaneousutilities.mspx">Miscellaneous</A></DIV>
+      <DIV class=mnpMenuBorder style="WIDTH: 180px"></DIV>
+      <DIV class=mnpMenuLabel>Additional Resources</DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1" 
+      menu="m0a9aa0de09fe4c2a991415bf9832b282"><IMG class=mnpMenuArrow title="" 
+      style="LEFT: 166px; VISIBILITY: hidden" height=7 alt=* 
+      src="LiveKd v3_0_fichiers/arrowLTR.gif" width=4 border=0><A 
+      href="http://www.microsoft.com/technet/sysinternals/information.mspx">Sysinternals 
+      Information</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1" 
+      menu="m7058185103e547d196de63d724a777f9"><IMG class=mnpMenuArrow title="" 
+      style="LEFT: 166px; VISIBILITY: hidden" height=7 alt=* 
+      src="LiveKd v3_0_fichiers/arrowLTR.gif" width=4 border=0><A 
+      href="http://www.microsoft.com/technet/sysinternals/utilitiesindex.mspx">Utilities 
+      Index</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1"><IMG 
+      class=mnpMenuArrow title="" style="LEFT: 166px; VISIBILITY: hidden" 
+      height=7 alt=* src="LiveKd v3_0_fichiers/arrowLTR.gif" width=4 border=0><A 
+      href="http://blogs.technet.com/MarkRussinovich/">Mark's Blog</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1"><IMG 
+      class=mnpMenuArrow title="" style="LEFT: 166px; VISIBILITY: hidden" 
+      height=7 alt=* src="LiveKd v3_0_fichiers/arrowLTR.gif" width=4 border=0><A 
+      href="http://forum.sysinternals.com/">Forum</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1"><IMG 
+      class=mnpMenuArrow title="" style="LEFT: 166px; VISIBILITY: hidden" 
+      height=7 alt=* src="LiveKd v3_0_fichiers/arrowLTR.gif" width=4 border=0><A 
+      href="http://www.microsoft.com/technet/sysinternals/information/licensingfaq.mspx">Licensing 
+      FAQ</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1"><IMG 
+      class=mnpMenuArrow title="" style="LEFT: 166px; VISIBILITY: hidden" 
+      height=7 alt=* src="LiveKd v3_0_fichiers/arrowLTR.gif" width=4 border=0><A 
+      href="http://www.microsoft.com/technet/sysinternals/information/licensing.mspx">Software 
+      License</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1"><IMG 
+      class=mnpMenuArrow title="" style="LEFT: 166px; VISIBILITY: hidden" 
+      height=7 alt=* src="LiveKd v3_0_fichiers/arrowLTR.gif" width=4 border=0><A 
+      href="http://blogs.technet.com/Sysinternals">Site Blog</A></DIV>
+      <DIV class=mnpMenuBorder 
+      style="MARGIN-BOTTOM: 0px; WIDTH: 180px"></DIV></DIV></DIV>
+      <DIV class=mnpAds 
+      style="BORDER-RIGHT: #999999 1px solid; BORDER-TOP: #999999 0px solid; BACKGROUND: #f1f1f1; PADDING-BOTTOM: 20px; BORDER-LEFT: #999999 0px solid; WIDTH: 181px; BORDER-BOTTOM: #999999 0px solid; HEIGHT: 100%">
+      <CENTER>
+      <DIV 
+      style="BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: 20px"></DIV><IFRAME 
+      id=rad_CMSTN1F3 style="BACKGROUND: #f1f1f1" marginWidth=0 marginHeight=0 
+      src="LiveKd v3_0_fichiers/ADSAdClient31.htm" frameBorder=0 width=120 
+      scrolling=no height=240 allowTransparency></IFRAME><BR></CENTER></DIV></TD>
+    <TD dir=ltr oncopy="e++; SetFirst('5');" width="100%">
+      <DIV 
+      style="PADDING-RIGHT: 15px; PADDING-LEFT: 20px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px">
+      <DIV class=ancestorLinks><NOBR><A 
+      href="http://technet.microsoft.com/">TechNet Home</A> &gt; </NOBR><NOBR><A 
+      href="http://www.microsoft.com/technet/sysinternals/default.mspx">Sysinternals 
+      Home</A> &gt; </NOBR><NOBR><A 
+      href="http://www.microsoft.com/technet/sysinternals/systeminformationutilities.mspx">System 
+      Information</A></NOBR></DIV>
+      <H1>LiveKd v3.0</H1>
+      <DIV class=date>Published: November 1, 2006</DIV>
+      <DIV style="HEIGHT: 18px"></DIV><A name=E2></A>
+      <H2>Introduction</H2>
+      <P><I>LiveKD</I>, a utility I wrote for the CD included with Inside 
+      Windows 2000, 3rd Edition, is now freely available. <I>LiveKD</I> allows 
+      you to run the Kd and Windbg Microsoft kernel debuggers, which are part of 
+      the <A 
+      href="http://www.microsoft.com/whdc/devtools/debugging/default.mspx">Debugging 
+      Tools for Windows package</A>, locally on a live system. Execute all the 
+      debugger commands that work on crash dump files to look deep inside the 
+      system. See the Debugging Tools for Windows documentation and our book for 
+      information on how to explore a system with the kernel debuggers. </P>
+      <P>While the latest versions of Windbg and Kd have a similar capability on 
+      Windows XP and Server 2003, <I>LiveKD</I> works on NT 4 through Server 
+      2003, including x64 versions of Windows, and enables more functionality, 
+      such as viewing thread stacks with the !thread command, than Windbg and 
+      Kd's own live kernel debugging facility. </P>
+      <DIV style="MARGIN-TOP: 3px; MARGIN-BOTTOM: 10px"><A 
+      href="http://www.microsoft.com/technet/sysinternals/SystemInformation/LiveKd.mspx#top"><IMG 
+      height=9 alt="Top of page" src="LiveKd v3_0_fichiers/arrow_px_up.gif" 
+      width=7 border=0></A><A class=topOfPage 
+      href="http://www.microsoft.com/technet/sysinternals/SystemInformation/LiveKd.mspx#top">Top 
+      of page</A></DIV><A name=EMB></A>
+      <H2>Installation</H2>
+      <P>First download and install the Debugging Tools for Windows package from 
+      Microsoft's web site: </P>
+      <P><A 
+      href="http://www.microsoft.com/whdc/devtools/debugging/debugstart.mspx">http://www.microsoft.com/whdc/devtools/debugging/debugstart.mspx</A></P>
+      <P>If you install the tools to their default directory of \Program 
+      Files\Microsoft\Debugging Tools for Windows, you can run <I>LiveKD</I> 
+      from any directory; otherwise you should copy LiveKD to the directory in 
+      which the tools are installed. </P>
+      <P>If you haven't installed symbols for the system on which you run 
+      <I>LiveKD</I>, <I>LiveKD</I> will ask if you want it to automatically 
+      configure the system to use Microsoft's symbol server (see the Debugging 
+      Tools for Windows documentation for information on symbol files and the 
+      Microsoft symbol server). </P>
+      <P><I>NOTE:</I> The Microsoft debugger will complain that it can't find 
+      symbols for LIVEKDD.SYS. This is expected, since I have not made symbols 
+      for LIVEKDD.SYS available, and does not affect the behavior of the 
+      debugger. </P>
+      <DIV style="MARGIN-TOP: 3px; MARGIN-BOTTOM: 10px"><A 
+      href="http://www.microsoft.com/technet/sysinternals/SystemInformation/LiveKd.mspx#top"><IMG 
+      height=9 alt="Top of page" src="LiveKd v3_0_fichiers/arrow_px_up.gif" 
+      width=7 border=0></A><A class=topOfPage 
+      href="http://www.microsoft.com/technet/sysinternals/SystemInformation/LiveKd.mspx#top">Top 
+      of page</A></DIV><A name=EDC></A>
+      <H2>Usage</H2>
+      <P><B>usage: livekd [-w] [-d] [-k ] [debugger options]</B></P>
+      <P><B>-w</B></P>
+      <P>Runs windbg instead of Kd (Kd is the default)</P>
+      <P><B>-d</B></P>
+      <P>Runs Dumpchk exam instead of Kd (Kd is the default)</P>
+      <P><B>-k</B></P>
+      <P>Specifices complete path and filename of debugger image to execute</P>
+      <P>All other options are passed through to Kd/Windbg/Dumpchk. Note: Use 
+      Ctrl-Break to terminate and restart the debugger if it hangs. </P>
+      <P><A href="http://download.sysinternals.com/Files/LiveKd.zip"><IMG 
+      height=55 alt="" src="LiveKd v3_0_fichiers/55x55_download.gif" width=55 
+      border=0></A><A 
+      href="http://download.sysinternals.com/Files/LiveKd.zip"><B>Download 
+      LiveKd (111 KB)</B></A></P><BR style="FONT-SIZE: 0pt" clear=all>
+      <DIV style="MARGIN-TOP: 16px; MARGIN-BOTTOM: 20px; WIDTH: 100%">
+      <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR>
+          <TD><A 
+            href="http://www.microsoft.com/technet/sysinternals/SystemInformation/LiveKd.mspx#top"><IMG 
+            height=9 alt="Top of page" 
+            src="LiveKd v3_0_fichiers/arrow_px_up.gif" width=7 border=0></A><A 
+            class=topOfPage 
+            href="http://www.microsoft.com/technet/sysinternals/SystemInformation/LiveKd.mspx#top">Top 
+            of page</A></TD></TR></TBODY></TABLE></DIV></DIV></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=bottom>
+    <TD class=mnpMenuTop width=180>&nbsp;</TD>
+    <TD><IFRAME id=footerId name=footerId marginWidth=0 marginHeight=0 
+      src="LiveKd v3_0_fichiers/CustomError.htm" frameBorder=0 width="100%" 
+      scrolling=no height=243></IFRAME></TD></TR></TBODY></TABLE><BR 
+style="OVERFLOW: hidden; LINE-HEIGHT: 1px" clear=all>
+<TABLE id=msviFooter cellSpacing=0 cellPadding=0 width="100%">
+  <TBODY>
+  <TR vAlign=bottom>
+    <TD id=msviFooter2 
+    style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#FFFFFF', endColorStr='#CDCDCD', gradientType='1')">
+      <DIV id=msviLocalFooter><NOBR><A 
+      href="http://go.microsoft.com/?linkid=317027" target=_top>Manage Your 
+      Profile</A> |</NOBR><WBR></WBR><NOBR><A 
+      href="http://www.microsoft.com/technet/contactus.mspx" target=_top>Contact 
+      Us</A> |</NOBR><WBR></WBR><NOBR><A 
+      href="http://www.microsoft.com/technet/abouttn/subscriptions/flash_register.mspx" 
+      target=_top>Newsletter</A></NOBR></DIV>
+      <DIV id=msviGlobalFooter><SPAN dir=ltr>© 2006 Microsoft Corporation. All 
+      rights reserved.&nbsp;</SPAN><NOBR><A 
+      href="http://go.microsoft.com/?linkid=4412892" target=_parent>Terms of 
+      Use</A> |</NOBR><WBR></WBR><NOBR><A 
+      href="http://go.microsoft.com/?linkid=4412893" 
+      target=_parent>Trademarks</A> |</NOBR><WBR></WBR><NOBR><A 
+      href="http://go.microsoft.com/?linkid=4412894" target=_parent>Privacy 
+      Statement</A></NOBR></DIV></TD>
+    <TD width=105 bgColor=#cdcdcd><IMG title="" height=29 alt=Microsoft 
+      src="LiveKd v3_0_fichiers/text.jpg" width=105 
+border=0></TD></TR></TBODY></TABLE>
+<SCRIPT language=javascript>        var msviFooter2;        if (document.getElementById)        {        msviFooter2 = document.getElementById("msviFooter2");        msviFooter2.style.filter = "";        }      </SCRIPT>
+
+<TABLE height=58 cellSpacing=0 cellPadding=0 width="100%">
+  <TBODY>
+  <TR vAlign=top>
+    <TD>
+      <DIV style="WIDTH: 200px"></DIV></TD>
+    <TD 
+    style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#FFFFFF', endColorStr='#CDCDCD', gradientType='1')" 
+    width="100%"></TD></TR></TBODY></TABLE>
+<DIV style="DISPLAY: none">
+<SCRIPT type=text/javascript>var gDomain="m.webtrends.com";var gDcsId="dcsjwb9vb00000c932fd0rjc7_5p3t";var gTrackEvents="1";var gFpc="WT_FPC";if(document.cookie.indexOf(gFpc+"=")==-1){document.write("<SCR"+"IPT TYPE='text/javascript' SRC='"+"http"+(window.location.protocol.indexOf('https:')==0?'s':'')+"://"+gDomain+"/"+gDcsId+"/wtid.js"+"'><\/SCR"+"IPT>");}</SCRIPT>
+
+<SCRIPT src="LiveKd v3_0_fichiers/wt.js" type=text/javascript></SCRIPT>
+<NOSCRIPT><IMG height=1 src="LiveKd v3_0_fichiers/njs.gif" width=1 border=0 
+name=DCSIMG></NOSCRIPT></DIV><LAYER visibility="hide">
+<DIV style="DISPLAY: none"><IMG height=0 alt="" hspace=0 
+src="LiveKd v3_0_fichiers/trans_pixel.gif" width=0 
+border=0></DIV></LAYER></BODY></HTML>

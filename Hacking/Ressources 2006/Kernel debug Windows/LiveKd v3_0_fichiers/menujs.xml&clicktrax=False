@@ -1,0 +1,112 @@
+
+
+function mnpMenuDir()
+{
+	return "LTR";
+}
+
+function mnpMenuCT()
+{
+	
+	return false;
+	
+}
+
+function m0a9aa0de09fe4c2a991415bf9832b282()
+{
+	this.items = new Array();
+	var n = 0;
+	this.items[n++] = new mnpPage('Advanced DPCs', '/technet/sysinternals/information/advanceddpcs.mspx', '', '', '_S2_Node1_S1_Node1');
+	this.items[n++] = new mnpPage('Boot INI Options', '/technet/sysinternals/information/bootini.mspx', '', '', '_S2_Node1_S1_Node2');
+	this.items[n++] = new mnpPage('Inside Windows Disk Defragmenting', '/technet/sysinternals/information/diskdefragmenting.mspx', '', '', '_S2_Node1_S1_Node3');
+	this.items[n++] = new mnpPage('Inside the Disk Key', '/technet/sysinternals/information/diskkey.mspx', '', '', '_S2_Node1_S1_Node4');
+	this.items[n++] = new mnpPage('Inside High Resolution Timers', '/technet/sysinternals/information/highresolutiontimers.mspx', '', '', '_S2_Node1_S1_Node5');
+	this.items[n++] = new mnpPage('Inside I/O Completion Ports', '/technet/sysinternals/information/iocompletionports.mspx', '', '', '_S2_Node1_S1_Node6');
+	this.items[n++] = new mnpPage('Inside Native Applications', '/technet/sysinternals/information/nativeapplications.mspx', '', '', '_S2_Node1_S1_Node7');
+	this.items[n++] = new mnpPage('Monitoring Boot-time Registry Access', '/technet/sysinternals/information/boottimeregistryactivity.mspx', '', '', '_S2_Node1_S1_Node8');
+	this.items[n++] = new mnpPage('NT 4.0 ACL Editors', '/technet/sysinternals/information/acleditors.mspx', '', '', '_S2_Node1_S1_Node9');
+	this.items[n++] = new mnpPage('Speaking Schedule', '/technet/sysinternals/information/speakingschedule.mspx', '', '', '_S2_Node1_S1_Node10');
+	this.items[n++] = new mnpPage('Sysinternals at Microsoft', '/technet/sysinternals/information/sysinternalsatmicrosoft.mspx', '', '', '_S2_Node1_S1_Node11');
+	this.items[n++] = new mnpPage('Sysinternals Newsletter', '/technet/sysinternals/information/sysinternalsnewsletter.mspx', '', '', '_S2_Node1_S1_Node12');
+	this.items[n++] = new mnpPage('Tips and Trivia', '/technet/sysinternals/information/tipsandtrivia.mspx', '', '', '_S2_Node1_S1_Node13');
+	this.items[n++] = new mnpPage('Win2K Quantums', '/technet/sysinternals/information/windows2000quantums.mspx', '', '', '_S2_Node1_S1_Node14');
+}
+
+function m7058185103e547d196de63d724a777f9()
+{
+	this.items = new Array();
+	var n = 0;
+	this.items[n++] = new mnpPage('Sysinternals Suite', '/technet/sysinternals/utilities/sysinternalssuite.mspx', '', '', '_S2_Node2_S1_Node1');
+	this.items[n++] = new mnpPage('AccessChk', '/technet/sysinternals/utilities/accesschk.mspx', '', '', '_S2_Node2_S1_Node2');
+	this.items[n++] = new mnpPage('AccessEnum', '/technet/sysinternals/utilities/accessenum.mspx', '', '', '_S2_Node2_S1_Node3');
+	this.items[n++] = new mnpPage('AdRestore', '/technet/sysinternals/utilities/adrestore.mspx', '', '', '_S2_Node2_S1_Node4');
+	this.items[n++] = new mnpPage('Autologon', '/technet/sysinternals/utilities/autologon.mspx', '', '', '_S2_Node2_S1_Node5');
+	this.items[n++] = new mnpPage('Autoruns', '/technet/sysinternals/utilities/autoruns.mspx', '', '', '_S2_Node2_S1_Node6');
+	this.items[n++] = new mnpPage('BgInfo', '/technet/sysinternals/utilities/bginfo.mspx', '', '', '_S2_Node2_S1_Node7');
+	this.items[n++] = new mnpPage('BlueScreen Screen Saver', '/technet/sysinternals/utilities/bluescreen.mspx', '', '', '_S2_Node2_S1_Node8');
+	this.items[n++] = new mnpPage('CacheSet', '/technet/sysinternals/utilities/cacheset.mspx', '', '', '_S2_Node2_S1_Node9');
+	this.items[n++] = new mnpPage('ClockRes', '/technet/sysinternals/utilities/clockres.mspx', '', '', '_S2_Node2_S1_Node10');
+	this.items[n++] = new mnpPage('Contig', '/technet/sysinternals/utilities/contig.mspx', '', '', '_S2_Node2_S1_Node11');
+	this.items[n++] = new mnpPage('Ctrl2Cap', '/technet/sysinternals/utilities/ctrl2cap.mspx', '', '', '_S2_Node2_S1_Node12');
+	this.items[n++] = new mnpPage('DebugView', '/technet/sysinternals/utilities/debugview.mspx', '', '', '_S2_Node2_S1_Node13');
+	this.items[n++] = new mnpPage('DiskExt', '/technet/sysinternals/utilities/diskext.mspx', '', '', '_S2_Node2_S1_Node14');
+	this.items[n++] = new mnpPage('DiskMon', '/technet/sysinternals/utilities/diskmon.mspx', '', '', '_S2_Node2_S1_Node15');
+	this.items[n++] = new mnpPage('DiskView', '/technet/sysinternals/utilities/diskview.mspx', '', '', '_S2_Node2_S1_Node16');
+	this.items[n++] = new mnpPage('DiskUsage', '/technet/sysinternals/utilities/du.mspx', '', '', '_S2_Node2_S1_Node17');
+	this.items[n++] = new mnpPage('EFSDump', '/technet/sysinternals/utilities/efsdump.mspx', '', '', '_S2_Node2_S1_Node18');
+	this.items[n++] = new mnpPage('FileMon', '/technet/sysinternals/utilities/filemon.mspx', '', '', '_S2_Node2_S1_Node19');
+	this.items[n++] = new mnpPage('Handle', '/technet/sysinternals/utilities/handle.mspx', '', '', '_S2_Node2_S1_Node20');
+	this.items[n++] = new mnpPage('Hex2dec', '/technet/sysinternals/utilities/hex2dec.mspx', '', '', '_S2_Node2_S1_Node21');
+	this.items[n++] = new mnpPage('Junction', '/technet/sysinternals/utilities/junction.mspx', '', '', '_S2_Node2_S1_Node22');
+	this.items[n++] = new mnpPage('LDMDump', '/technet/sysinternals/utilities/ldmdump.mspx', '', '', '_S2_Node2_S1_Node23');
+	this.items[n++] = new mnpPage('ListDLLs', '/technet/sysinternals/utilities/listdlls.mspx', '', '', '_S2_Node2_S1_Node24');
+	this.items[n++] = new mnpPage('LiveKD', '/technet/sysinternals/utilities/livekd.mspx', '', '', '_S2_Node2_S1_Node25');
+	this.items[n++] = new mnpPage('LoadOrder', '/technet/sysinternals/utilities/loadorder.mspx', '', '', '_S2_Node2_S1_Node26');
+	this.items[n++] = new mnpPage('LogonSessions', '/technet/sysinternals/utilities/logonsessions.mspx', '', '', '_S2_Node2_S1_Node27');
+	this.items[n++] = new mnpPage('NewSID', '/technet/sysinternals/utilities/newsid.mspx', '', '', '_S2_Node2_S1_Node28');
+	this.items[n++] = new mnpPage('NTFSInfo', '/technet/sysinternals/utilities/ntfsinfo.mspx', '', '', '_S2_Node2_S1_Node29');
+	this.items[n++] = new mnpPage('PageDefrag', '/technet/sysinternals/utilities/pagedefrag.mspx', '', '', '_S2_Node2_S1_Node30');
+	this.items[n++] = new mnpPage('PendMoves', '/technet/sysinternals/utilities/pendmoves.mspx', '', '', '_S2_Node2_S1_Node31');
+	this.items[n++] = new mnpPage('PhysMem', '/technet/sysinternals/information/tipsandtrivia.mspx#EDB', '', '', '_S2_Node2_S1_Node32');
+	this.items[n++] = new mnpPage('PipeList', '/technet/sysinternals/information/tipsandtrivia.mspx#E2', '', '', '_S2_Node2_S1_Node33');
+	this.items[n++] = new mnpPage('PortMon', '/technet/sysinternals/utilities/portmon.mspx', '', '', '_S2_Node2_S1_Node34');
+	this.items[n++] = new mnpPage('Process Explorer', '/technet/sysinternals/utilities/processexplorer.mspx', '', '', '_S2_Node2_S1_Node35');
+	this.items[n++] = new mnpPage('Process Monitor', '/technet/sysinternals/utilities/processmonitor.mspx', '', '', '_S2_Node2_S1_Node36');
+	this.items[n++] = new mnpPage('ProcFeatures', '/technet/sysinternals/utilities/procfeatures.mspx', '', '', '_S2_Node2_S1_Node37');
+	this.items[n++] = new mnpPage('PsTools', '/technet/sysinternals/utilities/pstools.mspx', '', 'm346867b5b87c476db3d0174155ba16c6', '_S2_Node2_S1_Node38');
+	this.items[n++] = new mnpPage('RegDelNull', '/technet/sysinternals/utilities/regdelnull.mspx', '', '', '_S2_Node2_S1_Node39');
+	this.items[n++] = new mnpPage('RegHide', '/technet/sysinternals/information/tipsandtrivia.mspx#EZB', '', '', '_S2_Node2_S1_Node40');
+	this.items[n++] = new mnpPage('RegJump', '/technet/sysinternals/utilities/regjump.mspx', '', '', '_S2_Node2_S1_Node41');
+	this.items[n++] = new mnpPage('RegMon', '/technet/sysinternals/utilities/regmon.mspx', '', '', '_S2_Node2_S1_Node42');
+	this.items[n++] = new mnpPage('RootkitRevealer', '/technet/sysinternals/utilities/rootkitrevealer.mspx', '', '', '_S2_Node2_S1_Node43');
+	this.items[n++] = new mnpPage('SDelete', '/technet/sysinternals/utilities/sdelete.mspx', '', '', '_S2_Node2_S1_Node44');
+	this.items[n++] = new mnpPage('ShareEnum', '/technet/sysinternals/utilities/shareenum.mspx', '', '', '_S2_Node2_S1_Node45');
+	this.items[n++] = new mnpPage('SigCheck', '/technet/sysinternals/utilities/sigcheck.mspx', '', '', '_S2_Node2_S1_Node46');
+	this.items[n++] = new mnpPage('Streams', '/technet/sysinternals/utilities/streams.mspx', '', '', '_S2_Node2_S1_Node47');
+	this.items[n++] = new mnpPage('Strings', '/technet/sysinternals/utilities/strings.mspx', '', '', '_S2_Node2_S1_Node48');
+	this.items[n++] = new mnpPage('Sync', '/technet/sysinternals/utilities/sync.mspx', '', '', '_S2_Node2_S1_Node49');
+	this.items[n++] = new mnpPage('TCPView', '/technet/sysinternals/utilities/tcpview.mspx', '', '', '_S2_Node2_S1_Node50');
+	this.items[n++] = new mnpPage('VolumeId', '/technet/sysinternals/utilities/volumeid.mspx', '', '', '_S2_Node2_S1_Node51');
+	this.items[n++] = new mnpPage('WhoIs', '/technet/sysinternals/utilities/whois.mspx', '', '', '_S2_Node2_S1_Node52');
+	this.items[n++] = new mnpPage('WinObj', '/technet/sysinternals/utilities/winobj.mspx', '', '', '_S2_Node2_S1_Node53');
+	this.items[n++] = new mnpPage('ZoomIt', '/technet/sysinternals/utilities/zoomit.mspx', '', '', '_S2_Node2_S1_Node54');
+}
+
+function m346867b5b87c476db3d0174155ba16c6()
+{
+	this.items = new Array();
+	var n = 0;
+	this.items[n++] = new mnpPage('PsExec', '/technet/sysinternals/utilities/psexec.mspx', '', '', '_S2_Node2_S1_Node38_S1_Node1');
+	this.items[n++] = new mnpPage('PsFile', '/technet/sysinternals/utilities/psfile.mspx', '', '', '_S2_Node2_S1_Node38_S1_Node2');
+	this.items[n++] = new mnpPage('PsGetSid', '/technet/sysinternals/utilities/psgetsid.mspx', '', '', '_S2_Node2_S1_Node38_S1_Node3');
+	this.items[n++] = new mnpPage('PsInfo', '/technet/sysinternals/utilities/psinfo.mspx', '', '', '_S2_Node2_S1_Node38_S1_Node4');
+	this.items[n++] = new mnpPage('PsKill', '/technet/sysinternals/utilities/pskill.mspx', '', '', '_S2_Node2_S1_Node38_S1_Node5');
+	this.items[n++] = new mnpPage('PsList', '/technet/sysinternals/utilities/pslist.mspx', '', '', '_S2_Node2_S1_Node38_S1_Node6');
+	this.items[n++] = new mnpPage('PsLoggedOn', '/technet/sysinternals/utilities/psloggedon.mspx', '', '', '_S2_Node2_S1_Node38_S1_Node7');
+	this.items[n++] = new mnpPage('PsLogList', '/technet/sysinternals/utilities/psloglist.mspx', '', '', '_S2_Node2_S1_Node38_S1_Node8');
+	this.items[n++] = new mnpPage('PsPasswd', '/technet/sysinternals/utilities/psPasswd.mspx', '', '', '_S2_Node2_S1_Node38_S1_Node9');
+	this.items[n++] = new mnpPage('PsService', '/technet/sysinternals/utilities/psservice.mspx', '', '', '_S2_Node2_S1_Node38_S1_Node10');
+	this.items[n++] = new mnpPage('PsShutdown', '/technet/sysinternals/utilities/psShutdown.mspx', '', '', '_S2_Node2_S1_Node38_S1_Node11');
+	this.items[n++] = new mnpPage('PsSuspend', '/technet/sysinternals/utilities/pssuspend.mspx', '', '', '_S2_Node2_S1_Node38_S1_Node12');
+}
+

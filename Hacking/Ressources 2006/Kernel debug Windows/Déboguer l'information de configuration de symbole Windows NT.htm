@@ -1,0 +1,1179 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0038)http://support.microsoft.com/kb/138258 -->
+<HTML><HEAD><TITLE>Déboguer l'information de configuration de symbole Windows NT</TITLE>
+<SCRIPT 
+src="Déboguer l'information de configuration de symbole Windows NT_fichiers/common.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT>setcookieval("gssSITE","gn");</SCRIPT>
+
+<SCRIPT type=text/javascript>SaveToFavoritesData.savingMsg='M\u00e9morisation...';SaveToFavoritesData.connectionErrorMsg='Impossible de se connecter';SaveToFavoritesData.savedMsg='Page m\u00e9moris\u00e9e';SaveToFavoritesData.noSaveErrorMsg='M\u00e9morisation impossible';SaveToFavoritesData.surveyUrl='\x2fcommon\x2fsurvey.aspx\x3fscid\x3dsw\x3bfr\x3b1167\x26surveystyle\x3dpopup\x26showpage\x3d1\x26site\x3dgn\x26siteregion\x3dfr\x26url\x3d%2fdefault.aspx%2fkb%2f138258\x26p0\x3dkb\x26p1\x3dfr\x26p2\x3d138258';SaveToFavoritesData.noCookieUrl='\x2fgp\x2fnocookies';</SCRIPT>
+
+<SCRIPT>var g_currentContent='kb\x3bfr\x3b138258';</SCRIPT>
+
+<SCRIPT 
+src="Déboguer l'information de configuration de symbole Windows NT_fichiers/survey.js" 
+type=text/javascript></SCRIPT>
+
+<META content=noarchive name=robots>
+<META 
+content="5867 3183 6842 5869 3186 5870 3187 7606 3188 5878 3191 6843 5879 3192 5880 3193 5881 3194 " 
+name=KBParents>
+<META content="kbusage KB138258 KbMtfr kbmt" name=Keywords>
+<META 
+content="Cet article fournit l'information détaillée comment sur installer Microsoft Windows NT Symbol Trees, des conseils d'installation avancée et des plis." 
+name=Description>
+<META content=fr name=MS.LOCALE>
+<META http-equiv=content-type content="text/html; charset=utf-8">
+<SCRIPT>var gCookieDomain='';</SCRIPT>
+<XMLREADER><LINK 
+href="Déboguer l'information de configuration de symbole Windows NT_fichiers/default.css" 
+type=text/css rel=stylesheet><LINK 
+href="Déboguer l'information de configuration de symbole Windows NT_fichiers/xmlContent.css" 
+type=text/css rel=stylesheet><LINK 
+href="Déboguer l'information de configuration de symbole Windows NT_fichiers/LHNSWidthChrome.css" 
+type=text/css rel=stylesheet><LINK 
+href="Déboguer l'information de configuration de symbole Windows NT_fichiers/override.css" 
+type=text/css rel=stylesheet></XMLREADER><!-- RESG: 11/24/2006 10:32:44 AM -- RESX: 1/1/0001 12:00:00 AM --><!-- (c) 2006 Microsoft Corporation. All Rights Reserved --><LINK 
+href="Déboguer l'information de configuration de symbole Windows NT_fichiers/b322030dS.css" 
+type=text/css rel=Stylesheet><LINK 
+href="Déboguer l'information de configuration de symbole Windows NT_fichiers/310ab51bS.css" 
+type=text/css rel=stylesheet>
+<SCRIPT language=JavaScript>var doImage=doImage;var TType=TType;function mhHover(tbl,idx,cls){var t,d;if(document.getElementById)t=document.getElementById(tbl);else t=document.all(tbl);if(t==null)return;if(t.getElementsByTagName)d=t.getElementsByTagName("TD");else d=t.all.tags("TD");if(d==null)return;if(d.length<=idx)return;d[idx].className=cls;}function footerjs(doc){if(doImage==null){var tt=TType==null?"PV":TType;doc.write('<layer visibility="hide"><div style="display:none"><img src="http://c.microsoft.com/trans_pixel.asp?source=localhost&TYPE=' + tt + '&p=MNPGenerator&URI=%2fMNPGenerator%2fdefault.aspx%3fr%3dgn%2ffr_NLN.xml&GUID=1F4FC18C-F71E-47FB-8FC9-612F8EE59C61&lc=fr-fr" width=0 height=0 hspace=0 vspace=0 border=0 alt=""/></div></layer>');}}</SCRIPT>
+
+<SCRIPT type=text/javascript>var PersonalizationInfo='a2IxMzgyNTgIZnIIRMOpYm9ndWVyIGwnaW5mb3JtYXRpb24gZGUg';</SCRIPT>
+
+<SCRIPT type=text/javascript>var enableSiteSurvey = true;</SCRIPT>
+
+<META content="MSHTML 6.00.2900.2995" name=GENERATOR></HEAD>
+<BODY onload=thisLoad(); onunload=thisUnload();><A name=top></A><!--NOINDEX_START-->
+<SCRIPT type=text/javascript>if (self.name == "MNPMainFrame") top.location.href = self.location.href;</SCRIPT>
+
+<DIV id=msviMasthead>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD width="100%">
+      <TABLE height=22 cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR>
+          <TD id=msviRegionIdGraphic bgColor=#4b92d9><A 
+            href="http://support.microsoft.com/common/international.aspx"><IMG 
+            title="Changer de pays/langue" height=22 alt=France 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/538564d9S.jpg" 
+            border=0></A></TD>
+          <TD id=msviRegionGradient1 
+          style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#4B92D9', endColorStr='#CEDFF6', gradientType='1')" 
+          width="50%"></TD>
+          <TD id=msviRegionGradient2 
+          style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#CEDFF6', endColorStr='#1E77D3', gradientType='1')" 
+          width="50%"></TD></TR></TBODY></TABLE></TD>
+    <TD id=msviGlobalToolbar dir=ltr noWrap align=left bgColor=#1e77d3 
+height=22>
+      <TABLE cellSpacing=0 cellPadding=0 border=0>
+        <TBODY>
+        <TR>
+          <TD class=gt0 onmouseover="mhHover('msviGlobalToolbar', 0, 'gt1')" 
+          onmouseout="mhHover('msviGlobalToolbar', 0, 'gt0')" noWrap><A 
+            href="http://www.microsoft.com/france/">Accueil Microsoft 
+          France</A></TD>
+          <TD class=gtsep>|</TD>
+          <TD class=gt0 onmouseover="mhHover('msviGlobalToolbar', 2, 'gt1')" 
+          onmouseout="mhHover('msviGlobalToolbar', 2, 'gt0')" noWrap><A 
+            href="http://support.microsoft.com/library/toolbar/3.0/sitemap/fr-fr.mspx">Plan 
+            du site</A></TD></TR></TBODY></TABLE></TD></TR>
+  <TR vAlign=top>
+    <TD width="100%">
+      <TABLE height=42 cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR vAlign=top>
+          <TD id=msviBrandBanner bgColor=#0a6cce><A 
+            href="http://www.microsoft.com/france/"><IMG title="" height=42 
+            alt=Microsoft 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/ms_masthead_ltr.gif" 
+            width=136 border=0></A></TD>
+          <TD 
+          style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#0A6CCE', endColorStr='#FFFFFF', gradientType='1')" 
+          width="100%"></TD></TR></TBODY></TABLE></TD>
+    <TD id=msviGlobalSearch bgColor=#ffffff>Rechercher sur Microsoft France 
+      :<BR>
+      <FORM id=msviSearchForm action=/library/toolbar/3.0/search.aspx><INPUT 
+      type=hidden value=fr-fr name=View><INPUT type=hidden value=UTF-8 
+      name=charset><NOBR>
+      <DIV style="HEIGHT: 18px"><INPUT id=msviSearchBox maxLength=255 name=qu><INPUT id=msviGoButton type=submit value=Ok></DIV></NOBR></FORM></TD></TR></TBODY></TABLE>
+<TABLE id=msviSubbanner cellSpacing=0 cellPadding=0 width="100%" bgColor=#003399 
+border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG title="" height=26 alt="Aide et Support" 
+      src="Déboguer l'information de configuration de symbole Windows NT_fichiers/aa5eda44S.jpg" 
+      width=467 border=0></TD>
+    <TD width="100%">&nbsp;</TD></TR></TBODY></TABLE>
+<DIV id=msviLocalToolbar>
+<TABLE height=19 cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD id=msviHomePageLink noWrap><A 
+      href="http://support.microsoft.com/">Page d'accueil</A></TD>
+    <TD><SPAN class=ltsep>|</SPAN></TD>
+    <TD class=lt0 onmouseover="mhHover('msviLocalToolbar', 2, 'lt1')" 
+    onmouseout="mhHover('msviLocalToolbar', 2, 'lt0')" noWrap><A 
+      href="http://support.microsoft.com/select/?target=hub">Sélectionner un 
+      produit</A></TD>
+    <TD><SPAN class=ltsep>|</SPAN></TD>
+    <TD class=lt0 onmouseover="mhHover('msviLocalToolbar', 4, 'lt1')" 
+    onmouseout="mhHover('msviLocalToolbar', 4, 'lt0')" noWrap><A 
+      href="http://support.microsoft.com/search">Rechercher</A></TD>
+    <TD><SPAN class=ltsep>|</SPAN></TD>
+    <TD class=lt0 onmouseover="mhHover('msviLocalToolbar', 6, 'lt1')" 
+    onmouseout="mhHover('msviLocalToolbar', 6, 'lt0')" noWrap><A 
+      href="http://support.microsoft.com/contactus/?ws=support">Contactez-nous</A></TD>
+    <TD width="100%"></TD></TR></TBODY></TABLE></DIV></DIV>
+<TABLE dir=ltr cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=top>
+    <TD dir=ltr width="100%"><!--NOINDEX_STOP--><XMLREADER>
+      <DIV id=contentArea>
+      <DIV id=mainRow>
+      <DIV id=thinColumn>
+      <DIV class="wp searchThin">
+      <H1>Rechercher du support technique (KB)</H1>
+      <FORM name=frmsrch onsubmit=SaveLeftSrch(); action=/search/default.aspx 
+      method=get target=_top>
+      <DIV class=rightNavSearch>
+      <TABLE cellSpacing=0 cellPadding=0 width="100%">
+        <TBODY>
+        <TR>
+          <TD width="100%">
+            <DIV class=text><INPUT class=text id=query maxLength=200 
+            name=query></DIV></TD>
+          <TD width=5>&nbsp;</TD>
+          <TD width=20><INPUT id=wtgo 
+            onmouseover="this.src='/library/images/support/EN-US/go_right_02-over.gif';" 
+            onmouseout="this.src='/library/images/support/fr/GSSSM_searchUI.gif';" 
+            type=image height=24 alt="Lancer la recherche" width=24 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/GSSSM_searchUI.gif"></TD></TR></TBODY></TABLE></DIV>
+      <DIV class=select><SELECT name=catalog>"); <OPTION value=LCID=1036 
+        selected>KB française</OPTION> <OPTION value=LCID=1033>KB 
+        anglaise</OPTION></SELECT> </DIV><A id=L_47993 
+      title="Passer à la recherche avancée" onclick=logSearchUISwitch(); 
+      href="http://support.microsoft.com/search/?adv=1">Recherche avancée</A> 
+      <INPUT type=hidden name=spid> <INPUT type=hidden name=qryWt> <INPUT 
+      type=hidden value=r name=mode> <INPUT type=hidden value=false name=cus> 
+      </FORM>
+      <SCRIPT type=text/javascript>document.frmsrch.qryWt.value='';document.frmsrch.cus.value='False';InitSrch();</SCRIPT>
+      </DIV>
+      <DIV class="wp articleTrans">
+      <H1>Traductions disponibles</H1>
+      <FORM name=frmArticleTrans onsubmit="return SwitchLanguage(29803);" 
+      action=/>
+      <DIV>
+      <TABLE cellSpacing=0 cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD><SELECT name=scid><OPTION value=kb;de;138258 
+              selected>Allemand</OPTION><OPTION value=kb;en-us;138258>Anglais 
+              (US)</OPTION><OPTION value=kb;zh-cn;138258>Chinois</OPTION><OPTION 
+              value=kb;es;138258>Espagnol</OPTION><OPTION 
+              value=kb;it;138258>Italien</OPTION><OPTION 
+              value=kb;ja;138258>Japonais</OPTION></SELECT></TD>
+          <TD class=spacer>&nbsp;</TD>
+          <TD><INPUT 
+            onmouseover="this.src='/library/images/support/FR/go_right_02-over.gif';" 
+            onmouseout="this.src='/library/images/support/FR/go_right_02.gif';" 
+            type=image alt="Traduire l&amp;apos;article" 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/go_right_02.gif"><A 
+            id=KBLangListRedirect 
+        href="http://support.microsoft.com/kb/"></A></TD></TR></TBODY></TABLE></DIV></FORM></DIV>
+      <DIV class=wp id=RelatedSupportCenters>
+      <TABLE class=LCT cellSpacing=0 cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD class=textColumn>
+            <H1>Centres de solutions associés</H1>
+            <TABLE class=list cellSpacing=0 cellPadding=2>
+              <TBODY>
+              <TR class=evenRow>
+                <TD class=lc0 vAlign=top width="100%">
+                  <TABLE class=innerTable cellSpacing=0 cellPadding=0>
+                    <TBODY>
+                    <TR>
+                      <TD class=bullet>•</TD>
+                      <TD class=text><A 
+                        href="http://support.microsoft.com/?scid=ph;fr;3188">Windows 
+                        NT Server 4.0</A></TD></TR></TBODY></TABLE></TD></TR>
+              <TR class=oddRow>
+                <TD class=lc0 vAlign=top width="100%">
+                  <TABLE class=innerTable cellSpacing=0 cellPadding=0>
+                    <TBODY>
+                    <TR>
+                      <TD class=bullet>•</TD>
+                      <TD class=text><A 
+                        href="http://support.microsoft.com/?scid=ph;fr;3194">Windows 
+                        NT Workstation 
+            4.0</A></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></DIV>
+      <DIV class=wp id=AdditionalResources>
+      <TABLE class=LCT cellSpacing=0 cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD class=textColumn>
+            <H1>Autres options de support</H1>
+            <TABLE class=list cellSpacing=0 cellPadding=2>
+              <TBODY>
+              <TR class=evenRow id=L_47976_tr>
+                <TD class=lc0 vAlign=top width="100%">
+                  <TABLE class=innerTable cellSpacing=0 cellPadding=0>
+                    <TBODY>
+                    <TR>
+                      <TD class=bullet>•</TD>
+                      <TD class=text><A id=L_47976 
+                        onclick="return MS_HandleClick(this,'AdditionalResources', true);" 
+                        href="http://support.microsoft.com/contactus/?ws=support">Contactez-nous</A><BR></TD></TR></TBODY></TABLE></TD></TR>
+              <TR class=oddRow id=L_47978_tr>
+                <TD class=lc0 vAlign=top width="100%">
+                  <TABLE class=innerTable cellSpacing=0 cellPadding=0>
+                    <TBODY>
+                    <TR>
+                      <TD class=bullet>•</TD>
+                      <TD class=text><A id=L_47978 
+                        onclick="return MS_HandleClick(this,'AdditionalResources', true);" 
+                        href="http://support.microsoft.com/newsgroups/default.aspx">Newsgroups</A><BR></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></DIV>
+      <DIV class=wp id=SupportTools>
+      <TABLE class=LCT cellSpacing=0 cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD class=textColumn>
+            <H1>Options de page</H1>
+            <TABLE class=list cellSpacing=0 cellPadding=2>
+              <TBODY>
+              <TR class=evenRow id=PrintPage_tr>
+                <TD class=lc0 vAlign=top width="100%">
+                  <TABLE class=innerTable cellSpacing=0 cellPadding=0>
+                    <TBODY>
+                    <TR>
+                      <TD class=image><A id=bil_PrintPage title=Imprimer 
+                        onclick="return MS_HandleClick(this,'SupportTools', true);" 
+                        href="http://support.microsoft.com/gp/noscript/"><IMG 
+                        id=bi_PrintPage alt=Imprimer 
+                        src="Déboguer l'information de configuration de symbole Windows NT_fichiers/printicon.gif"></A></TD>
+                      <TD class=text><A id=PrintPage title=Imprimer 
+                        onclick="return MS_HandleClick(this,'SupportTools', true);" 
+                        href="http://support.microsoft.com/gp/noscript/">Imprimer</A></TD></TR></TBODY></TABLE></TD></TR>
+              <TR class=oddRow id=EmailPage_tr>
+                <TD class=lc0 vAlign=top width="100%">
+                  <TABLE class=innerTable cellSpacing=0 cellPadding=0>
+                    <TBODY>
+                    <TR>
+                      <TD class=image><A id=bil_EmailPage title=Envoyer 
+                        onclick="return MS_HandleClick(this,'SupportTools', true);" 
+                        href="mailto:?body=http://support.microsoft.com/default.aspx/kb/138258"><IMG 
+                        id=bi_EmailPage alt=Envoyer 
+                        src="Déboguer l'information de configuration de symbole Windows NT_fichiers/emailicon.gif"></A></TD>
+                      <TD class=text><A id=EmailPage title=Envoyer 
+                        onclick="return MS_HandleClick(this,'SupportTools', true);" 
+                        href="mailto:?body=http://support.microsoft.com/default.aspx/kb/138258">Envoyer</A></TD></TR></TBODY></TABLE></TD></TR>
+              <TR class=evenRow id=Worldwide_tr>
+                <TD class=lc0 vAlign=top width="100%">
+                  <TABLE class=innerTable cellSpacing=0 cellPadding=0>
+                    <TBODY>
+                    <TR>
+                      <TD class=image><A id=bil_Worldwide 
+                        title="Microsoft dans le monde" 
+                        onclick="return MS_HandleClick(this,'SupportTools', true);" 
+                        href="http://support.microsoft.com/common/international.aspx?rdPath=0"><IMG 
+                        id=bi_Worldwide alt="Microsoft dans le monde" 
+                        src="Déboguer l'information de configuration de symbole Windows NT_fichiers/langicon.gif"></A></TD>
+                      <TD class=text><A id=Worldwide 
+                        title="Microsoft dans le monde" 
+                        onclick="return MS_HandleClick(this,'SupportTools', true);" 
+                        href="http://support.microsoft.com/common/international.aspx?rdPath=0">Microsoft 
+                        dans le monde</A></TD></TR></TBODY></TABLE></TD></TR>
+              <TR class=oddRow id=SaveToMySupportFavorites_tr>
+                <TD class=lc0 vAlign=top width="100%">
+                  <TABLE class=innerTable cellSpacing=0 cellPadding=0>
+                    <TBODY>
+                    <TR>
+                      <TD class=image><A id=bil_SaveToMySupportFavorites 
+                        title="Ajouter à mes Favoris du Support" 
+                        onclick="return MS_HandleClick(this,'SupportTools', true);" 
+                        href="http://support.microsoft.com/gp/noscript/"><IMG 
+                        id=bi_SaveToMySupportFavorites 
+                        alt="Ajouter à mes Favoris du Support" 
+                        src="Déboguer l'information de configuration de symbole Windows NT_fichiers/saveicon.gif"></A></TD>
+                      <TD class=text><A id=SaveToMySupportFavorites 
+                        title="Ajouter à mes Favoris du Support" 
+                        onclick="return MS_HandleClick(this,'SupportTools', true);" 
+                        href="http://support.microsoft.com/gp/noscript/">Ajouter 
+                        à mes Favoris du Support</A></TD></TR></TBODY></TABLE></TD></TR>
+              <TR class=evenRow id=MySupportFavoritesLink_tr>
+                <TD class=lc0 vAlign=top width="100%">
+                  <TABLE class=innerTable cellSpacing=0 cellPadding=0>
+                    <TBODY>
+                    <TR>
+                      <TD class=image><A id=bil_MySupportFavoritesLink 
+                        title="Consulter mes Favoris du Support" 
+                        onclick="return MS_HandleClick(this,'SupportTools', true);" 
+                        href="http://support.microsoft.com/gp/noscript/"><IMG 
+                        id=bi_MySupportFavoritesLink 
+                        alt="Consulter mes Favoris du Support" 
+                        src="Déboguer l'information de configuration de symbole Windows NT_fichiers/gotoicon.gif"></A></TD>
+                      <TD class=text><A id=MySupportFavoritesLink 
+                        title="Consulter mes Favoris du Support" 
+                        onclick="return MS_HandleClick(this,'SupportTools', true);" 
+                        href="http://support.microsoft.com/gp/noscript/">Consulter 
+                        mes Favoris du Support</A></TD></TR></TBODY></TABLE></TD></TR>
+              <TR class=oddRow id=SendFeedback_tr>
+                <TD class=lc0 vAlign=top width="100%">
+                  <TABLE class=innerTable cellSpacing=0 cellPadding=0>
+                    <TBODY>
+                    <TR>
+                      <TD class=image><A id=bil_SendFeedback 
+                        title="Envoyer vos commentaires" 
+                        onclick="return MS_HandleClick(this,'SupportTools', true);" 
+                        href="http://support.microsoft.com/gp/noscript/" 
+                        target=_blank><IMG id=bi_SendFeedback 
+                        alt="Envoyer vos commentaires" 
+                        src="Déboguer l'information de configuration de symbole Windows NT_fichiers/sendicon.gif"></A></TD>
+                      <TD class=text><A id=SendFeedback 
+                        title="Envoyer vos commentaires" 
+                        onclick="return MS_HandleClick(this,'SupportTools', true);" 
+                        href="http://support.microsoft.com/gp/noscript/" 
+                        target=_blank>Envoyer vos 
+                  commentaires</A></TD></TR></TBODY></TABLE></TD></TR>
+              <TR class=evenRow id=LogTag_tr>
+                <TD class=lc0 vAlign=top width="100%">
+                  <TABLE class=innerTable cellSpacing=0 cellPadding=0>
+                    <TBODY>
+                    <TR>
+                      <TD class=text>
+                        <DIV class=center><A id=idPPScarab 
+                        href="http://login.live.com/login.srf?wa=wsignin1.0&amp;rpsnv=10&amp;ct=1164393164&amp;rver=4.0.1532.0&amp;wp=MCLBI&amp;wreply=https:%2F%2Fsupport.microsoft.com%2Fdefault.aspx%2Fkb%2F138258&amp;lc=1036&amp;cb=wizid%3D6182013c-7c1f-40a3-99ae-27651c3668aa%26lcid%3D1036%26returnurl%3Dhttps%253a%252f%252fsupport.microsoft.com%252fdefault.aspx%252fkb%252f138258%26brand%3DMicrosoft&amp;id=74335"><IMG 
+                        class=PassportSignIn id=idSI 
+                        style="BORDER-TOP-STYLE: none; BORDER-RIGHT-STYLE: none; BORDER-LEFT-STYLE: none; BORDER-BOTTOM-STYLE: none" 
+                        alt="Windows Live ID" 
+                        src="Déboguer l'information de configuration de symbole Windows NT_fichiers/signin.gif"></A></DIV></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE></DIV></DIV>
+      <DIV id=mainColumn>
+      <DIV class=kb id=kb>
+      <DIV class=default id=default><!-- - -KB 3 start- - --><A id=top></A>
+      <H1 class=title>Déboguer l'information de configuration de symbole Windows 
+      NT</H1>
+      <DIV class=appliesToLink><A 
+      href="http://support.microsoft.com/kb/138258#appliesto">Voir les produits 
+      auxquels s'applique cet article</A></DIV>
+      <SCRIPT>function loadTOCNode(){}</SCRIPT>
+
+      <DIV class="disclaimer mt">
+      <DIV class=label>TRADUCTION AUTOMATIQUE : Cet article technique a été 
+      traduit par un système automatique, c'est-à-dire sans aucune intervention 
+      humaine. Microsoft propose ce type d’articles en complément de ceux 
+      traduits par des traducteurs professionnels. Ces articles sont destinés 
+      principalement aux utilisateurs ne comprenant pas l'anglais en leur 
+      proposant, en complément, une version française de l’information technique 
+      fournie dans la version américaine et originale de l’article. Pour plus de 
+      détails, veuillez consulter la page 
+      http://support.microsoft.com/gp/mtdetails. Attention : Il est possible que 
+      certaines parties de l’article ne soient pas traduites par le système 
+      automatique et qu’elles soient restées rédigées en anglais. Microsoft ne 
+      garantit pas la qualité linguistique des traductions et ne peut être tenu 
+      responsable d’aucun problème, direct ou indirect, dû à une quelconque 
+      erreur de traduction du contenu ou de son utilisation par les 
+      utilisateurs.</DIV></DIV>
+      <DIV class=articleProperty>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD>Numéro d'article</TD>
+          <TD>:</TD>
+          <TD>138258</TD></TR>
+        <TR>
+          <TD>Dernière mise à jour</TD>
+          <TD>:</TD>
+          <TD>mercredi 1 novembre 2006</TD></TR>
+        <TR>
+          <TD>Version</TD>
+          <TD>:</TD>
+          <TD>2.1</TD></TR></TBODY></TABLE></DIV>
+      <DIV class=toc id=tocDiv>
+      <H5>Sommaire</H5></DIV>
+      <SCRIPT type=text/javascript>
+      var sectionFilter = "type != 'notice' && type != 'securedata' && type != 'querywords'";
+      var tocArrow = "/library/images/support/kbgraphics/public/en-us/downarrow.gif";
+      var depthLimit = 10;
+      var depth3Limit = 10;
+      var depth4Limit = 5;
+      var depth5Limit = 3;
+      var tocEntryMinimum = 1;
+    </SCRIPT>
+
+      <SCRIPT 
+      src="Déboguer l'information de configuration de symbole Windows NT_fichiers/kbtoc.js" 
+      type=text/javascript></SCRIPT>
+      <NOSCRIPT>
+      <STYLE>.toc {
+	DISPLAY: none
+}
+</STYLE>
+      </NOSCRIPT>
+      <DIV class=section>
+      <H2 class=subTitle id=tocHeadRef>Résumé</H2>
+      <SCRIPT type=text/javascript>loadTOCNode(1, 'summary');</SCRIPT>
+
+      <DIV class=sbody>Cet article fournit l'information détaillée comment sur 
+      installer Microsoft Windows NT Symbol Trees, des conseils d'installation 
+      avancée et des plis. 
+      <DIV class=topOfPage>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD class=image><A 
+            href="http://support.microsoft.com/kb/138258#top"><IMG 
+            title="Retour au début" alt="Retour au début" 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/uparrow.gif"></A></TD>
+          <TD class=text><A 
+            href="http://support.microsoft.com/kb/138258#top">Retour au 
+          début</A></TD></TR></TBODY></TABLE></DIV></DIV>
+      <H2 class=subTitle id=tocHeadRef>Plus d'informations</H2>
+      <SCRIPT type=text/javascript>loadTOCNode(1, 'moreinformation');</SCRIPT>
+
+      <DIV class=sbody>
+      <H3 id=tocHeadRef>Sommaire de l'articl</H3>
+      <SCRIPT type=text/javascript>loadTOCNode(2, 'moreinformation');</SCRIPT>
+
+      <TABLE class="list ul">
+        <TBODY>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Informations générales</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Configurer les arborescence de symboles 
+          personnalisées</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Processeur seul contre le processeur multiligne</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>HAL.DLL personnalis</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Utiliser des symboles dans le débogueur</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Vérifier les symboles</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Vérification de symbole avancé</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Versions contrôlées</TD></TR></TBODY></TABLE>
+      <DIV class=topOfPage>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD class=image><A 
+            href="http://support.microsoft.com/kb/138258#top"><IMG 
+            title="Retour au début" alt="Retour au début" 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/uparrow.gif"></A></TD>
+          <TD class=text><A 
+            href="http://support.microsoft.com/kb/138258#top">Retour au 
+          début</A></TD></TR></TBODY></TABLE></DIV>
+      <H3 id=tocHeadRef>Informations générales</H3>
+      <SCRIPT type=text/javascript>loadTOCNode(2, 'moreinformation');</SCRIPT>
+      Les fichiers de symboles de débogage (symboles) sont nécessaires pour 
+      effectuer le noyau et l'utilisateur le débogage dans Symboles Windows NT. 
+      constitue un moyen de référencer des variables globales et de fonctionner 
+      des noms dans l'exécutable chargé. <BR><BR>Des symboles sont provoqués par 
+      l'éditeur de liens. Ils sont supprimés de produit commercial et sont 
+      enregistrés dans un fichier (.DBG) distinct. Cette opération permet de 
+      réduire considérablement la taille des fichiers et donc de diminuer le 
+      temps de chargement des fichiers et d'améliorer les performances du 
+      système Il réduit également le nombre de disquettes d'installation. 
+      Symboles représentent les noms Function/API et les variables globales. 
+      <BR><BR>Le .DBG File contient l'information symbolique pour chaque 
+      fichier. [ Les se trouvent sur le CD-ROM d'installation dans 
+      \Support\Debug\[i386| mips ] \Symbols. Ils figurent également sur le 
+      serveur NT de génération. L'emplacement est 
+      \\Ntbuilds\Release\Usa\Build###\[x86| |alpha]\Fre.srv\symbols mips. 
+      <BR><BR>Le répertoire Symbol est répartir dans sept sous-répertoire, 
+      appelés Extension Subdirectories (remarque que plusieurs les fichiers de 
+      ces répertoires de symboles sont mode Utilisateur) : <BR><BR>
+      <DIV class=indent>COM - répertoire pour les symboles de tous les fichiers 
+      se terminant par .CO <BR>CPL \ash répertoire pour les symboles de tous les 
+      fichiers se terminant par .CPL <BR>DLL - répertoire pour les symboles de 
+      tous les fichiers se terminant par .DL <BR>DRV - répertoire pour les 
+      symboles de tous les fichiers se terminant par .DR <BR>EXE - répertoire 
+      pour les symboles de tous les fichiers se terminant par .EX <BR>SCR 
+      symboles de tous les fichiers se terminant par .SCR apparaissent ici 
+      <BR>SYS - répertoire pour les symboles de tous les fichiers se terminant 
+      par .SYS <BR></DIV><BR>Symboles doivent correspondre à des versions de 
+      fichier : <BR><BR>Symboles d'une version différente fournissent 
+      l'information erronée, envoient à développeur de chasser des ombres et 
+      perdent l'heure considérable. Double check avec le client que que crée le 
+      client exécute et que le client possède tous les correctifs a installé. Le 
+      Kernel Stop Screen affiche le numéro de version du noyau. 
+      <BR><BR>Générations corrigées : <BR><BR>Les versions avec correctifs 
+      telles que les Service Packs requièrent un jeu de symboles spécial 
+      associant les symboles de la version de base et ceux des correctifs 
+      <DIV class=topOfPage>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD class=image><A 
+            href="http://support.microsoft.com/kb/138258#top"><IMG 
+            title="Retour au début" alt="Retour au début" 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/uparrow.gif"></A></TD>
+          <TD class=text><A 
+            href="http://support.microsoft.com/kb/138258#top">Retour au 
+          début</A></TD></TR></TBODY></TABLE></DIV>
+      <H3 id=tocHeadRef>Configurer les arborescence de symboles 
+      personnalisées</H3>
+      <SCRIPT type=text/javascript>loadTOCNode(2, 'moreinformation');</SCRIPT>
+      N'oubliez pas que symboles doivent correspondre aux fichiers installés sur 
+      l'ordinateur d'un client. Fréquence vous devez créer des symboles ensemble 
+      personnalisé simplement pour un client particulier à laquelle. 
+      <BR><BR><B>REMARQUE</B> : Symbol Trees complet peut durer de 30 Mo 
+      d'espace disque plus de. <BR>
+      <TABLE class="list ol">
+        <TBODY>
+        <TR>
+          <TD class=number>1.</TD>
+          <TD class=text>Créez un sous-répertoire pour stocker votre jeu 
+            client de symbole. Par exemple<BR><BR>C:\MYSYMBOLS </TD></TR>
+        <TR>
+          <TD class=number>2.</TD>
+          <TD class=text>Démarrez toujours avec le numéro de version Windows 
+            NT de base. Copiez les fichiers suivants à partir du CD-ROM 
+            d'installation pour la version appropriée : <BR><BR><SPAN 
+            class=userInput>\SUPPORT\DEBUG\I386 C:\MYSYMBOLS [CD Drive] /S 
+            XCOPY. </SPAN></TD></TR>
+        <TR>
+          <TD class=number>3.</TD>
+          <TD class=text>Copiez des symboles pour les fichiers binaires 
+            appropriés de Service Pack au-dessus de votre arborescence 
+            personnalisée. Symboles de Service Pack figurent sur les serveurs 
+            répertoriés dans la section sous "Emplacements intitulés Symbol" 
+        </TD></TR>
+        <TR>
+          <TD class=number>4.</TD>
+          <TD class=text>Copiez tous les correctifs tiers tels que les signes 
+            Compaq SSD au-dessus de dans votre arborescence de symboles 
+            personnalisée. Vous pouvez doit obtenir ces symboles à partir du 
+            site Web de fournisseur. REMARQUE : étapes 3 et 4 peut doit être 
+            inversé selon l'ordre qu'ils ont été installés par le client. 
+            Correspondez aux étapes du client. </TD></TR>
+        <TR>
+          <TD class=number>5.</TD>
+          <TD class=text>Si un correctif est installé sur le serveur, vous 
+            devez vous procurer le symbole correspondant pour le correctif. Si 
+            le correctif n'est pas fourni à un fichier de symboles, vous devez 
+            contacter services de support technique Microsoft au sujet des 
+            possibilités de ces symboles. Copiez le symbole mis à jour au-dessus 
+            de votre arborescence de symboles personnalisée. Vérifiez que vous 
+            le placez dans le sous-dossier correct (par exemple Sys exe, dll, 
+            etc). </TD></TR></TBODY></TABLE>
+      <DIV class=topOfPage>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD class=image><A 
+            href="http://support.microsoft.com/kb/138258#top"><IMG 
+            title="Retour au début" alt="Retour au début" 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/uparrow.gif"></A></TD>
+          <TD class=text><A 
+            href="http://support.microsoft.com/kb/138258#top">Retour au 
+          début</A></TD></TR></TBODY></TABLE></DIV>
+      <H3 id=tocHeadRef>Processeur seul contre le processeur multiligne</H3>
+      <SCRIPT type=text/javascript>loadTOCNode(2, 'moreinformation');</SCRIPT>
+      Windows NT fait appel à un noyau spécial pour les systèmes SMP Au cours de 
+      l'installation ce noyau change de nom Il est important que vous renommez 
+      également le fichier SYMBOL.DBG pour le débogage. <BR>
+      <DIV class=indent>NTOSKRNL.EXE NTOSKRNL.DBG = processeur Seul 
+      NTKRNLMP.EXE. NTKRNLMP.DBG = Plusieurs processeurs </DIV><BR>
+      <TABLE class="list ol">
+        <TBODY>
+        <TR>
+          <TD class=number>1.</TD>
+          <TD class=text>Si vous avez un système multiprocesseur de procéder 
+            de la manière suivante. Sous votre arborescence de symboles dans 
+            \SYMBOLS\EXE personnalisée, deux fichiers de noyau sont. Renommez 
+            NTOSKRNL.DBG à NTOSKRNL.UNI. </TD></TR>
+        <TR>
+          <TD class=number>2.</TD>
+          <TD class=text>Copiez NTKRNLMP.DBG dans 
+      NTOSKRNL.DBG.</TD></TR></TBODY></TABLE>
+      <DIV class=topOfPage>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD class=image><A 
+            href="http://support.microsoft.com/kb/138258#top"><IMG 
+            title="Retour au début" alt="Retour au début" 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/uparrow.gif"></A></TD>
+          <TD class=text><A 
+            href="http://support.microsoft.com/kb/138258#top">Retour au 
+          début</A></TD></TR></TBODY></TABLE></DIV>
+      <H3 id=tocHeadRef>HAL.DLL personnalis</H3>
+      <SCRIPT type=text/javascript>loadTOCNode(2, 'moreinformation');</SCRIPT>
+      Certains plates-formes matériels nécessitent un Hardware Abstraction Layer 
+      Driver spécial. Comme le fichier de Noyau, la couche d'abstraction 
+      matérielle personnalisée est renommée au cours du processus 
+      d'installation. Voici la liste des couches d'abstraction matérielle 
+      courantes <BR><BR>Fichiers HAL pour I386 Computers : <BR><PRE class=in_text>              Uncompressed
+Filename      Size (bytes) Description
+-------------------------------------------------------------------------
+HAL.DLL       48,416       Standard HAL for Intel systems
+HAL486C.DLL   47,376       HAL for 486 c step processor
+HALAPIC.DLL   63,616       Uniprocessor version of HALMPS.DLL
+HALAST.DLL    46,416       HAL for AST SMP systems
+HALCBUS.DLL   79,776       HAL for Cbus systems
+HALMCA.DLL    45,488       HAL for MCA-based systems (PS/2 and others)
+HALMPS.DLL    65,696       HAL for most Intel multiprocessor systems
+HALNCR.DLL    79,392       HAL for NCR SMP machines
+HALOLI.DLL    40,048       HAL for Olivetti SMP machines
+HALSP.DLL     52,320       HAL for Compaq Systempro
+HALWYSE7.DLL  40,848       HAL for Wyse7 systems
+
+HAL files for DEC Alpha Computers:
+
+              Uncompressed
+Filename      Size (bytes) Description
+--------------------------------------------------------------------------
+HAL0JENS.DLL  56,800       Digital DECpc AXP 150 HAL
+HALALCOR.DLL  69,120       Digital AlphaStation 600 Family
+HALAVANT.DLL  66,752       Digital AlphaStation 200/400 Family HAL
+HALEB64P.DLL  70,528       Digital AlphaPC64 HAL
+HALGAMMP.DLL  72,896       Digital AlphaServer 2x00 5/xxx Family HAL
+HALMIKAS.DLL  67,040       Digital AlphaServer 1000 Family Uniprocessor
+HAL
+HALNONME.DLL  65,376       Digital AXPpci 33 HAL
+HALQS.DLL     65,088       Digital Multia MultiClient Desktop HAL
+HALSABMP.DLL  72,736       Digital AlphaServer 2x00 4/xxx Family HAL
+
+HAL files for MIPS Computers:
+
+              Uncompressed
+Filename      Size (bytes) Description
+--------------------------------------------------------------------------
+HALACR.DLL    43,648       ACER HAL
+HALDTI.DLL    68,288       DESKStation Evolution
+HALDUOMP.DLL  41,728       Microsoft-designed dual MP HAL
+HALFXS.DLL    42,016       MTI with a r4000 or r4400
+HALFXSPC.DLL  42,176       MTI with a r4600
+HALNECMP.DLL  44,736       NEC dual MP
+HALNTP.DLL    116,000      NeTpower FASTseries
+HALR98MP.DLL  127,232      NEC 4 processor MP
+HALSNI4X.DLL  95,520       Siemens Nixdorf UP and MP
+HALTYNE.DLL   68,032       DESKstation Tyne
+
+HAL files for PPC Computers:
+
+              Uncompressed
+Filename      Size (bytes) Description
+--------------------------------------------------------------------------
+HALCARO.DLL   169,504      HAL for IBM-6070
+HALEAGLE.DLL  206,208      HAL for Motorola PowerStack and Big Bend
+HALFIRE.DLL   136,576      Hal for Powerized_ES,
+                                   Powerized_MX, and
+                                   Powerized_MX MP
+HALPOLO.DLL   169,152      HAL for IBM-6030
+HALPPC.DLL    169,184      HAL for IBM-6015
+HALWOOD.DLL   95,616       HAL for IBM-6020</PRE><BR><BR>Détermination de 
+      la couche d'abstraction matérielle à utiliser <BR><BR>Au cours de 
+      l'installation un fichier journal texte est créé Ce fichier peut vous 
+      informer sur le nom d'origine de la couche HAL. <BR>
+      <TABLE class="list ol">
+        <TBODY>
+        <TR>
+          <TD class=number>1.</TD>
+          <TD class=text>Accédez à sous-répertoire %systemroot%\REPAIR.</TD></TR>
+        <TR>
+          <TD class=number>2.</TD>
+          <TD class=text>Exécutez la commande ATTRIB -R -H -S SETUP.LOG pour 
+            afficher le fichier</TD></TR>
+        <TR>
+          <TD class=number>3.</TD>
+          <TD class=text>Mettez du fichier dans Bloc-notes Microsoft et la 
+            recherche de couche d'abstraction 
+      matérielle.</TD></TR></TBODY></TABLE>REMARQUE : vérifier si un noyau 
+      spécial est également utilisé cette même technique peut être utile. 
+      <BR><BR>Accédez à symbole HAL d'installation : <BR>
+      <TABLE class="list ol">
+        <TBODY>
+        <TR>
+          <TD class=number>1.</TD>
+          <TD class=text>Accédez à votre arborescence de symboles sous 
+            \SYMBOLS\DLL personnalisée.</TD></TR>
+        <TR>
+          <TD class=number>2.</TD>
+          <TD class=text>Renommez HAL.DBG en HAL.X86</TD></TR>
+        <TR>
+          <TD class=number>3.</TD>
+          <TD class=text>Copiez dans HAL.DBG "d' HLL.DBG 
+        personnaliser".</TD></TR></TBODY></TABLE>
+      <DIV class=topOfPage>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD class=image><A 
+            href="http://support.microsoft.com/kb/138258#top"><IMG 
+            title="Retour au début" alt="Retour au début" 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/uparrow.gif"></A></TD>
+          <TD class=text><A 
+            href="http://support.microsoft.com/kb/138258#top">Retour au 
+          début</A></TD></TR></TBODY></TABLE></DIV>
+      <H3 id=tocHeadRef>Utiliser des symboles dans le débogueur</H3>
+      <SCRIPT type=text/javascript>loadTOCNode(2, 'moreinformation');</SCRIPT>
+      Un Windows NT Debugger tel qu'I386KD.EXE recherche des symboles aux 
+      emplacements suivants : <BR>
+      <DIV class=indent>Variable _NT_ALT_SYMBOL_PATH d'environnement système 
+      <BR>Variable _NT_SYMBOL_PATH d'environnement système </DIV><BR>Ces 
+      emplacements sont définis en passant par variables d'environnement 
+      système. Ils sont généralement configurés par un fichier de commandes de 
+      débogage utilisant la commande SET. Le _NT_ALT_SYMBOL_PATH est facultatif. 
+      Par exemple <BR>
+      <DIV class=indent>Vous définissez _NT_SYMBOL_PATH = K:\NT35- SP3\SYMBOLS 
+      <BR>Vous _NT_ALT_SYMBOL_PATH définissez = c:\WINNT\SYMBOLS 
+      </DIV><BR><B>REMARQUE</B> : symboles sont le répertoire au-dessus des 
+      sous-répertoire d'extension (si le fichier de noyau NTOSKRNL.DBG de 
+      symboles se trouve autrement dit à 
+      C:\DEBUG\511\I386\SYMBOLS\EXE\NTOSKRNL.DBG) Le _NT_SYMBOL_PATH a dû être 
+      défini sur C:\DEBUG\511\I386\SYMBOLS <BR><BR>Comment à des chemin d'accès 
+      Utiliser : <BR><BR>Ces chemin d'accès différents sont utilisés bon une 
+      utilisation pour conserver des arborescence de symboles statiques pour 
+      chaque version Windows NT. Vous pointez simplement vos chemin d'accès à 
+      symboles vers chaque version et Service Pack si nécessaire. Vous pouvez 
+      par exemple utiliser le suivant pour un système 1057 avec SP2 installé : 
+      <BR>
+      <DIV class=indent>Vous définissez _NT_ALT_SYMBOL_PATH = c:\NT351- 
+      SP2\SYMBOLS <BR>Vous définissez _NT_SYMBOL_PATH = K:\NT351- 1057\SYMBOLS 
+      </DIV><BR>Le débogueur tente d'utiliser d'abord les symboles de Service 
+      Pack. [Les symboles de Service Pack n'incluent pas les symboles de 
+      génération de base dans ce cas seulement les symboles SP]. Si le débogueur 
+      ne trouve pas un symbole particulier dans l'arborescence SP, il le 
+      recherche dans l'arborescence de symboles 1057. <BR><BR>Ordre de recherche 
+      : <BR><BR>Les chemin d'accès différents à symboles sont analysés dans 
+      l'ordre indiqué au-dessus de. Le premier fichier de symboles avec le nom 
+      correct qui est trouvé est utilisé. Dans l'exemple au-dessus de 
+      _NT_ALT_SYMBOL_PATH = c:\NT351- SP2\SYMBOLS est une le premier recherché. 
+      <BR><BR>Override variable d'environnement : <BR><BR>Vous pouvez où 
+      spécifier un chemin d'accès à symboles, I386KD prend en charge un 
+      commutateur de ligne de commande "- y ". Toutefois utiliser ce commutateur 
+      ignore vos variables d'environnement existantes. <BR><BR>Modifiez le 
+      chemin d'accès à la volée : <BR><BR>Vous pouvez modifier le chemin de 
+      recherche de symbole à tout moment dans le débogueur en émettant " ! 
+      Sympath " commande. Par exemple <BR>
+      <DIV class=indent>! SYMPATH C:\SYMBOLS. </DIV>
+      <DIV class=topOfPage>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD class=image><A 
+            href="http://support.microsoft.com/kb/138258#top"><IMG 
+            title="Retour au début" alt="Retour au début" 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/uparrow.gif"></A></TD>
+          <TD class=text><A 
+            href="http://support.microsoft.com/kb/138258#top">Retour au 
+          début</A></TD></TR></TBODY></TABLE></DIV>
+      <H3 id=tocHeadRef>Vérifier les symboles</H3>
+      <SCRIPT type=text/javascript>loadTOCNode(2, 'moreinformation');</SCRIPT>
+      ! RECHARGEMENT : <BR><BR>" KD &amp;gt; ! RECHARGEMENT " the "vous devez 
+      vous prompt pour la première fois taper" à une fois que vous avez obtenu. 
+      Cela provoque l'information symbolique est rechargée et est synchronisée. 
+      Si vous obtenez l'erreur "PsLoadedModuleList être NULL" vous comportez 
+      probablement les symboles incorrects chargé. Assurez-vous que vous avez 
+      installé le fichier HAL.DBG et NTOSKRNL.DBG approprié pour l'ordinateur 
+      que vous déboguez. <BR><BR>! PROCESSUS : <BR><BR>Des symboles peuvent 
+      aussi être vérifiés si vous obtenez l'erreur, vous comportez probablement 
+      les symboles incorrects "Impossible à trouver une tête de liste de 
+      processus" chargés " en tapant PROCESSUS " !. <BR><BR>KB : <BR><BR>Si le 
+      Stack Trace possède des intervalles dans la liste de noms de fonctions, 
+      cela indique que vous manquez des symboles. Que fonctions sont manquantes 
+      peut également indiquer une pile endommagée, mais cela est quelque peu 
+      rare. Vérifiez double vos symboles avant de déclarer une pile endommagée. 
+      Également regardez sur la pile aux adresses de retour. Ils tout doivent 
+      être supérieurs que 8000000. <BR><BR>! SYMPATH : <BR><BR>Des symboles 
+      incorrects peuvent être corrigés en accédant vers une autre fenêtre de 
+      commande, en copiant les symboles appropriés et en effectuant ! ! symbol 
+      path SYMPATH rechargement sur le débogueur ou par spécifier le chemin 
+      d'accès correct a. 
+      <DIV class=topOfPage>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD class=image><A 
+            href="http://support.microsoft.com/kb/138258#top"><IMG 
+            title="Retour au début" alt="Retour au début" 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/uparrow.gif"></A></TD>
+          <TD class=text><A 
+            href="http://support.microsoft.com/kb/138258#top">Retour au 
+          début</A></TD></TR></TBODY></TABLE></DIV>
+      <H3 id=tocHeadRef>Vérification de symbole avancé</H3>
+      <SCRIPT type=text/javascript>loadTOCNode(2, 'moreinformation');</SCRIPT>
+      Clients ne savent pas parfois quelles versions de pilote ils ont 
+      installées sur leurs ordinateurs. Ils ont peut-être installé un correctif 
+      pour NTFS, mais le numéro de bogue n'ils connaissent pas. Vous devez 
+      déterminer peut-être manuellement les fichiers .DBG sont nécessaires. 
+      <BR><BR>La façon cible et dbg meilleur vérifier absolument correspondance 
+      doit afficher leur valeur de somme de vérification. Cette valeur est 
+      stockée à l'intérieur du en-tête de fichier. <BR><BR>Remarque : pour plus 
+      savoir sur le système d'exploitation, format de fichier rechercher "format 
+      de fichier Portable Exécution" dans MSDN. L'en-tête PE contient des 
+      numéros de version vous liez date\time, etc. <BR><BR>D'abord déterminer le 
+      somme de vérification des fichiers clients et rechercher un fichier dbg 
+      doté d'un somme correspondant de vérification, puis fait le plan général 
+      ici. <BR><BR>Il existe nombreuses manières d'extraire le chksum de la 
+      cible et le dbg. Si vous avez l'accès aux fichiers, vous pouvez utiliser 
+      le suivant. Cet exemple suppose que vous êtes intéressé dans le fichier 
+      NTOSKRNL. <BR><BR>LINK32 : <BR><BR>Cet utilitaire se trouve dans le 
+      sous-répertoire NT Build, \MSTOOLS : <BR>
+      <DIV class=indent>NTOSKRNL.DBG LINK32.EXE D'EN-TÊTES--LINK32.EXE 
+      NTOSKRNL.EXE D'EN-TÊTES- VIDAGE DE VIDAGE- </DIV><BR>DUMPBIN : <BR><BR>Cet 
+      utilitaire se trouve dans le répertoire Visual C bin : <BR>
+      <DIV class=indent>NTOSKRNL.DBG /HEADER /HEADER DUMPBIN.EXE NTOSKRNL.EXE 
+      DUMPBIN.EXE </DIV><BR>Si vous utilisez un débogueur sur un système ou un 
+      vidage sur l'incident, vous trouvez le checksum du fichier cible en 
+      affichant l'en-tête de fichier dans la mémoire. <BR>
+      <TABLE class="list ol">
+        <TBODY>
+        <TR>
+          <TD class=number>1.</TD>
+          <TD class=text>! PILOTER donnera à vous l'adresse de base de 
+          pilote.</TD></TR>
+        <TR>
+          <TD class=number>2.</TD>
+          <TD class=text>Baseaddr dd + L1 d8</TD></TR></TBODY></TABLE>
+      <DIV class=topOfPage>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD class=image><A 
+            href="http://support.microsoft.com/kb/138258#top"><IMG 
+            title="Retour au début" alt="Retour au début" 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/uparrow.gif"></A></TD>
+          <TD class=text><A 
+            href="http://support.microsoft.com/kb/138258#top">Retour au 
+          début</A></TD></TR></TBODY></TABLE></DIV>
+      <H3 id=tocHeadRef>Versions contrôlées</H3>
+      <SCRIPT type=text/javascript>loadTOCNode(2, 'moreinformation');</SCRIPT>
+      Si vous installez des versions debug vérifié de fichiers de Windows NT, 
+      vous devez effectuer dispositions spéciales pour ils des fichiers dbg de 
+      symboles. Certain correctif a vérifié que générations disposent de 
+      l'information symbolique être intégré au fichier cible. Dans ces cas 
+      simplement effectuez une copie du fichier et il nommez *.DBG. Placez le 
+      fichier de sous-répertoire de symbole normal autrement dit \SYMBOLS\EXE. 
+      <BR><BR>Toutes les générations de vérification publiée publiquement 
+      possèdent des fichiers dbg distinct uniquement similaires aux versions 
+      gratuites. Le dbg pour versions contrôlé et gratuits est cependant 
+      différent. Par exemple la MS NT DDK contient une version vérifiée complète 
+      de NT. Il contient également un symbole complet défini passant avec il. 
+      <BR><BR><B>REMARQUE</B> : a vérifié que versions du noyau NT est même pour 
+      les systèmes Multiprocesseur et Monoprocesseur. 
+      <DIV class=topOfPage>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD class=image><A 
+            href="http://support.microsoft.com/kb/138258#top"><IMG 
+            title="Retour au début" alt="Retour au début" 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/uparrow.gif"></A></TD>
+          <TD class=text><A 
+            href="http://support.microsoft.com/kb/138258#top">Retour au 
+          début</A></TD></TR></TBODY></TABLE></DIV>
+      <H3 id=tocHeadRef>Emplacements de symbole</H3>
+      <SCRIPT type=text/javascript>loadTOCNode(2, 'moreinformation');</SCRIPT>
+      Produit commercial : <BR>
+      <DIV class=indent>\SUPPORT\DEBUG\I386\SYMBOLS CD-ROM 
+      <BR>\\NTX86X\FREEBINS.XXX </DIV><BR>
+      <DIV class=topOfPage>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD class=image><A 
+            href="http://support.microsoft.com/kb/138258#top"><IMG 
+            title="Retour au début" alt="Retour au début" 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/uparrow.gif"></A></TD>
+          <TD class=text><A 
+            href="http://support.microsoft.com/kb/138258#top">Retour au 
+          début</A></TD></TR></TBODY></TABLE></DIV></DIV></DIV>
+      <DIV class=appliesTo>
+      <HR>
+      <A id=appliesto></A>
+      <H5>Les informations contenues dans cet article s'appliquent au(x) 
+      produit(s) suivant(s):</H5>
+      <TABLE class=list>
+        <TBODY>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Microsoft Windows NT Advanced Server 3.1</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Microsoft Windows NT Server 3.5</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Microsoft Windows NT Server 3.51</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Microsoft Windows NT Server 4.0 Standard 
+Edition</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Microsoft Windows NT Workstation 3.1</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Microsoft Windows NT Workstation 3.5</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Microsoft Windows NT Workstation 3.51</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Microsoft Windows NT Workstation 4.0 Developer 
+          Edition</TD></TR>
+        <TR>
+          <TD class=bullet>•</TD>
+          <TD class=text>Microsoft Windows NT Advanced Server 
+      3.1</TD></TR></TBODY></TABLE></DIV>
+      <DIV class=topOfPage>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD class=image><A 
+            href="http://support.microsoft.com/kb/138258#top"><IMG 
+            title="Retour au début" alt="Retour au début" 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/uparrow.gif"></A></TD>
+          <TD class=text><A 
+            href="http://support.microsoft.com/kb/138258#top">Retour au 
+          début</A></TD></TR></TBODY></TABLE></DIV>
+      <DIV class=keywords>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD class=header>
+            <H5>Mots-clés :&nbsp;</H5></TD>
+          <TD class=text>kbusage KB138258 KbMtfr kbmt</TD></TR></TBODY></TABLE>
+      <DIV class=topOfPage>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD class=image><A 
+            href="http://support.microsoft.com/kb/138258#top"><IMG 
+            title="Retour au début" alt="Retour au début" 
+            src="Déboguer l'information de configuration de symbole Windows NT_fichiers/uparrow.gif"></A></TD>
+          <TD class=text><A 
+            href="http://support.microsoft.com/kb/138258#top">Retour au 
+          début</A></TD></TR></TBODY></TABLE></DIV></DIV>
+      <DIV class="disclaimer text">L'INFORMATION CONTENUE DANS CE DOCUMENT EST 
+      FOURNIE PAR MICROSOFT SANS GARANTIE D'AUCUNE SORTE, EXPLICITE OU 
+      IMPLICITE. L'UTILISATEUR ASSUME LE RISQUE DE L'UTILISATION DU CONTENU DE 
+      CE DOCUMENT. CE DOCUMENT NE PEUT ETRE REVENDU OU CEDE EN ECHANGE D'UN 
+      QUELCONQUE PROFIT.</DIV><!-- - -KB 3 end- - --></DIV></DIV>
+      <DIV class=wp id=fmsSurvey>
+      <DIV class=fms>
+      <SCRIPT type=text/javascript>var g_asAnswers = [];var g_iAnswerPtr = 0;var currentsectionid = 1;var navindex = 1;var currentsection;var navpath = new Array();var g_SCID = 'sw;fr;1361';var g_SITE = 'gn';var g_REGIONID = 'fr';var g_URL = '%252fdefault.aspx%252fkb%252f138258';var g_BROWSERLANGCODE = 'fr';var g_SURVEYLANGCODE = 'fr';var g_SURVEYID = '1361';var g_SURVEYNAME = '';var g_asParams = ['kb','fr','138258','','','','','','machine',''];var g_showall = 0;var g_surveystyle = 'popup';var bClickCancel = 0;var g_maxKBsInCookie = '10';var g_kbvisited = '';</SCRIPT>
+      <IFRAME id=submitframe style="DISPLAY: none" 
+      src="Déboguer l'information de configuration de symbole Windows NT_fichiers/surveysubmit.htm"></IFRAME>
+      <DIV class=DOCUMENT>
+      <FORM name=frmSurveyMain action=/common/survey.aspx method=post 
+      width="100%"><INPUT id=FMSACTION type=hidden value=PERSIST 
+      name=FMSACTION><INPUT id=emailaddress type=hidden name=emailaddress><INPUT 
+      id=emailsurveyurl type=hidden name=emailsurveyurl><INPUT id=sessionid 
+      type=hidden name=sessionid><INPUT id=SURVEYSCID type=hidden 
+      name=SURVEYSCID><INPUT id=SURVEYID type=hidden name=SURVEYID><INPUT 
+      id=REGIONID type=hidden name=REGIONID><INPUT id=SURVEYNAME type=hidden 
+      name=SURVEYNAME><INPUT id=SURVEYLANGCODE type=hidden 
+      name=SURVEYLANGCODE><INPUT id=BROWSERLANGCODE type=hidden 
+      name=BROWSERLANGCODE><INPUT id=SITE type=hidden name=SITE><INPUT id=FMSURL 
+      type=hidden name=FMSURL><INPUT id=PARAMS type=hidden name=PARAMS><INPUT 
+      id=PARAMLENGTH type=hidden name=PARAMLENGTH><INPUT id=SURVEYANSWERS 
+      type=hidden name=SURVEYANSWERS><INPUT id=DATALENGTH type=hidden 
+      name=DATALENGTH><INPUT id=DIRECTION type=hidden value=LTR 
+      name=DIRECTION><INPUT id=PREVIEWLOCATION type=hidden name=PREVIEWLOCATION>
+      <DIV id=DIV_FIRST style="DISPLAY: none">
+      <TABLE class=QUESTIONCONTAINER cellSpacing=0 cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD>
+            <DIV class=QUESTIONTEXT>
+            <H5>Veuillez nous faire part de vos commentaires sur cet article 
+            technique :</H5></DIV></TD></TR>
+        <TR>
+          <TD>
+            <DIV class=QUESTIONINSTRUCTION></DIV></TD></TR></TBODY></TABLE>
+      <DIV class=QUESTIONCONTAINER>
+      <DIV class=QUESTIONTEXT>Cet article vous a-t-il aidé à résoudre votre 
+      problème&nbsp;?</DIV>
+      <DIV class=QUESTIONINSTRUCTION></DIV>
+      <TABLE cellSpacing=0 cellPadding=0 border=0>
+        <TBODY>
+        <TR>
+          <TD class=ANSWERTEXT vAlign=top><INPUT id=8167 
+            onclick=handleOptionalTxt(this); type=radio value=0 
+          name=s1q7814>Oui</TD></TR>
+        <TR>
+          <TD class=ANSWERTEXT vAlign=top><INPUT id=13111 
+            onclick=handleOptionalTxt(this); type=radio value=0 
+          name=s1q7814>Non</TD></TR>
+        <TR>
+          <TD class=ANSWERTEXT vAlign=top><INPUT id=12862 
+            onclick=handleOptionalTxt(this); type=radio value=0 
+            name=s1q7814>Partiellement</TD></TR>
+        <TR>
+          <TD class=ANSWERTEXT vAlign=top><INPUT id=13082 
+            onclick=handleOptionalTxt(this); type=radio value=0 name=s1q7814>Je 
+            ne sais pas</TD></TR></TBODY></TABLE></DIV>
+      <DIV class=QUESTIONCONTAINER>
+      <DIV class=QUESTIONTEXT></DIV>
+      <DIV class=QUESTIONINSTRUCTION></DIV>
+      <TABLE cellSpacing=0 cellPadding=0 border=0>
+        <TBODY>
+        <TR class=GHR_LEGENDTEXT>
+          <TD height=20></TD>
+          <TD vAlign=top align=left colSpan=9 height=20>
+            <TABLE cellSpacing=0 cellPadding=0 width="100%">
+              <TBODY>
+              <TR class=GHR_LEGENDTEXT>
+                <TD width="10%">Entièrement d’accord</TD>
+                <TD width="10%"></TD>
+                <TD width="10%"></TD>
+                <TD width="10%"></TD>
+                <TD width="10%"></TD>
+                <TD width="10%"></TD>
+                <TD width="10%"></TD>
+                <TD width="10%"></TD>
+                <TD width="10%">Pas du tout d’accord</TD></TR></TBODY></TABLE></TD></TR>
+        <TR>
+          <TD class=GHR_LEGENDTEXT width="25%"></TD>
+          <TD class=GHR_LEGENDTEXT align=middle width="8%">9</TD>
+          <TD class=GHR_LEGENDTEXT align=middle width="8%">8</TD>
+          <TD class=GHR_LEGENDTEXT align=middle width="8%">7</TD>
+          <TD class=GHR_LEGENDTEXT align=middle width="8%">6</TD>
+          <TD class=GHR_LEGENDTEXT align=middle width="8%">5</TD>
+          <TD class=GHR_LEGENDTEXT align=middle width="8%">4</TD>
+          <TD class=GHR_LEGENDTEXT align=middle width="8%">3</TD>
+          <TD class=GHR_LEGENDTEXT align=middle width="8%">2</TD>
+          <TD class=GHR_LEGENDTEXT align=middle width="8%">1</TD></TR>
+        <TR class=GHR_ODDROW>
+          <TD vAlign=center>
+            <DIV class=GHR_QUESTIONTEXT>L'article est facile à comprendre 
+          :</DIV></TD>
+          <TD align=middle><INPUT id=13122 type=radio value=9 
+            name=s1q7708_13122></TD>
+          <TD align=middle><INPUT id=13122 type=radio value=8 
+            name=s1q7708_13122></TD>
+          <TD align=middle><INPUT id=13122 type=radio value=7 
+            name=s1q7708_13122></TD>
+          <TD align=middle><INPUT id=13122 type=radio value=6 
+            name=s1q7708_13122></TD>
+          <TD align=middle><INPUT id=13122 type=radio value=5 
+            name=s1q7708_13122></TD>
+          <TD align=middle><INPUT id=13122 type=radio value=4 
+            name=s1q7708_13122></TD>
+          <TD align=middle><INPUT id=13122 type=radio value=3 
+            name=s1q7708_13122></TD>
+          <TD align=middle><INPUT id=13122 type=radio value=2 
+            name=s1q7708_13122></TD>
+          <TD align=middle><INPUT id=13122 type=radio value=1 
+            name=s1q7708_13122></TD></TR>
+        <TR class=GHR_EVENROW>
+          <TD vAlign=center>
+            <DIV class=GHR_QUESTIONTEXT>L’article est précis :</DIV></TD>
+          <TD align=middle><INPUT id=13123 type=radio value=9 
+            name=s1q7708_13123></TD>
+          <TD align=middle><INPUT id=13123 type=radio value=8 
+            name=s1q7708_13123></TD>
+          <TD align=middle><INPUT id=13123 type=radio value=7 
+            name=s1q7708_13123></TD>
+          <TD align=middle><INPUT id=13123 type=radio value=6 
+            name=s1q7708_13123></TD>
+          <TD align=middle><INPUT id=13123 type=radio value=5 
+            name=s1q7708_13123></TD>
+          <TD align=middle><INPUT id=13123 type=radio value=4 
+            name=s1q7708_13123></TD>
+          <TD align=middle><INPUT id=13123 type=radio value=3 
+            name=s1q7708_13123></TD>
+          <TD align=middle><INPUT id=13123 type=radio value=2 
+            name=s1q7708_13123></TD>
+          <TD align=middle><INPUT id=13123 type=radio value=1 
+            name=s1q7708_13123></TD></TR></TBODY></TABLE></DIV>
+      <TABLE class=QUESTIONCONTAINER cellSpacing=0 cellPadding=0 border=0>
+        <TBODY>
+        <TR>
+          <TD>
+            <DIV class=QUESTIONTEXT>Commentaires 
+        supplémentaires&nbsp;:</DIV></TD></TR>
+        <TR>
+          <TD>
+            <DIV class=QUESTIONINSTRUCTION></DIV></TD></TR>
+        <TR>
+          <TD><TEXTAREA class=ANSWERBOX onpaste="enforceMaxLength(this, 500)" onkeydown="enforceMaxLength(this, 500)" name=s1q7812 rows=6 cols=80></TEXTAREA></TD></TR></TBODY></TABLE>
+      <TABLE class=QUESTIONCONTAINER cellSpacing=0 cellPadding=0>
+        <TBODY>
+        <TR>
+          <TD>
+            <DIV class=QUESTIONTEXT>Attention, cette interface de soumission 
+            d'enquête n’est pas un moyen de joindre le support technique 
+            Microsoft. Veuillez soumettre vos demandes liées à des difficultés 
+            techniques en utilisant les informations et ressources en ligne 
+            disponibles sur ce site (pages "Contactez-nous" ou des "Services de 
+            support en ligne"). De plus, afin de garantir la protection de vos 
+            données personnelles, n’indiquez pas vos coordonnées dans vos 
+            commentaires.</DIV></TD></TR>
+        <TR>
+          <TD>
+            <DIV class=QUESTIONINSTRUCTION></DIV></TD></TR></TBODY></TABLE>
+      <DIV class=NAVIGATION>
+      <TABLE width="98%">
+        <TBODY>
+        <TR>
+          <TD noWrap align=right><INPUT class=NAVBUTTON onclick=closesurvey(10);SwitchSection(); type=button value=Envoyer></TD></TR></TBODY></TABLE></DIV></DIV>
+      <SCRIPT type=text/javascript>var firstSection = document.getElementById("DIV_FIRST");</SCRIPT>
+
+      <DIV id=DIV_CLOSE style="DISPLAY: none">
+      <DIV class=SURVEYINTROTEXT>Merci ! Vos commentaires sont utilisés pour 
+      nous aider à améliorer la qualité de notre contenu de support technique en 
+      ligne. Pour consulter les différentes options d'aide et de support 
+      disponibles, visitez la <A href="http://support.microsoft.com/">page 
+      d’accueil du site Aide et Support</A>.</DIV>
+      <SCRIPT type=text/javascript>var lastSection = document.getElementById("DIV_CLOSE");</SCRIPT>
+      </DIV></FORM></DIV></DIV></DIV></DIV></DIV>
+      <DIV id=widthFix></DIV></DIV></XMLREADER></TD></TR></TBODY></TABLE><!--NOINDEX_START--><BR 
+style="OVERFLOW: hidden; LINE-HEIGHT: 1px" clear=all>
+<TABLE id=msviFooter cellSpacing=0 cellPadding=0 width="100%">
+  <TBODY>
+  <TR vAlign=bottom>
+    <TD id=msviFooter2 
+    style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#FFFFFF', endColorStr='#3F8CDA', gradientType='1')">
+      <DIV id=msviLocalFooter><NOBR><A 
+      href="https://profile.microsoft.com/RegSysProfileCenter/Infodefault.aspx?LCID=1036">Gérez 
+      votre profil</A> |</NOBR><WBR><NOBR><A 
+      href="http://support.microsoft.com/contactus/?ws=support" 
+      target=_parent>Contactez-nous</A></NOBR></DIV>
+      <DIV id=msviGlobalFooter><SPAN dir=ltr>©2006 Microsoft Corporation. Tous 
+      droits réservés.&nbsp;</SPAN><NOBR><A 
+      href="http://www.microsoft.com/france/core/copyright.mspx">Conditions 
+      d'utilisation</A> |</NOBR><WBR><NOBR><A 
+      href="http://support.microsoft.com/library/toolbar/3.0/trademarks/fr-fr.mspx">Marques</A> 
+      |</NOBR><WBR><NOBR><A 
+      href="http://support.microsoft.com/privacy/">Confidentialité</A> 
+      |</NOBR><WBR><NOBR><A 
+      href="http://www.microsoft.com/france/core/contacteznous/ours.aspx" 
+      target=_parent>A propos de ce site</A></NOBR></DIV></TD></TR></TBODY></TABLE>
+<SCRIPT language=javascript>var msviFooter2;if (document.getElementById){msviFooter2 = document.getElementById("msviFooter2");msviFooter2.style.filter = "";}</SCRIPT>
+
+<TABLE height=58 cellSpacing=0 cellPadding=0 width="100%">
+  <TBODY>
+  <TR vAlign=top>
+    <TD>
+      <DIV style="WIDTH: 200px"></DIV></TD>
+    <TD 
+    style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#FFFFFF', endColorStr='#3F8CDA', gradientType='1')" 
+    width="100%"></TD></TR></TBODY></TABLE><IMG id=webmetriximg alt="" 
+src="Déboguer l'information de configuration de symbole Windows NT_fichiers/onepix.gif"><NOSCRIPT><IMG 
+id=StatsDotNetImgNoScript alt="" 
+src="Déboguer l'information de configuration de symbole Windows NT_fichiers/default.gif"></NOSCRIPT><IMG 
+id=StatsDotNetImg alt="" 
+src="Déboguer l'information de configuration de symbole Windows NT_fichiers/onepix.gif" 
+name=StatsDotNetImg>
+<SCRIPT type=text/javascript>StatsDotNet.disabled=false;StatsDotNet.host='http\x3a\x2f\x2fsupport.microsoft.com\x2fLTS\x2fdefault.aspx';StatsDotNet.ssId='1';StatsDotNet.siteLcId='1036';StatsDotNet.url='\x2fdefault.aspx';StatsDotNet.contentType='kb';StatsDotNet.contentLn='1036';StatsDotNet.contentId='138258';StatsDotNet.eventCollectionId=1;StatsDotNet.siteBrandId='1';StatsDotNet.onUnloadTimeout=300;StatsDotNet.userAgentString='mozilla\x2f4.0 \x28compatible\x3b msie 6.0\x3b windows nt 5.1\x3b sv1\x29';</SCRIPT>
+
+<SCRIPT type=text/javascript>function thisLoad(){KBFeedBackShowSurvey();g_reSupportedHostnames = new RegExp("\\.microsoft\\.com$|\\.passport\\.com$|\\.live\\.com$", "i");ForeignLink_Hookup(true);MNPResizeFix();MS_WebMetrix('http\x3a\x2f\x2fc.microsoft.com\x2ftrans_pixel.asp\x3fTYPE\x3dSSPV\x26SOURCE\x3dSUPPORT\x26GUID\x3d1F4FC18C-F71E-47fb-8FC9-612F8EE59C61\x26URI\x3d\x252fgn\x252ffr\x252fkb_fr_138258\x26R\x3d');StatsDotNet.LogPageOnLoad();}function thisUnload(){}</SCRIPT>
+</BODY></HTML>

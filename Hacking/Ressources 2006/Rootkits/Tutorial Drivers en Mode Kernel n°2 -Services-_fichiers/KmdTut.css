@@ -1,0 +1,117 @@
+BODY {
+	PADDING-RIGHT: 10px; PADDING-LEFT: 10px; FONT-SIZE: x-small; PADDING-BOTTOM: 10px; COLOR: #333333; PADDING-TOP: 10px; FONT-FAMILY: verdana, tahoma, sans-serif; BACKGROUND-COLOR: #ffffff; TEXT-ALIGN: justify
+}
+P {
+	FONT-SIZE: x-small; MARGIN-LEFT: 3em; FONT-FAMILY: verdana, tahoma, sans-serif; TEXT-ALIGN: justify
+}
+UL {
+	FONT-SIZE: x-small; MARGIN-LEFT: 3em; FONT-FAMILY: verdana, tahoma, sans-serif; TEXT-ALIGN: justify
+}
+OL {
+	FONT-SIZE: x-small; MARGIN-LEFT: 3em; FONT-FAMILY: verdana, tahoma, sans-serif; TEXT-ALIGN: justify
+}
+DL {
+	FONT-SIZE: x-small; MARGIN-LEFT: 3em; FONT-FAMILY: verdana, tahoma, sans-serif; TEXT-ALIGN: justify
+}
+DIV.src {
+	MARGIN-TOP: 3em; FONT-SIZE: x-small; MARGIN-LEFT: 3em; COLOR: #66aa99; FONT-FAMILY: verdana, tahoma, sans-serif; TEXT-ALIGN: left
+}
+P EM {
+	FONT-WEIGHT: bolder; COLOR: #636363; FONT-STYLE: normal
+}
+P LI {
+	MARGIN-LEFT: 2em
+}
+H1 {
+	MARGIN-TOP: 2em; FONT-SIZE: large; MARGIN-BOTTOM: 1.2em; COLOR: #666666; FONT-FAMILY: tahoma, verdana, sans-serif; TEXT-ALIGN: center
+}
+H2 {
+	MARGIN-TOP: 2em; FONT-SIZE: medium; MARGIN-BOTTOM: 1.2em; COLOR: #666666; FONT-FAMILY: tahoma, verdana, sans-serif; TEXT-ALIGN: left
+}
+H3 {
+	MARGIN-TOP: 2em; FONT-SIZE: small; MARGIN-BOTTOM: 1.2em; COLOR: #666666; FONT-FAMILY: tahoma, verdana, sans-serif; TEXT-ALIGN: left
+}
+PRE {
+	BORDER-RIGHT: #f0f0f0 2px solid; PADDING-RIGHT: 1em; BORDER-TOP: #f0f0f0 2px solid; PADDING-LEFT: 1em; FONT-SIZE: x-small; PADDING-BOTTOM: 1em; MARGIN-LEFT: 3em; BORDER-LEFT: #f0f0f0 2px solid; COLOR: #000000; MARGIN-RIGHT: 0.8em; PADDING-TOP: 1em; BORDER-BOTTOM: #f0f0f0 2px solid; FONT-FAMILY: "courier new", monospace; BACKGROUND-COLOR: #ffffef
+}
+TD PRE {
+	BORDER-RIGHT: #f0f0f0 2px solid; PADDING-RIGHT: 1em; BORDER-TOP: #f0f0f0 2px solid; PADDING-LEFT: 1em; FONT-SIZE: x-small; PADDING-BOTTOM: 1em; MARGIN: 0em; BORDER-LEFT: #f0f0f0 2px solid; COLOR: #000000; PADDING-TOP: 1em; BORDER-BOTTOM: #f0f0f0 2px solid; FONT-FAMILY: "courier new", monospace; BACKGROUND-COLOR: #ffffef
+}
+.note {
+	PADDING-RIGHT: 1em; PADDING-LEFT: 1em; FONT-SIZE: x-small; PADDING-BOTTOM: 1em; MARGIN-LEFT: 4em; COLOR: #506580; MARGIN-RIGHT: 1em; PADDING-TOP: 1em; FONT-FAMILY: verdana, tahoma, sans-serif; BACKGROUND-COLOR: #f5f9ff; TEXT-ALIGN: justify
+}
+.warning {
+	PADDING-RIGHT: 1em; PADDING-LEFT: 1em; FONT-SIZE: x-small; PADDING-BOTTOM: 1em; MARGIN-LEFT: 4em; COLOR: #506580; MARGIN-RIGHT: 1em; PADDING-TOP: 1em; FONT-FAMILY: verdana, tahoma, sans-serif; BACKGROUND-COLOR: #fff5f9; TEXT-ALIGN: justify
+}
+DIV P {
+	FONT-SIZE: 9pt; MARGIN: 0px; COLOR: #8088a0; FONT-STYLE: italic; FONT-FAMILY: arial, tahoma, sans-serif; TEXT-ALIGN: right
+}
+A {
+	COLOR: #666666; FONT-FAMILY: verdana, tahoma; TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #cc9999; TEXT-DECORATION: underline
+}
+SPAN.CMT {
+	COLOR: #000000; BACKGROUND-COLOR: #e6e8f0
+}
+SPAN.CMT {
+	COLOR: #000000; BACKGROUND-COLOR: #eaecf4
+}
+SPAN.STRING {
+	COLOR: #8000ff
+}
+SPAN.INC {
+	FONT-WEIGHT: bold; COLOR: #8000ff
+}
+SPAN.PROC {
+	FONT-WEIGHT: bold; COLOR: #8000ff; BACKGROUND-COLOR: #ffff80
+}
+SPAN.START {
+	FONT-WEIGHT: bold; COLOR: #ff0080
+}
+SPAN.NL {
+	FONT-WEIGHT: bold; COLOR: #008080
+}
+SPAN.GB {
+	FONT-WEIGHT: bold; COLOR: #808080
+}
+SPAN.IF {
+	FONT-WEIGHT: bold; COLOR: #800040
+}
+SPAN.FN {
+	FONT-WEIGHT: bold
+}
+SPAN.STRUCT {
+	FONT-WEIGHT: bold; COLOR: #ffffff; BACKGROUND-COLOR: #cccccc
+}
+SPAN.MACRO {
+	FONT-WEIGHT: bold; COLOR: #ffffff; BACKGROUND-COLOR: #cccccc
+}
+SPAN.TRY {
+	FONT-WEIGHT: bold; COLOR: #800080
+}
+TABLE {
+	BORDER-RIGHT: 0px; BORDER-TOP: 0px; MARGIN: 0em 0.5em 0.5em 2.4em; BORDER-LEFT: 0px; BORDER-BOTTOM: 0px
+}
+TR {
+	FONT-SIZE: x-small; FONT-FAMILY: verdana, tahoma, sans-serif; BACKGROUND-COLOR: #f6f6f6
+}
+TD {
+	FONT-SIZE: x-small; FONT-FAMILY: verdana, tahoma, sans-serif; BACKGROUND-COLOR: #f6f6f6
+}
+TD P {
+	FONT-SIZE: x-small; MARGIN: 0.5em; FONT-FAMILY: verdana, tahoma, sans-serif; TEXT-ALIGN: justify
+}
+TD EM {
+	FONT-WEIGHT: bolder; COLOR: #636363
+}
+TD.contents {
+	FONT-SIZE: x-small; FONT-FAMILY: verdana, tahoma, sans-serif; BACKGROUND-COLOR: #ffffff
+}
+TD.logo {
+	BORDER-RIGHT: 0px; PADDING-RIGHT: 0px; BORDER-TOP: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; MARGIN: 0px; BORDER-LEFT: 0px; PADDING-TOP: 0px; BORDER-BOTTOM: 0px
+}
+TH {
+	PADDING-RIGHT: 0.5em; PADDING-LEFT: 0.5em; FONT-SIZE: x-small; PADDING-BOTTOM: 0.5em; COLOR: #ffffff; PADDING-TOP: 0.5em; FONT-FAMILY: verdana, tahoma, sans-serif; BACKGROUND-COLOR: #c0c0c0; TEXT-ALIGN: center
+}

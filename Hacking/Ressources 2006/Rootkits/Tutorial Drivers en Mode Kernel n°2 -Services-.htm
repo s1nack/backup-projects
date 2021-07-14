@@ -1,0 +1,735 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0043)http://neitsabes.free.fr/ASM/KMD/kmd02.html -->
+<HTML><HEAD><TITLE>Tutorial Drivers en Mode Kernel n°2 -Services-</TITLE>
+<META content="KMD kernel programmation programmeur assembleur MASM asm" 
+name=keywords>
+<META content="Assembly programming" name=DESRIPTION>
+<META content=http://neitsabes.online.fr name=Identifier-URL>
+<META content="7 Days" name=revisit-after>
+<META content=FR name=language>
+<META content="Assembly programming" name=abstract>
+<META content=Document name=resource-type>
+<META http-equiv=CACHE-CONTROL content=NO-CACHE>
+<META content=General name=rating>
+<META content=Document name=VW96.object-type>
+<META lang=fr content=Neitsa name=Author>
+<META content="copyright Neitsa" name=COPYRIGHT>
+<META content=index,follow,all name=ROBOTS>
+<META http-equiv=Expires content=never>
+<META content=20040501 name=Date-Creation-yyyymmdd>
+<META content=20040715 name=Date-Revision-yyyymmdd>
+<META http-equiv=Content-Type content="text/html; charset=ISO-8859-1">
+<SCRIPT 
+src="Tutorial Drivers en Mode Kernel n°2 -Services-_fichiers/color.js"></SCRIPT>
+<LINK href="Tutorial Drivers en Mode Kernel n°2 -Services-_fichiers/KmdTut.css" 
+type=text/css rel=stylesheet>
+<META content="MSHTML 6.00.2900.2912" name=GENERATOR></HEAD>
+<BODY>
+<TABLE cellSpacing=0 cellPadding=0 width="96%">
+  <TBODY>
+  <TR class=logo>
+    <TD class=logo width="100%" 
+    background="Tutorial Drivers en Mode Kernel n°2 -Services-_fichiers/img1px.jpg"><IMG 
+      height=110 alt="KmdTut Logo" 
+      src="Tutorial Drivers en Mode Kernel n°2 -Services-_fichiers/imgLogo.jpg" 
+      width=350></TD>
+    <TD class=logo width="100%" 
+    background="Tutorial Drivers en Mode Kernel n°2 -Services-_fichiers/img1px.jpg"><IMG 
+      height=110 
+      src="Tutorial Drivers en Mode Kernel n°2 -Services-_fichiers/imgLogoRight.jpg" 
+      width=100></TD></TR></TBODY></TABLE>
+<P><A href="http://neitsabes.free.fr/ASM/KMD/KMDindex.htm">Retour menu KMD</A> / 
+<A href="http://neitsabes.free.fr/ASM.html">Retour menu assembleur</A> </P>
+<H1>Services</H1>
+<DIV align=center>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TD class=contents vAlign=top><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd02.html#k2d1"><B>2.1 
+      Services</B></A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd02.html#k2d2"><B>2.2 
+      L'administrateur de contrôle de service</B></A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd02.html#k2d3"><B>2.3 Le 
+      programme de contrôle de service </B></A>
+      <DIV style="MARGIN-LEFT: 2em"><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd02.html#k2d3d1">2.3.1 Etablir 
+      une connexion au SCM</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd02.html#k2d3d2">2.3.2 Installer 
+      un nouveau driver</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd02.html#k2d3d3">2.3.3 Démarrer 
+      le driver</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd02.html#k2d3d4">2.3.4 
+      Désinstaller le driver</A><BR></DIV><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd02.html#k2d4"><B>2.4 Macros de 
+      chaîne</B></A> </TD></TR></TBODY></TABLE></DIV>
+<DIV class=src><IMG height=23 
+src="Tutorial Drivers en Mode Kernel n°2 -Services-_fichiers/src.gif" 
+width=22>&nbsp;<B>Code Source :</B> KmdKit\examples\simple\Beeper</DIV>
+<P>Vous vous demandez peut être comment les services du mode utilisateur se 
+relient aux drivers en mode Kernel. En fait ce sont des bestioles tout à fait 
+différentes. Mais avant que nous puissions communiquer avec le module de gestion 
+de périphérique [ <EM>device driver </EM>] nous devons l'installer et le 
+démarrer. Nous devrons ici nous conformer aux règles d'interface destinées aux 
+services. </P>
+<H2>2.1 Services<A name=k2d1></A></H2>
+<P>Windows NT a un mécanisme pour démarrer les processus qui fournissent des 
+services non attachés à un utilisateur interactif. De tels processus s'appellent 
+les services. Un bon exemple d'un service pourrait être un serveur Web. La 
+plupart des services temporels [ <EM>time services </EM>] n'ont absolument 
+aucune interface utilisateur. C'est la seule catégorie d'applications 
+fonctionnant d'une telle manière. Les services peuvent être démarrés au moment 
+même du démarrage de système ou bien ils peuvent également être démarrés 
+manuellement. Dans ce sens les modules de gestion de périphérique sont très 
+semblables aux services. </P>
+<P>Windows NT supporte également un service de drivers [ <EM>drivers services 
+</EM>] qui se conforme aux protocoles de module de gestion de périphérique pour 
+Windows NT. Il est semblable au service du mode utilisateur. Ainsi, les services 
+peuvent se référer à un processus de serveur ou encore à un module de gestion de 
+périphérique. Microsoft a mélangé les drivers en mode Kernel et ceux en mode 
+utilisateur. Par conséquent la suite de ce tutorial peut sembler être un 
+imbroglio, puisque je parlerai parfois de "service" et parfois de "driver". Cet 
+article traite uniquement des modules de gestion de périphérique (sous entendu 
+"drivers"). Ainsi vous devriez toujours lire "driver". Je le notifierai 
+évidemment s'il est nécessaire de séparer l'appellation "service" de celle de 
+"driver". Considérez en outre que la documentation décrivant les fonctions en 
+relation avec les services, est parfois plutôt ambiguë. Beaucoup de fonctions 
+discutées dans cette section s'appliquent aussi bien aux services qu'aux modules 
+de gestion de périphérique, mais je me concentrerai sur des modules de gestion 
+de périphérique et éviterai de discuter des services. </P>
+<P>Il y a trois types de composants impliqués dans le fonctionnement des 
+services de Windows NT:</P>
+<UL>
+  <LI>
+  <P><EM><I>Administrateur de contrôle de service [Service Control 
+  Manager</I></EM> (SCM)<EM><I>]</I></EM>. Le SCM est responsable du démarrage 
+  du service, de la communication avec lui et ainsi de suite. </P>
+  <LI>
+  <P><EM><I>Programme de controle de service [Service Control Program</I></EM> 
+  (SCP)<EM><I>]</I></EM>. Le SCP communique avec le SCM lui indiquant quand 
+  démarrer ou arrêter le service et ainsi de suite. </P>
+  <LI>
+  <P>A <EM><I>programme de service</I></EM> qui contient le code exécutable. A 
+  ce propos vous pouvez vous remémorer ce qui a été mentionné plus tôt dans cet 
+  article, à savoir qu'un service est un module de gestion de périphérique. 
+  </P></LI></UL>
+<P>Comme il a déjà été dit, nous étudierons le driver lui-même dans la prochaine 
+partie, mais maintenant concentrerons nous sur les deux premiers composants.</P>
+<H2>2.2 L'administrateur de controle de services [SCM] <A name=k2d2></A></H2>
+<P>Le SCM réside dans \%SystemRoot%\System32\Services.exe. Le processus de 
+Winlogon démarre le SCM tôt pendant le <EM>boot </EM>du système. Il balaye alors 
+le contenu de HKLM\SYSTEM\CurrentControlSet\Services, créant une entrée dans la 
+base de donnée de service pour chaque clef qu'il rencontre. Une entrée de base 
+de donnée inclut tous les paramètres connexes définis pour un service. Si le 
+service ou le driver est marqué comme ayant un démarrage automatique le SCM le 
+démarre et détecte les échecs au démarrage.</P>
+<P>Pour vous faire une certaine représentation à ce sujet, démarrez l'éditeur de 
+registre (\%SystemRoot%\regedit.exe), ouvrez 
+HKLM\SYSTEM\CurrentControlSet\Services\ et explorez son contenu. </P>
+<P>Pour énumérer les services installés (et non les drivers), choisissez les 
+outils d'administration du panneau de configuration, et choisissez 
+«&nbsp;services&nbsp;». </P>
+<P>Depuis la «&nbsp;Gestion de l'ordinateur&nbsp;» vous pouvez énumérer les 
+drivers installés. (Menu Démarrer, choisissez Programmes, outils 
+d'administrations, gestion de l'ordinateur ; ou du panneau de configuration, 
+outils d'administrations, gestion de l'ordinateur.) Depuis «&nbsp;gestion de 
+l'ordinateur&nbsp;», ouvrez «&nbsp;Information système&nbsp;» puis 
+«&nbsp;Environnement logiciel&nbsp;», et ouvrez «&nbsp;Pilotes&nbsp;». 
+(Malheureusement, cette option n'est plus présente depuis Windows XP).</P>
+<P>Après avoir analysé le contenu de ces trois fenêtres, vous remarquerez qu'ils 
+coïncident à bien des égards. </P>
+<P>L'entrée HKLM\SYSTEM\CurrentControlSet\Services\ contient des sous-clés, 
+désignées en interne par le nom du driver ou du service. Chaque sous-clé inclut 
+tous les paramètres en relation avec le service.</P>
+<P>Considérons un ensemble minimum possible de paramètres nécessaires pour 
+installer un module de gestion de périphérique. Comme exemple, nous prendrons le 
+driver beeper.sys (nous parlerons du driver en lui-même la fois prochaine). </P>
+<P></P>
+<CENTER><IMG height=230 
+src="Tutorial Drivers en Mode Kernel n°2 -Services-_fichiers/image001.gif" 
+width=672><BR><BR><B>Figure 2-1.</B> Clés de registre pour le driver beeper.sys 
+</CENTER>
+<P></P>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Paramètre</TH>
+    <TH colSpan=2>Description</TH></TR>
+  <TR vAlign=top>
+    <TD width=110>
+      <P><EM><I>DisplayName</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- nom du service à employer par des programmes d'interface utilisateur. 
+      Si aucun nom n'est indiqué, le nom de la clef d'enregistrement du service 
+      devient son nom.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=110 rowSpan=4>
+      <P><EM><I>ErrorControl</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- si un driver reporte une erreur en réponse à la commande de démarrage 
+      de SCM, cette valeur indique le niveau de la commande d'erreur et 
+      détermine comment le SCM réagit. </P>
+      <P>Deux de ces valeurs recèlent un certain intérêt pour nous : </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=216>
+      <P>SERVICE_ERROR_IGNORE (0)</P></TD>
+    <TD align=left width=386>
+      <P>- Le Manager d'I/O ignore les erreurs de retour du driver mais continue 
+      l'opération de démarrage. Rien n'est noté [logged]; </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=216>
+      <P>SERVICE_ERROR_NORMAL (1)</P></TD>
+    <TD align=left>
+      <P>- Si le driver ne se charge pas ou ne s'initialise pas, le démarrage 
+      devrait s'en suivre mais un avertissement est affiché à l'utilisateur. Un 
+      événement est écrit dans le System Event Log [notification des événements 
+      système]. </P></TD></TR>
+  <TR vAlign=top>
+    <TD colSpan=2>
+      <P>Vous pouvez voir une description des événements système en choisissant 
+      «&nbsp;Outils d'administration&nbsp;» &gt; «&nbsp;Observateur 
+      d'événement&nbsp;» et en double-cliquant sur un événement. </P>
+      <P>Le driver du beeper fait tout un travail utile durant l'étape 
+      d'initialisation (dans la routine DriverEntry), puis il renvoie un code 
+      d'erreur pour être enlever de la mémoire puisqu'il ne peut faire rien 
+      davantage. Le paramètre ErrorControl pour le driver du beeper est égal à 
+      SERVICE_ERROR_IGNORE, ainsi aucune notification [log] n'est faite. 
+  </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=110>
+      <P><EM><I>ImagePath</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- indique le chemin complet de l'image du driver.</P>
+      <P>Si ImagePath n'est pas indiqué, le Manager d'I/O recherche les drivers 
+      dans le dossier \Winnt\System32\Drivers. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=110 rowSpan=4>
+      <P><EM><I>Start</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- indique quand démarrer le driver.</P>
+      <P>Ici, seules deux valeurs peuvent nous être utiles : </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=216>
+      <P>SERVICE_AUTO_START (2)</P></TD>
+    <TD align=left>
+      <P>- Le driver démarre en même temps que le système.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=216>
+      <P>SERVICE_DEMAND_START (3)</P></TD>
+    <TD align=left>
+      <P>- Le driver est démarré sur demande par le SCM en réponse à une demande 
+      explicite d'utilisateur.</P></TD></TR>
+  <TR vAlign=top>
+    <TD colSpan=2>
+      <P>N'importe quel driver ayant valeur Start indiquée comme étant 
+      SERVICE_AUTO_START (2) est démarré par le SCM pendant le démarrage du 
+      système. De tels drivers s'appellent Services auto démarrant [ 
+      <EM>auto-start services </EM>]. Si le driver dépend d'autres drivers, le 
+      SCM démarre également ces drivers (les modules de gestion de périphérique 
+      peuvent employer les valeurs Group et Tag pour commander l'ordre de 
+      chargement, mais à la différence des services, ils ne peuvent pas indiquer 
+      des valeurs de DependOnGroup ou de DependOnService). Il y a également 
+      d'autres drapeaux [<EM>flags</EM>] indiquant le démarrage automatique, par 
+      exemple, SERVICE_BOOT_START (0). Seuls les modules de gestion de 
+      périphérique peuvent l'indiquer. Le Manager d'I/O charge de tels drivers 
+      avant que tous les processus en mode utilisateur ne s'exécutent, et donc 
+      avant que le SCM ne démarre. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=110>
+      <P><EM><I>Type</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- indique le type de service.</P>
+      <P>Puisque nous allons traiter de module de gestion de périphérique la 
+      seule valeur que nous pouvons employer est SERVICE_KERNEL_DRIVER (1). 
+    </P></TD></TR></TBODY></TABLE>
+<P>Après avoir regardé le schéma 2-1, que pouvons nous dire au sujet du driver 
+beeper.sys ? Et bien, le driver en mode Kernel du beeper réside dans le dossier 
+C:\masm32\Ring0\Kmd\Article2\beeper. Son nom d'affichage est "Nice Beeper 
+Melody", son démarrage est sur demande, et les erreurs possibles sont ignorées 
+et non notifiées. </P>
+<P>Nous verrons plus tard ce que le préfixe «&nbsp; \??&nbsp;» situé dans le 
+chemin du dossier de l'image du driver signifie. </P>
+<P>Si nous voulons démarrer le driver, qui n'est pas présent dans la base de 
+données du SCM, cela peut être fait dynamiquement, à tout moment, avec l'aide du 
+programme de gestion de service ( <EM>Device Control Program </EM>pour être plus 
+précis, mais il n'existe aucun concept de ce type dans la terminologie 
+Microsoft). </P>
+<H2>2.3 Le Programme de controle de service <A name=k2d3>[SCP]</A></H2>
+<P>Comme l'indique son nom, le programme de gestion de service est prévu pour 
+commander les services ou les modules de gestion de périphérique. Il fait ceci 
+sous la surveillance du SCM, appellant les fonctions appropriées. Tous sont 
+exportés par le module \%SystemRoot%\System32\advapi.dll ( <EM>Advanced AP 
+</EM>I). </P>
+<P>Voici le code du programme de gestion de service qui commandera le driver 
+beeper.sys. </P><PRE><SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;  Programme de contrôle de services pour le driver "beeper"         				  </SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>.386</SPAN>
+<SPAN class=INC>.model</SPAN> flat, stdcall
+<SPAN class=INC>option</SPAN> casemap:none
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                             I N C L U D E   F I L E S                                             </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>include</SPAN> \masm32\include\windows.inc
+
+<SPAN class=INC>include</SPAN> \masm32\include\kernel32.inc
+<SPAN class=INC>include</SPAN> \masm32\include\user32.inc
+<SPAN class=INC>include</SPAN> \masm32\include\advapi32.inc
+
+<SPAN class=INC>includelib</SPAN> \masm32\lib\kernel32.lib
+<SPAN class=INC>includelib</SPAN> \masm32\lib\user32.lib
+<SPAN class=INC>includelib</SPAN> \masm32\lib\advapi32.lib
+
+<SPAN class=INC>include</SPAN> \masm32\Macros\Strings.mac
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                       C O D E                                                     </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>.code</SPAN>
+
+<SPAN class=START>start</SPAN> <SPAN class=PROC>proc</SPAN>
+
+<SPAN class=GB>local</SPAN> hSCManager:HANDLE
+<SPAN class=GB>local</SPAN> hService:HANDLE
+<SPAN class=GB>local</SPAN> acDriverPath[MAX_PATH]:CHAR
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>OpenSCManager</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, SC_MANAGER_CREATE_SERVICE
+    <SPAN class=IF>.if</SPAN> eax != <SPAN class=NL>NULL</SPAN>
+        mov hSCManager, eax
+
+        push eax
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetFullPathName</SPAN>, $CTA0(<SPAN class=STRING>"beeper.sys"</SPAN>), <SPAN class=GB>sizeof</SPAN> acDriverPath, <SPAN class=GB>addr</SPAN> acDriverPath, esp
+        pop eax
+
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CreateService</SPAN>, hSCManager, $CTA0(<SPAN class=STRING>"beeper"</SPAN>), $CTA0(<SPAN class=STRING>"Nice Melody Beeper"</SPAN>), \
+                SERVICE_START + DELETE, SERVICE_KERNEL_DRIVER, SERVICE_DEMAND_START, \
+                SERVICE_ERROR_IGNORE, <SPAN class=GB>addr</SPAN> acDriverPath, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>
+        <SPAN class=IF>.if</SPAN> eax != <SPAN class=NL>NULL</SPAN>
+            mov hService, eax
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>StartService</SPAN>, hService, 0, <SPAN class=NL>NULL</SPAN>
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DeleteService</SPAN>, hService
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CloseServiceHandle</SPAN>, hService
+        <SPAN class=IF>.else</SPAN>
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, $CTA0(<SPAN class=STRING>"Can't register driver."</SPAN>), <SPAN class=NL>NULL</SPAN>, MB_ICONSTOP
+        <SPAN class=IF>.endif</SPAN>
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CloseServiceHandle</SPAN>, hSCManager
+    <SPAN class=IF>.else</SPAN>
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, $CTA0(<SPAN class=STRING>"Can't connect to Service Control Manager."</SPAN>), \
+                            <SPAN class=NL>NULL</SPAN>, MB_ICONSTOP
+    <SPAN class=IF>.endif</SPAN>
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>ExitProcess</SPAN>, 0
+
+<SPAN class=START>start</SPAN> <SPAN class=PROC>endp</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=START>end start</SPAN>
+</PRE>
+<H3>2.3.1 Etablir une connexion au SCM<A name=k2d3d1></A></H3>
+<P>La première étape est d'appeler la fonction OpenSCManager pour établir un 
+raccordement au SCM sur l'ordinateur indiqué et pour ouvrir la base de données 
+adéquate. </P><PRE><SPAN class=FN>OpenSCManager</SPAN> <SPAN class=GB>proto</SPAN> lpMachineName:LPSTR, lpDatabaseName:LPSTR, dwDesiredAccess:DWORD
+</PRE>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Paramètre</TH>
+    <TH colSpan=2>Description&#314;</TH></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpMachineName</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Pointe vers une chaîne terminée par NULL nommant l'ordinateur cible. 
+      Si le pointeur est NULL ou s'il dirige vers une chaîne vide, la fonction 
+      se connecte au SCM de l'ordinateur local. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100 rowSpan=3>
+      <P><EM><I>lpDatabaseName</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Pointe vers une chaîne terminée par NULL qui nomme la base de donnée 
+      à ouvrir du SCM. Cette chaîne devrait indiquer ServicesActive. Si elle 
+      vaut SERVICES_ACTIVE_DATABASE ou NULL (ce qui est la même chose), la base 
+      de données ServicesActive est ouverte par défaut. </P></TD></TR>
+  <TR vAlign=top>
+    <TD colSpan=2><PRE><SPAN class=INC>.const</SPAN>
+szActiveDatabase <SPAN class=GB>db</SPAN> "ServicesActive", 0
+SERVICES_ACTIVE_DATABASE <SPAN class=GB>equ offset</SPAN> szActiveDatabase</PRE></TD></TR>
+  <TR vAlign=top>
+    <TD colSpan=2>
+      <P>Puisque nous n'ouvrirons aucune autre base de données de SCM, excepté 
+      celle qui est active, nous indiquerons simplement NULL </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100 rowSpan=4>
+      <P><EM><I>dwDesiredAccess</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Indique le droit d'accès au SCM. </P>
+      <P>Ce paramètre indique au SCM ce que nous avons l'intention de faire avec 
+      sa base de donnée. </P>
+      <P>Ici, trois valeurs peuvent nous être utiles : </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=200>
+      <P>SC_MANAGER_CONNECT</P></TD>
+    <TD align=left>
+      <P>- Permet se connecter au SCM.</P>
+      <P>Ce type d'accès est implicitement indiqué par défaut (si vous passez 
+      simplement 0). Très étrange, mais la documentation ne dit rien au sujet de 
+      ce que nous pouvons faire de particulier en ayant ce type d'accès. Mais 
+      cependant beaucoup de choses peuvent être faites. Nous pouvons démarrer et 
+      arrêter le driver, et même supprimer son entrée de la base de données du 
+      SCM;</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=200>
+      <P>SC_MANAGER_CREATE_SERVICE</P></TD>
+    <TD align=left>
+      <P>- Permet d'appeler la fonction CreateService pour créer un objet de 
+      service et l'ajouter à la base de donnée.</P>
+      <P>En fait, avoir ce type d'accès pour la création de service n'est pas la 
+      seule chose que nous pouvons faire. Puisque le drapeau SC_MANAGER_CONNECT 
+      est placé par défaut, nous pouvons faire toutes les choses possibles avec 
+      ce type d'accès. Mais il est vrai que cela n'est pas vraiment 
+      implicite;</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=200>
+      <P>SC_MANAGER_ALL_ACCESS</P></TD>
+    <TD align=left>
+      <P>- Donne le plein accès à la base de donnée du 
+SCM.</P></TD></TR></TBODY></TABLE>
+<P>Nous établissons une connexion au SCM comme ceci : </P><PRE>    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>OpenSCManager</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, SC_MANAGER_CREATE_SERVICE
+    <SPAN class=IF>.if</SPAN> eax != <SPAN class=NL>NULL</SPAN>
+        mov hSCManager, eax
+</PRE>
+<P>Si la fonction OpenSCManager réussit, la valeur de retour est un handle à la 
+base de donnée du SCM indiquée. Nous passerons ce handle à d'autres fonctions 
+pour manipuler la base de données du SCM. </P>
+<P>Notez que l'installation de module de gestion de périphérique en mode Kernel 
+exige un compte avec les droits d'administrateur. Ceci assure une sécurité 
+nécessaire, ainsi les utilisateurs normaux ne peuvent pas ajouter et exécuter de 
+code privilégié sans l'autorité compétente. Par conséquent, il est considéré ici 
+que vous êtes administrateur. </P>
+<H3>2.3.2 Installation d'un nouveau driver <A name=k2d3d2></A></H3>
+<P>Une fois que le SCM a été ouvert, nous ajoutons notre driver à la base de 
+données du SCM par un appel à CreateService. Voici son prototype. CreateService 
+a treize paramètres. Mais ne paniquez pas. En fait tout ceci est plutôt simple. 
+</P><PRE><SPAN class=FN>CreateService</SPAN> <SPAN class=GB>proto</SPAN> hSCManager:HANDLE, lpServiceName:LPSTR, lpDisplayName:LPSTR, \
+                    dwDesiredAccess:DWORD, dwServiceType:DWORD, dwStartType:DWORD, \
+                    dwErrorControl:DWORD, lpBinaryPathName:LPSTR, lpLoadOrderGroup:LPSTR, \
+                    lpdwTagId:LPDWORD, lpDependencies:LPSTR, lpServiceStartName:LPSTR, \
+                    lpPassword:LPSTR
+</PRE>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Paramètre</TH>
+    <TH colSpan=2>Description&#314;</TH></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>hSCManager</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Handle de la base de donnée du SCM. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpServiceName</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Pointe vers une chaîne terminée par NULL qui nomme le service à 
+      installer. La longueur maximum de la chaîne est de 256 caractères. Le 
+      slash (/) et l'antislash (\) sont ne sont pas des caractères admissibles 
+      pour un nom de service. </P>
+      <P>&nbsp;</P>
+      <P>La chaîne correspond à la valeur d'une sous-clé de 
+      «&nbsp;service&nbsp;» dans la base de registre. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpDisplayName</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Pointe vers une chaîne de caractère terminée par NULL qui doit être 
+      employée par un programme utilisateur pour identifier le service. Cette 
+      chaîne a une longueur maximum de 256 caractères.</P>
+      <P>Correspond à la valeur DisplayName dans la base de registre. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100 rowSpan=6>
+      <P><EM><I>dwDesiredAccess</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Indique l'accès au service.</P>
+      <P>Voici les valeurs qui peuvent nous intéresser : </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=200>
+      <P>SERVICE_ALL_ACCESS</P></TD>
+    <TD align=left>
+      <P>- Plein accès au service ;</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=200>
+      <P>SERVICE_START</P></TD>
+    <TD align=left>
+      <P>- Permet d'appeler la fonction StartService pour démarrer le service 
+      ;</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=200>
+      <P>SERVICE_STOP</P></TD>
+    <TD align=left>
+      <P>- Permet d'appeler la fonction ControlService pour arrêter le service 
+      ;</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=200>
+      <P>DELETE</P></TD>
+    <TD align=left>
+      <P>- permet d'appeler la fonction DeleteService pour supprimer le service 
+      ;</P></TD></TR>
+  <TR vAlign=top>
+    <TD colSpan=2>
+      <P>Nous devons faire seulement deux actions : démarrer le driver et 
+      l'enlever de la base de donnée du SCM. Ainsi, nous passons SERVICE_START 
+      et DELETE pour ce paramètre. Nous ne devons bien sûr pas arrêter le driver 
+      puisque son initialisation échouerait. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>dwServiceType</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Specifie le type de service. Nous utiliserons uniquement 
+      SERVICE_KERNEL_DRIVER.</P>
+      <P>Correspond à la valeur type dans la base de registre. .</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>dwStartType</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Indique quand démarrer le service. Si nous voulons démarrer le driver 
+      par nous-mêmes nous passons SERVICE_DEMAND_START. Si le driver doit être 
+      démarré juste après le <EM>boot </EM>du système nous passerons 
+      SERVICE_AUTO_START. </P>
+      <P>Correspond à la valeur Start dans la base de registre. .</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><EM><I>dwErrorControl</I></EM></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Indique la sévérité de l'erreur si le driver ne démarre pas pendant 
+      sa phase normal de démarrage. Nous emploierons SERVICE_ERROR_IGNORE pour 
+      ignorer les erreurs ou SERVICE_ERROR_NORMAL pour noter les erreurs 
+      possibles. </P>
+      <P>Correspond à la valeur ErrorControl dans la base de registre. 
+</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpBinaryPathName</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Pointe vers une chaîne terminée par NULL qui contient le chemin 
+      entier relatif au fichier binaire du driver. </P>
+      <P>Correspond à la valeur ImagePath dans la base de registre. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpLoadOrderGroup</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Pointe vers une chaîne terminée par NULL qui nomme le groupe d'ordre 
+      de chargement [Load ordering group] dont ce service est un membre. Notre 
+      driver n'appartenant à aucun groupe, nous passerons simplement la valeur 
+      NULL. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpdwTagId</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Pointe vers une variable de 32 bits qui reçoit une valeur unique 
+      d'étiquette pour un service appartenant au groupe indiqué dans le 
+      paramètre lpLoadOrderGroup. Aucune étiquette n'est exigée pour nous et ce 
+      paramètre sera donc NULL. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpDependencies</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Ce paramètre n'a aucune signification pour les drivers de services. 
+      Il sera donc toujours NULL. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpServiceStartName</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Pointeur vers une chaîne terminée par NULL et qui indique le nom du 
+      compte sous lequel le service devrait fonctionner. Si le type de service 
+      est SERVICE_KERNEL_DRIVER ce nom est le nom d'objet du driver que le 
+      système emploie pour charger le module de gestion de périphérique. Nous 
+      spécifierons ici NULL car notre driver doit employer un nom d'objet par 
+      défaut créé par le système d'I/O. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpPassword</I></EM></P></TD>
+    <TD colSpan=2>
+      <P>- Les mots de passe sont ignorés pour les drivers de services. Toujours 
+      spécifier NULL. </P></TD></TR></TBODY></TABLE>
+<P>Résumons. Dans les cinq derniers paramètres nous spécifions toujours NULL, et 
+vous pouvez complètement oublier ceux-ci. Le premier paramètre est le Handle à 
+la base de données du SCM. Le paramètre dwDesiredAccess est très clair aussi. Je 
+pense que vous avez déjà deviné pour ce qui est des autres paramètres. Ils 
+correspondent aux clefs de la base de registre que nous avons analysées 
+ci-dessus. La table ci-dessous est une aide visuelle pour votre convenance. </P>
+<CENTER>
+<TABLE cellSpacing=2 cellPadding=10>
+  <TBODY>
+  <TR>
+    <TH>CreateService</TH>
+    <TH>Registre</TH></TR>
+  <TR>
+    <TD>lpServiceName</TD>
+    <TD>nom de la sous-clé du registre </TD></TR>
+  <TR>
+    <TD>lpDisplayName</TD>
+    <TD>Nom d'affichage du driver </TD></TR>
+  <TR>
+    <TD>dwServiceType</TD>
+    <TD>Type</TD></TR>
+  <TR>
+    <TD>dwStartType</TD>
+    <TD>Démarrage</TD></TR>
+  <TR>
+    <TD>dwErrorControl</TD>
+    <TD>Contrôle d'erreur </TD></TR>
+  <TR>
+    <TD>lpBinaryPathName</TD>
+    <TD>Chemin vers le driver </TD></TR></TBODY></TABLE></CENTER>
+<P></P>
+<CENTER><B>Table 2-1.</B> Correspondance de quelques paramètres passés à 
+CreateService et les clefs de la base de registre. </CENTER>
+<P></P>
+<P>Comme vous pouvez le voir, tout n'est pas aussi complexe. Retournons au code 
+source. </P><PRE>        push eax
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetFullPathName</SPAN>, $CTA0(<SPAN class=STRING>"beeper.sys"</SPAN>), <SPAN class=GB>sizeof</SPAN> acDriverPath, <SPAN class=GB>addr</SPAN> acDriverPath, esp
+        pop eax
+
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CreateService</SPAN>, hSCManager, $CTA0(<SPAN class=STRING>"beeper"</SPAN>), $CTA0(<SPAN class=STRING>"Nice Melody Beeper"</SPAN>), \
+                SERVICE_START + DELETE, SERVICE_KERNEL_DRIVER, SERVICE_DEMAND_START, \
+                SERVICE_ERROR_IGNORE, <SPAN class=GB>addr</SPAN> acDriverPath, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>
+        <SPAN class=IF>.if</SPAN> eax != <SPAN class=NL>NULL</SPAN>
+            mov hService, eax
+</PRE>
+<P>En appelant GetFullPathName nous obtenons le chemin complet au fichier du 
+module de gestion de périphérique pour le passer ensuite à CreateService. </P>
+<P>CreateService ajoute notre driver à la base de données du SCM, et crée une 
+sous-clé d'enregistrement appropriée. Regardez le schéma 2-1 de nouveau. Toutes 
+ces informations ont été ajoutées dans la base de registre par CreateService. Si 
+vous commentez l'appel à DeleteService dans le fichier csp.asm, recompilez ce 
+dernier et le faite fonctionner vous pouvez voir exactement la même chose sur 
+votre ordinateur. </P>
+<P>Ne pensez pas qu'en ayant utilisé des fonctions pour la base de registre 
+(fonction Reg*) pour manipuler cette dernière, il soit possible d'obtenir le 
+même résultat. Vous pouvez ajouter des données dans la base de registre, mais 
+celles-ci n'apparaîtront pas dans la base de données du SCM. </P>
+<P>Si le module de gestion de périphérique indiqué existe déjà dans la base de 
+données du SCM l'appel à CreateService échouera. Un Appel à GetLastError renvoie 
+ERROR_SERVICE_EXISTS. Si CreateService est réussi après avoir ajouté le driver à 
+la base de données du SCM, le Handle du driver est retourné. Ce Handle est 
+exigée par d'autres fonctions afin de manipuler le driver. </P>
+<H3>2.3.3 Démarrer le driver<A name=k2d3d3></A></H3>
+<P>T La prochaine fonction que nous devrons appeler est StartService. En voici 
+son prototype :</P><PRE><SPAN class=FN>StartService</SPAN> <SPAN class=GB>proto</SPAN> hService:HANDLE, dwNumServiceArgs:DWORD, lpServiceArgVectors:LPSTR
+</PRE>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Paramètre</TH>
+    <TH>Description</TH></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>hService</I></EM></P></TD>
+    <TD>
+      <P>- Identifie le service ouvert. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>dwNumServiceArgs</I></EM></P></TD>
+    <TD>
+      <P>- Ce paramètre est toujours zéro pour des modules de gestion de 
+      périphérique.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>lpServiceArgVectors</I></EM></P></TD>
+    <TD>
+      <P>- Les services de driver ne reçoivent aucun argument. Ainsi, il devrait 
+      être NULL. </P></TD></TR></TBODY></TABLE>
+<P>Maintenant nous démarrons le driver comme ceci : </P><PRE>            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>StartService</SPAN>, hService, 0, <SPAN class=NL>NULL</SPAN>
+</PRE>
+<P>La fonction StartService force le système à faire quelques actions qui 
+rappelle le chargement de DLL en mode utilisateur. Une image du fichier du 
+driver est mappée dans l'espace d'adresse du système. Le driver est toujours 
+mappé à une adresse arbitraire. Ainsi le système exécute quelques 
+relocalisations [relocations] dans l'image du driver en utilisant la section 
+.reloc du fichier PE. Toutes les références aux symboles importés sont 
+réarrangées. Quand l'image du driver est prête, le système appelle le point 
+d'entrée du driver, qui réside dans la routine de DriverEntry. La différence 
+principale ici est que le code de la routine de DriverEntry fonctionne toujours 
+dans le contexte du processus système. </P>
+<P>L'appel à la fonction StartService est synchrone. Cela signifie qu'il n'y 
+aura pas de retour de la fonction tant que la routine DriverEntry du driver ne 
+sera pas fini. Si l'initialisation du driver réussit, DriverEntry devrait 
+renvoyer STATUS_SUCCESS, et StartService renverra une valeur non nulle. </P>
+<P>La valeur retournée par StartService est sans intérêt pour nous, puisque le 
+driver de beeper a déjà joué sa gentille mélodie et a renvoyé un code d'erreur. 
+Ainsi, nous savons à l'avance que la fonction StartService renverra une erreur. 
+</P>
+<H3>2.3.4 Désinstallation du driver<A name=k2d3d4></A></H3><PRE>            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DeleteService</SPAN>, hService
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CloseServiceHandle</SPAN>, hService
+        <SPAN class=IF>.else</SPAN>
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, $CTA0(<SPAN class=STRING>"Can't register driver."</SPAN>), <SPAN class=NL>NULL</SPAN>, MB_ICONSTOP
+        <SPAN class=IF>.endif</SPAN>
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CloseServiceHandle</SPAN>, hSCManager
+</PRE>
+<P>Maintenant tout ce qu'il nous reste à faire c'est de restaurer le système 
+dans son état initial. Nous appellerons DeleteService pour enlever le driver de 
+la base de données du SCM. Étrangement, il n'est pas nécessaire de passer le 
+Handle de la base de données du SCM à DeleteService. Le prototype de 
+DeleteService est très simple : </P><PRE><SPAN class=GB>DeleteService</SPAN> <SPAN class=GB>proto</SPAN> hService:HANDLE
+</PRE>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Paramètre</TH>
+    <TH>Description</TH></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>hService</I></EM></P></TD>
+    <TD>
+      <P>- Identifie le service à enlever. Il est nécessaire d'avoir le droit 
+      d'accès approprié. Nous avons ce dernier. </P></TD></TR></TBODY></TABLE>
+<P>Cette fonction ne supprime pas réellement le service tout de suite ; elle 
+marque simplement le service pour la suppression. Le SCM supprimera le service 
+seulement quand le service cessera de fonctionner et après que tous les Handles 
+au service aient été fermés. Car nous possédons toujours le Handle sur le 
+driver, il n'est pas enlevé de la base de données du SCM. Si vous essayez 
+d'appeler DeleteService à plusieurs reprises la fonction échouera ; Un appel à 
+GetLastError retournera ERROR_SERVICE_MARKED_FOR_DELETE. </P>
+<P>Puisque nous n'avons plus besoin de communiquer avec le driver, nous devons 
+fermer le Handle en appelant CloseServiceHandle : </P><PRE><SPAN class=FN>CloseServiceHandle</SPAN> <SPAN class=GB>proto</SPAN> hSCObject:HANDLE
+</PRE>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Paramètre</TH>
+    <TH>Description</TH></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>hSCObject</I></EM></P></TD>
+    <TD>
+      <P>- Handle du driver ou de la base de donnée du SCM à fermer. 
+  </P></TD></TR></TBODY></TABLE>
+<P>Comme il n'y a plus d'handles <EM></EM>ouverts pour le driver à cet instant , 
+l'entrée de ce dernier est enlevée de la base de données du SCM. Le deuxième 
+appel à CloseServiceHandle ferme le Handle au SCM lui-même. </P>
+<P>&nbsp;</P>
+<H2>2.4 Macros de chaînes <A name=k2d4></A></H2>
+<P>Enfin vous devez savoir ce qu'est $CTA0. C'est une fonction de Macro. Elle 
+vous laisse définir une chaîne ASCII se terminant par NULL dans la section de 
+donnée en lecture seule. Vous pouvez l'employer directement avec la macro 
+<EM>Invoke </EM>. Cette macro n'est pas la seule. Le dossier \Macros\Strings.mac 
+contient beaucoup d'autres macros utiles pour définir des chaînes de caractères 
+avec une explication détaillée quant à leur emploi. Comme ces macros ne sont pas 
+spécialement liées au développement de drivers je ne prêterai plus attention à 
+ce sujet, mais j'emploierai de telles macros un peu partout. </P>
+<HR width="100%" color=#8088a0 SIZE=1>
+
+<DIV>
+<P>Copyright © 2002-2004 Four-F, <A 
+href="mailto:four-f@mail.ru">four-f@mail.ru</A></P>
+<P>Traduction par Neitsa , <A 
+href="mailto:tzcorporation@hotmail.com">tzcorporation@hotmail.com</A></P></DIV></BODY></HTML>

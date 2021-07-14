@@ -1,0 +1,158 @@
+; I/ kernel32 handle
+56		push esi
+33C0		xor eax,eax
+648B4030	mov eax,fs:[eax+0x30]
+8B400C		mov eax,dword ptr ds:[eax+C]
+8B701C		mov esi,dword ptr ds:[eax+1C]
+ad		lods dword ptr ds:[esi] (olly) // lodsd (doc)
+8B4008		mov eax,dword ptr ds:[eax+8]
+5E		pop esi
+
+
+; II/ récup adresse GetProcAddress (ou de VirtualAlloc)
+; eax=handle kernel32 et esi=hash de GetProcAddress (ou VirtualAlloc)
+mov ebx, dword ptr [eax+3c]
+mov ebx, dword ptr [eax+ebx+78]
+add ebx, eax
+mov ecx, dword ptr [ebx+18]
+mov edx, dword ptr [ebx+20]
+add edx, eax
+[AAA]
+dec ecx
+test ecx, ecx
+jz [DDD]
+shl ecx, 2
+push esi
+mov esi, dword [edx+ecx]
+add esi, eax
+shr ecx, 2
+xor edi, edi
+push eax
+[BBB]
+xor eax, eax
+mov al, byte [esi]
+test al, al
+jz [CCC]
+ror edi, 13
+add edi, eax
+inc esi
+jmp [BBB]
+[CCC]
+pop eax
+pop esi
+cmp edi, esi
+jnz [AAA]
+[DDD]
+mov edx, dword [ebx+24]
+add edx, eax
+shl ecx, 1
+mov dx, word [edx+ecx]
+xor ecx, ecx
+mov cx, dx
+mov edx, dword [ebx+1c]
+add edx, eax
+shl ecx, 2
+mov esi, dword [edx+ecx]
+add esi, eax
+mov eax, esi
+
+; III/ récup autres adresses
+
+
+; IV/ allocation mémoire VirtualAlloc 
+6A04       push PAGE_READWRITE
+6800200000 push MEM_RESERVE
+6850010000 push 150
+6800       push NULL
+e8[VA]     call VirtualAlloc
+	   mov dword ptr [addr page allouée], eax
+
+
+; V/ ouverture fichier texte et copie contenu dans la page mémoire allouée
+6a00	   push NULL
+6800000000 push FILE_ATTRIBUTE_NORMAL
+6a03	   push OPEN_EXISTING
+6a00	   push NULL
+6a01	   push FILE_SHARE_READ
+6880000000 push GENERIC_READ
+	   push dword ptr [adresse filename]
+e8[CF]	   call CreateFile
+8bd8	   mov  ebx, eax
+53	   push ebx
+6800       push NULL
+50	   push eax
+e8[GFZ]	   call GetFileSize
+5b	   pop ebx
+6800       push NULL
+	   push dword ptr [nbFileRead]
+50	   push eax
+	   push dword ptr [page_allouée]
+53	   push ebx
+e8[RF]	   call ReadFile
+
+; VI/ WriteProcessMemory
+; esi=edi=ptr sur la page mémoire
+[CCC]
+ac         lodsb [AAA]
+3c5a       cmp al, 5ah ;5a code ascii Z
+75[AAA]    jnz [AAA]   
+3c59       cmp al, 59h ;59 code ascii Y
+75[BBB]	   jnz [BBB]
+3c00	   cmp al, NULL
+75[DDD]
+
+[AAA]
+8bf7       mov esi, edi
+ad         lodsd
+50         push eax 
+46         inc esi
+56         push esi
+8bfe       mov edi, esi
+eb[CCC]    jmp [CCC]
+
+[BBB]
+8bc6       mov eax, esi
+48	   dec eax
+2bc7	   sub eax, edi
+50	   push eax
+e8[WPM]    call WriteProcessMemory
+eb[CCC]    jmp [CCC]
+
+[DDD]
+fin de la boucle, jmp l'EP original
+
+; VIII/ jmp sur l'EP de base
+	   mov eax, dword ptr [EPbase]
+ffe0	   jmp eax
+
+
+
+
+
+
+;récapitulatif:
+; I/ kernel32 handle
+; II/ récup adresse GetProcAddress		| cette méthode veut qu'on 
+; III/ récup autres adresses			| ne crée pas de jumptable
+; IV/ allocation mémoire VirtualAlloc		| mais qu'on stocke les
+; V/ ouverture fichier texte			| fonctions dans la pile
+; VI/ WriteProcessMemory			
+
+;ou bien
+; I/ kernel32 handle
+; II/ récup adresse VirtualAlloc		
+; III/ call VirtualAlloc pour avoir une jumptable			| cette méthode crée une
+; IV/ récup adresse GetProcAdress qu'on met dans la jumptable		| jumptable et utilise 
+; V/ récup des autres adresses avec GetProcAddress			| GetProcAddress pour
+; VI/ call VirtualAlloc pour le fichier texte				| la remplir
+; VII/ ouverture fichier texte
+; VIII/ WriteProcessMemory
+
+;ou bien
+; I/ kernel handle						| cette méthode crée une
+; II/ récup adresse VirtualAlloc				| jumptable mais n'utilise
+; III/ call VirtualAlloc pour avoir une jumptable		| pas GetProcAddress
+; IV/ récup de toutes les adresses à la main			| elle récupère tout
+; V/ call VirtualAlloc pour le fichier texte			| via le handle kernel32
+; VI/ ouverture fichier texte
+; VII/ WriteProcessMemory

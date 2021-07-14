@@ -1,0 +1,1459 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0043)http://neitsabes.free.fr/ASM/KMD/kmd03.html -->
+<HTML><HEAD><TITLE>Tutorial Drivers en Mode Kernel n°3 - Les modules de gestion de périphérique les plus simples</TITLE>
+<META content="KMD kernel programmation programmeur assembleur MASM asm" 
+name=keywords>
+<META content="Assembly programming" name=DESRIPTION>
+<META content=http://neitsabes.online.fr name=Identifier-URL>
+<META content="7 Days" name=revisit-after>
+<META content=FR name=language>
+<META content="Assembly programming" name=abstract>
+<META content=Document name=resource-type>
+<META http-equiv=CACHE-CONTROL content=NO-CACHE>
+<META content=General name=rating>
+<META content=Document name=VW96.object-type>
+<META lang=fr content=Neitsa name=Author>
+<META content="copyright Neitsa" name=COPYRIGHT>
+<META content=index,follow,all name=ROBOTS>
+<META http-equiv=Expires content=never>
+<META content=20040913 name=Date-Creation-yyyymmdd>
+<META content=20040913 name=Date-Revision-yyyymmdd>
+<META http-equiv=Content-Type content="text/html; charset=ISO-8859-1"><LINK 
+href="Tutorial Drivers en Mode Kernel n°3 - Les modules de gestion de périphérique les plus simples_fichiers/KmdTut.css" 
+type=text/css rel=stylesheet>
+<SCRIPT 
+src="Tutorial Drivers en Mode Kernel n°3 - Les modules de gestion de périphérique les plus simples_fichiers/color.js"></SCRIPT>
+
+<META content="MSHTML 6.00.2900.2912" name=GENERATOR></HEAD>
+<BODY>
+<TABLE cellSpacing=0 cellPadding=0 width="96%">
+  <TBODY>
+  <TR class=logo>
+    <TD class=logo width="100%" 
+    background="Tutorial Drivers en Mode Kernel n°3 - Les modules de gestion de périphérique les plus simples_fichiers/img1px.jpg"><IMG 
+      height=110 alt="KmdTut Logo" 
+      src="Tutorial Drivers en Mode Kernel n°3 - Les modules de gestion de périphérique les plus simples_fichiers/imgLogo.jpg" 
+      width=350></TD>
+    <TD class=logo width="100%" 
+    background="Tutorial Drivers en Mode Kernel n°3 - Les modules de gestion de périphérique les plus simples_fichiers/img1px.jpg"><IMG 
+      height=110 
+      src="Tutorial Drivers en Mode Kernel n°3 - Les modules de gestion de périphérique les plus simples_fichiers/imgLogoRight.jpg" 
+      width=100></TD></TR></TBODY></TABLE>
+<P><A href="http://neitsabes.free.fr/ASM/KMD/KMDindex.htm">Retour menu KMD</A> / 
+<A href="http://neitsabes.free.fr/ASM.html">Retour menu assembleur</A></P>
+<H1>Les modules de gestion de périphérique les plus simples </H1>
+<DIV align=center>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TD class=contents vAlign=top><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d1"><B>3.1 Comment 
+      compiler et lier le module de gestion de périphérique en mode 
+      Kernel</B></A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d2"><B>3.2 Le module 
+      de gestion de périphérique en mode kernel le plus simple</B></A> 
+      <DIV style="MARGIN-LEFT: 2em"><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d2d1">3.2.1 Code 
+      source du driver le plus simple</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d2d2">3.2.2 Routine 
+      DriverEntry</A><BR></DIV><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d3"><B>3.3 Module de 
+      gestion de périphérique "Beeper"</B></A> 
+      <DIV style="MARGIN-LEFT: 2em"><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d3d1">3.3.1 Code 
+      source du driver beeper </A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d3d2">3.3.2 Contrôler 
+      le timer du système</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d3d3">3.3.3 Démarrer 
+      le driver automatiquement</A><BR></DIV><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d4"><B>3.4 Programme 
+      de contrôle de service (SCP) pour le driver giveio</B></A> 
+      <DIV style="MARGIN-LEFT: 2em"><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d4d1">3.4.1 Code 
+      source du SCP pour le driver Giveio </A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d4d2">3.4.2 Utiliser 
+      la base de registre pour passer des informations au driver</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d4d3">3.4.3 Accéder à 
+      la CMOS</A><BR></DIV><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d5"><B>3.5 Module de 
+      gestion de périphérique Giveio</B></A> 
+      <DIV style="MARGIN-LEFT: 2em"><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d5d1">3.5.1 Code 
+      source du driver Giveio</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d5d2">3.5.2 I/O 
+      permission bit map</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d5d3">3.5.3 Lire des 
+      informations depuis la base de registre</A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d5d4">3.5.4 Donner 
+      l'accès aux ports d'E/S à un processus en mode utilisateur</A><BR></DIV><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd03.html#k3d6"><B>3.6 Quelques 
+      mots à propos du débogage de driver</B></A></TD></TR></TBODY></TABLE></DIV>
+<DIV class=src><IMG height=22 
+src="Tutorial Drivers en Mode Kernel n°3 - Les modules de gestion de périphérique les plus simples_fichiers/src.gif" 
+width=18>&nbsp;<B>Code source:</B> KmdKit\examples\simple\Beeper<BR><IMG 
+height=22 
+src="Tutorial Drivers en Mode Kernel n°3 - Les modules de gestion de périphérique les plus simples_fichiers/src.gif" 
+width=18>&nbsp;<B>Code source:</B> KmdKit\examples\simple\DateTime</DIV>
+<H2>3.1 Comment compiler et lier le module de gestion de périphérique en mode 
+Kernel <A name=k3d1></A></H2>
+<P>Je place toujours le code source de mon driver dans un fichier batch. Un tel 
+fichier est un mélange entre des fichiers *.bat et *.asm, mais l'extension reste 
+"bat".</P><PRE><SPAN class=CMT>;@echo off</SPAN>
+<SPAN class=CMT>;goto make</SPAN>
+
+
+<SPAN class=INC>.386</SPAN>                      <SPAN class=CMT>; driver's code start </SPAN>
+
+  <SPAN class=CMT>;::::::::::::::::::::::::::::::::</SPAN>
+  <SPAN class=CMT>; the rest of the driver's code ;</SPAN>
+  <SPAN class=CMT>;::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=START>end</SPAN> <SPAN class=FN>DriverEntry</SPAN>            <SPAN class=CMT>; driver's code end </SPAN>
+
+
+:make
+
+set drv=drvname
+
+\masm32\bin\ml /nologo /c /coff %drv%.bat
+\masm32\bin\link /nologo /driver /base:0x10000 /align:32 /out:%drv%.sys /subsystem:native %drv%.obj
+
+del %drv%.obj
+
+echo.
+pause
+</PRE>
+<P>Si vous faites fonctionner un tel fichier "auto-compilable" les choses 
+suivantes vont arriver. Premièrement, deux commandes sont mises en commentaires, 
+ainsi elles sont ignorées par le compilateur de MASM, mais acceptées par le 
+processeur de commande qui à son tour ignore les points-virgules. Le saut de 
+commande se fait ensuite vers le label :make où sont spécifiées quelques options 
+pour le compilateur et l'éditeur de lien. Toutes les instructions suivant la 
+directive end sont ignorées par le compilateur. De cette façon toutes les lignes 
+entre la commande goto make et make sont ignorées par le processeur de commande 
+mais acceptées par le compilateur. Tout ce qui est en dehors (incluant la 
+commande goto make et le label :make) est ignoré par le compilateur mais accepté 
+par le processeur de commande. Cette méthode est extrêmement utile, du fait que 
+le code source garde avec lui toutes les infos sur la façon dont il doit être 
+compilé et lié. Vous pouvez aussi ajouter des commandes supplémentaires de 
+processing si vous le souhaitez. J'utilise cette méthode pour tous mes drivers. 
+Comme le programme de contrôle ne requière habituellement rien de spécial, vous 
+pouvez le compiler comme vous l'entendez. </P><PRE>set drv=drvname
+</PRE>
+<P>Nous définnissons une variable d'environnement, qui se substituera au nom du 
+fichier du driver.</P>
+<P>Les options de l'éditeur de lien sont les suivantes: </P>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Commande</TH>
+    <TH>Description</TH></TR>
+  <TR vAlign=top>
+    <TD width=140>
+      <P><EM>/driver</EM></P></TD>
+    <TD>
+      <P>- Informe l'éditeur e lien qu'il doit créer un driver kernel pour 
+      Windows NT;</P>
+      <P>&nbsp;</P>
+      <P>L'effet le plus important de cette option est l'ajout d'une nouvelle 
+      section appelée "INIT". Ici va la section ".idata", qui contient une liste 
+      de structure IMAGE_IMPORT_DESCRIPTOR ainsi que les des fonctions et 
+      modules importés. Cette section "INIT" est marquée "discardable" 
+      (écartable) du fait que le loader NT écarte cette section après avoir 
+      localisé les adresses des fonctions importées.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=140>
+      <P><EM>/base:0x10000</EM></P></TD>
+    <TD>
+      <P>- Mets l'adresse de base du driver comme étant égale à 10000h. Nous 
+      avons déjà abordé ce point dans une partie précédente ;</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=140>
+      <P><EM>/align:32</EM></P></TD>
+    <TD>
+      <P>- La mémoire système est une ressource précieuse. Ainsi les fichiers de 
+      module de gestion de périphérique se doivent d'avoir un alignement de 
+      section plus "fin" ; </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=140>
+      <P><EM>/out:%dvr%.sys</EM></P></TD>
+    <TD>
+      <P>- L'éditeur de lien crée des fichiers *.exe par défaut, ou bien produit 
+      un fichier *.dll si l'option /DLL est spécifiée. Nous devons forcer 
+      l'éditeur de lien à créer un fichier *.sys.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=140>
+      <P><EM>/subsystem:native</EM></P></TD>
+    <TD>
+      <P>- dans le PE header de tout fichier exécutable il existe un champs 
+      indiquant à l'éditeur de lien quel est le sous-système requit par le 
+      module: Win32, POSIX ou OS/2. Il est nécessaire de placer l'image d'un 
+      driver dans l'environnement approprié. Quand nous compilons des fichiers 
+      *.exe ou *.dll, nous indiquons habituellement sous cette option que le 
+      fichier exécutable requiert un sous-système Win32. Les drivers en mode 
+      kernel ne requièrent absolument aucun sous-système du fait qu'il 
+      fonctionne dans l'environnement natif.</P></TD></TR></TBODY></TABLE>
+<H2>3.2 Le module de gestion de périphérique en mode kernel le plus simple<A 
+name=k3d2></A></H2>
+<H3>3.2.1 Code source du driver le plus simple<A name=k3d2d1></A></H3>
+<P>Voici le code source du module de gestion de périphérique en mode kernel le 
+plus simple possible.</P><PRE><SPAN class=CMT>;@echo off</SPAN>
+<SPAN class=CMT>;goto make</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>; Le_Plus_Simple - Le plus simple des modules de gestion de périphériques                          </SPAN><SPAN class=CMT> </SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>.386</SPAN>
+<SPAN class=INC>.model</SPAN> flat, stdcall
+<SPAN class=INC>option</SPAN> casemap:none
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                I N C L U D E   F I L E S                                          </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>include</SPAN> \masm32\include\w2k\ntstatus.inc
+<SPAN class=INC>include</SPAN> \masm32\include\w2k\ntddk.inc
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                         C O D E                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>.code</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                       DriverEntry                                                 </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=FN>DriverEntry</SPAN> <SPAN class=PROC>proc</SPAN> pDriverObject:PDRIVER_OBJECT, pusRegistryPath:PUNICODE_STRING
+
+    mov eax, STATUS_DEVICE_CONFIGURATION_ERROR
+    <SPAN class=GB>ret</SPAN>
+
+<SPAN class=FN>DriverEntry</SPAN> <SPAN class=PROC>endp</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=START>end</SPAN> <SPAN class=FN>DriverEntry</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                              B U I L D I N G   D R I V E R                                        </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+:make
+
+set drv=simplest
+
+\masm32\bin\ml /nologo /c /coff %drv%.bat
+\masm32\bin\link /nologo /driver /base:0x10000 /align:32 /out:%drv%.sys /subsystem:native %drv%.obj
+
+del %drv%.obj
+
+echo.
+pause
+</PRE>
+<H3>3.2.2 La routine DriverEntry<A name=k3d2d2></A></H3>
+<P>Comme tout autre module exécutable, chaque driver doit avoir un point 
+d'entrée appelé lorsque le driver est chargé en mémoire. Le point d'entré du 
+driver est la routine <EM>DriverEntry</EM> (Entrée du driver). Ce nom est donné 
+par convention au point d'entrée principal d'un module de gestion de 
+périphérique en mode kernel. Vous pouvez le renommer comme il vous convient. La 
+routine <EM>DriverEntry</EM> initialise les structures de données pour le 
+driver. Le prototype pour le routine <EM>DriverEntry</EM> est défini comme suit 
+: </P><PRE><SPAN class=FN>DriverEntry</SPAN> <SPAN class=GB>proto</SPAN> DriverObject:PDRIVER_OBJECT, RegistryPath:PUNICODE_STRING
+</PRE>
+<P>Malheureusement la fameuse "notation hongroise" par Charles Simony n'est pas 
+utilisée dans le DDK. Je l'utiliserais partout où cela sera possible. Ainsi, 
+j'ai ajouté les préfixes pour DriverObject et RegistryPath.</P>
+<P>Les types de données de PDRIVER_OBJECT et PUNICODE_STRING sont définis 
+respectivement dans \include\w2k\ntddk.inc et \include\w2k\ntdef.inc.</P><PRE>PDRIVER_OBJECT  <SPAN class=INC>typedef</SPAN> PTR DRIVER_OBJECT
+PUNICODE_STRING <SPAN class=INC>typedef</SPAN> PTR UNICODE_STRING
+</PRE>
+<P>Quand le gestionnaire d' I/O appelle la routine <EM>DriverEntry</EM> il lui 
+passe deux pointeurs :</P>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Paramètre</TH>
+    <TH>Description</TH></TR>
+  <TR vAlign=top>
+    <TD width=120>
+      <P><EM><I>pDriverObject</I></EM></P></TD>
+    <TD>
+      <P>- Un pointeur à un objet driver à peine initialisé représentant le 
+      driver.</P>
+      <P>&nbsp;</P>
+      <P>Windows NT est un système d'exploitation orienté objet. Ainsi les 
+      drivers sont représentés en tant qu'objet. En chargeant le driver en 
+      mémoire, le système crée un objet driver représentant un driver donné. 
+      L'objet driver n'est rien de plus que la structure DRIVER_OBJECT (définie 
+      dans \include\w2k\ntddk.inc). Le pointeur pDriverObject donne au driver un 
+      accès à cette structure. Nous n'avons pas besoin de l'utiliser pour 
+      l'instant. </P></TD></TR>
+  <TR vAlign=top>
+    <TD width=120>
+      <P><EM><I>pusRegistryPath</I></EM></P></TD>
+    <TD>
+      <P>- Un pointeur vers une chaîne de caractère Unicode "comptée" qui 
+      spécifie un chemin vers la clé de registre associée au driver. Nous avons 
+      déjà abordé les clés de registre des drivers dans la partie 
+précédente.</P>
+      <P>&nbsp;</P>
+      <P>Le driver peut employer ce pointeur pour stocker ou retrouver des 
+      informations spécifiques au driver. Si un driver devait utiliser ce chemin 
+      après que la routine <EM>DriverEntry</EM> soit accomplie, il devrait 
+      sauvegarder une copie de cette chaîne de caractère Unicode, mais pas le 
+      pointeur en lui-même car ce dernier n'a aucune signification en dehors de 
+      la routine <EM>DriverEntry</EM>.</P></TD></TR></TBODY></TABLE>
+<P>La chaîne de caractère Unicode "comptée" est aussi une structure de type 
+UNICODE_STRING. A la différence du code en mode utilisateur, le code en mode 
+kernel utilise les chaînes de caractère dans le format UNICODE_STRING. Ce format 
+est défini dans \include\w2k\ntdef.inc comme ceci: </P><PRE>UNICODE_STRING <SPAN class=STRUCT>STRUCT</SPAN>
+    _Length         WORD    ?
+    MaximumLength   WORD    ?
+    Buffer          PWSTR   ?
+UNICODE_STRING <SPAN class=STRUCT>ENDS</SPAN>
+</PRE>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Paramètre</TH>
+    <TH>Description</TH></TR>
+  <TR vAlign=top>
+    <TD width=120>
+      <P><EM><I>_Length</I></EM></P></TD>
+    <TD>
+      <P>- Longueur de la chaîne de caractère en octets (non le nombre de 
+      caractères), sans compter le caractère NULL final (j'ai du changer le nom 
+      original "Length" car celui ci est un mot clé réservé sous MASM) 
+  ;</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=120>
+      <P><EM><I>MaximumLength</I></EM></P></TD>
+    <TD>
+      <P>- Longueur en octets (non en caractères) du buffer pointer par le 
+      membre Buffer ;</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=120>
+      <P><EM><I>Buffer</I></EM></P></TD>
+    <TD>
+      <P>- Pointeur vers la chaîne de caractère Unicode. N'attendez pas 
+      obligatoirement qu'elle se termine par un zéro. Parfois ce n'est pas le 
+      cas !</P></TD></TR></TBODY></TABLE>
+<P>Le principal avantage de ce format est sa détermination claire à la fois de 
+la longueur de la chaîne actuelle et aussi de sa longueur maximale possible. 
+Cela permet d'éviter des calculs additionnels. </P>
+<P>Le driver décrit ci-dessus (\src\Article2-3\simplest\simplest.sys) est 
+vraiment très simple. La seule qu'il fasse est de se charger lui-même. Comme il 
+ne peut rien faire de plus il retourne un code d'erreur 
+STATUS_DEVICE_CONFIGURATION_ERROR (voir \include\w2k\ntstatus.inc pour une liste 
+complète des codes d'erreur possible). Si vous retournez STATUS_SUCCESS, le 
+driver restera en mémoire et vous ne pourrez pas le décharger, car nous n'avons 
+pas défini la routine <EM>DriverUnload</EM> qui se charge de cela. </P>
+<P>Vous pouvez enregistrer et charger n'importe quel driver avec l'utilitaire 
+<EM>KmdManager</EM>.</P>
+<H2>3.3 Module de gestion de périphérique "Beeper"<A name=k3d3></A></H2>
+<H3>3.3.1 Code source du driver Beeper<A name=k3d3d1></A></H3>
+<P>Examinons dès à présent le driver Beeper. La dernière fois nous avions écrit 
+son programme de contrôle.</P><PRE><SPAN class=CMT>;@echo off</SPAN>
+<SPAN class=CMT>;goto make</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;  beeper - Driver en Kernel mode                                                                   </SPAN>
+<SPAN class=CMT>;  Produit des bips avec le haut parler de l'ordinateur                                             </SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>.386</SPAN>
+<SPAN class=INC>.model</SPAN> flat, stdcall
+<SPAN class=INC>option</SPAN> casemap:none
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                              I N C L U D E   F I L E S                                            </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>include</SPAN> \masm32\include\w2k\ntstatus.inc
+<SPAN class=INC>include</SPAN> \masm32\include\w2k\ntddk.inc
+<SPAN class=INC>include</SPAN> \masm32\include\w2k\hal.inc
+
+<SPAN class=INC>includelib</SPAN> \masm32\lib\w2k\hal.lib
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                     E Q U A T E S                                                 </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+TIMER_FREQUENCY        <SPAN class=GB>equ</SPAN> 1193167                   <SPAN class=CMT>; 1,193,167 Hz </SPAN>
+OCTAVE                 <SPAN class=GB>equ</SPAN> 2                         <SPAN class=CMT>; multiplicateur d'octave</SPAN>
+
+PITCH_C                <SPAN class=GB>equ</SPAN> 523                       <SPAN class=CMT>; C        -  523,25 Hz </SPAN>
+PITCH_Cs               <SPAN class=GB>equ</SPAN> 554                       <SPAN class=CMT>; C#       -  554,37 Hz </SPAN>
+PITCH_D                <SPAN class=GB>equ</SPAN> 587                       <SPAN class=CMT>; D        -  587,33 Hz </SPAN>
+PITCH_Ds               <SPAN class=GB>equ</SPAN> 622                       <SPAN class=CMT>; D#       -  622,25 Hz </SPAN>
+PITCH_E                <SPAN class=GB>equ</SPAN> 659                       <SPAN class=CMT>; E        -  659,25 Hz </SPAN>
+PITCH_F                <SPAN class=GB>equ</SPAN> 698                       <SPAN class=CMT>; F        -  698,46 Hz </SPAN>
+PITCH_Fs               <SPAN class=GB>equ</SPAN> 740                       <SPAN class=CMT>; F#       -  739,99 Hz </SPAN>
+PITCH_G                <SPAN class=GB>equ</SPAN> 784                       <SPAN class=CMT>; G        -  783,99 Hz </SPAN>
+PITCH_Gs               <SPAN class=GB>equ</SPAN> 831                       <SPAN class=CMT>; G#       -  830,61 Hz </SPAN>
+PITCH_A                <SPAN class=GB>equ</SPAN> 880                       <SPAN class=CMT>; A        -  880,00 Hz </SPAN>
+PITCH_As               <SPAN class=GB>equ</SPAN> 988                       <SPAN class=CMT>; B        -  987,77 Hz </SPAN>
+PITCH_H                <SPAN class=GB>equ</SPAN> 1047                      <SPAN class=CMT>; H        - 1046,50 Hz </SPAN>
+
+<SPAN class=CMT>; Nous allons jouer un accord de Do majeur</SPAN>
+
+TONE_1                 <SPAN class=GB>equ</SPAN> TIMER_FREQUENCY/(PITCH_C*OCTAVE)
+TONE_2                 <SPAN class=GB>equ</SPAN> TIMER_FREQUENCY/(PITCH_E*OCTAVE)
+TONE_3                 <SPAN class=GB>equ</SPAN> (PITCH_G*OCTAVE)           <SPAN class=CMT>; pour HalMakeBeep </SPAN>
+
+DELAY                  <SPAN class=GB>equ</SPAN> 1800000h                   <SPAN class=CMT>; pour mon ordinateur à ~800mHz</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                         M A C R O S                                               </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+DO_DELAY <SPAN class=MACRO>MACRO</SPAN>
+    mov eax, DELAY
+    <SPAN class=IF>.while</SPAN> eax
+        dec eax
+    <SPAN class=IF>.endw</SPAN>
+<SPAN class=MACRO>ENDM</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                            C O D E                                                </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>.code</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                            MakeBeep1                                              </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=FN>MakeBeep1</SPAN> <SPAN class=PROC>proc</SPAN> dwPitch:DWORD
+
+    <SPAN class=CMT>; Accès direct au hardware</SPAN>
+
+    cli
+
+    mov al, 10110110y
+    out 43h, al
+
+    mov eax, dwPitch
+    out 42h, al
+
+    mov al, ah
+    out 42h, al
+
+    <SPAN class=CMT>; Met le haut-parleur en fonctionnement</SPAN>
+
+    in al, 61h
+    or  al, 11y
+    out 61h, al
+
+    sti
+
+    DO_DELAY
+
+    cli
+
+    <SPAN class=CMT>; Arrête le haut-parleur</SPAN>
+
+    in al, 61h
+    and al, 11111100y
+    out 61h, al
+
+    sti
+
+    <SPAN class=GB>ret</SPAN>
+
+<SPAN class=FN>MakeBeep1</SPAN> <SPAN class=PROC>endp</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                            MakeBeep2                                              </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=FN>MakeBeep2</SPAN> <SPAN class=PROC>proc</SPAN> dwPitch:DWORD
+
+    <SPAN class=CMT>; Accès au hardware en utilisant WRITE_PORT_UCHAR et READ_PORT_UCHAR </SPAN>
+    <SPAN class=CMT>; fonctions provenant de hal.dll </SPAN>
+
+    cli
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>WRITE_PORT_UCHAR</SPAN>, 43h, 10110110y
+
+    mov eax, dwPitch
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>WRITE_PORT_UCHAR</SPAN>, 42h, al
+    mov eax, dwPitch
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>WRITE_PORT_UCHAR</SPAN>, 42h, ah
+
+    <SPAN class=CMT>; Met le haut-parleur en fonctionnement</SPAN>
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>READ_PORT_UCHAR</SPAN>, 61h
+    or  al, 11y
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>WRITE_PORT_UCHAR</SPAN>, 61h, al
+
+    sti
+
+    DO_DELAY	
+
+    cli
+
+    <SPAN class=CMT>; Arrete le haut-parleur</SPAN>
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>READ_PORT_UCHAR</SPAN>, 61h
+    and al, 11111100y
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>WRITE_PORT_UCHAR</SPAN>, 61h, al
+
+    sti
+
+    <SPAN class=GB>ret</SPAN>
+
+<SPAN class=FN>MakeBeep2</SPAN> <SPAN class=PROC>endp</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                       DriverEntry                                                 </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=FN>DriverEntry</SPAN> <SPAN class=PROC>proc</SPAN> pDriverObject:PDRIVER_OBJECT, pusRegistryPath:PUNICODE_STRING
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MakeBeep1</SPAN>, TONE_1
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MakeBeep2</SPAN>, TONE_2
+
+    <SPAN class=CMT>; Accès au hardware en utilisant le fonction HalMakeBeep de hal.dll</SPAN>
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>HalMakeBeep</SPAN>, TONE_3
+    DO_DELAY
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>HalMakeBeep</SPAN>, 0
+
+    mov eax, STATUS_DEVICE_CONFIGURATION_ERROR
+    <SPAN class=GB>ret</SPAN>
+
+<SPAN class=FN>DriverEntry</SPAN> <SPAN class=PROC>endp</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=START>end</SPAN> <SPAN class=FN>DriverEntry</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+:make
+
+set drv=beeper
+
+\masm32\bin\ml /nologo /c /coff %drv%.bat
+\masm32\bin\link /nologo /driver /base:0x10000 /align:32 /out:%drv%.sys /subsystem:native %drv%.obj
+
+del %drv%.obj
+
+echo.
+pause
+</PRE>
+<P>La fonction première du driver est de jouer des arpèges de Do majeur en 
+utilisant le haut-parleur de la carte-mère. Pour réaliser ceci le driver utilise 
+les instructions IN et OUT du CPU pour accèder aux ports d'entrée/sortie (E/S). 
+Il est bien connu que l'accés aux ports d'E/S est protégé par Windows NT car 
+c'est une ressource système importante. Une tentative d'exécuter une instruction 
+IN ou OUT depuis le mode utilisateur conduit à l'arrêt du processus. Mais il 
+existe en fait une possibilité pour contrevenir à cette limitation, par exemple 
+de permettre au mode utilisateur d'accéder directement aux ports d'E/S. Nous 
+parlerons de ceci un peu plus tard. </P>
+<H3>3.3.2 Contrôler le timer du système<A name=k3d3d2></A></H3>
+<P>Il y a trois timers dans l'ordinateur. Ils sont connus en tant que timer 0, 1 
+et 2 et résident dans le <EM><I>Programmable Interval Timer</I></EM> (PIT). Le 
+timer 2 est utilisé dans le contrôle de la production des sons. La fréquence à 
+laquelle le timer oscille est déterminée par une valeur de compteur initiale. Le 
+timer compte à rebours depuis cette valeur jusqu'à zéro, et une fois atteint 
+zéro, le timer oscille. Le compteur est alors remis à la valeur du compteur 
+prédéterminée et le processus recommence à nouveau. Le processus de compte à 
+rebours est contrôlé par l'oscillateur principal du système, qui fonctionne à 
+une fréquence de 1 193 180 Hz (un million cent quatre vingt treize mille cent 
+quatre vingt). Cette valeur est fixée pour toute la famille des PC. A chaque 
+fois qu'il oscille, le timer système compte à rebours une fois. Pour varier la 
+fréquence à laquelle le timer oscille, nous devons juste lui donner une nouvelle 
+valeur de compteur initiale. Pour calculer la fréquence à laquelle le 
+haut-parleur va produire un son, nous utilisons la formule: 1193180/. Vous 
+trouverez des informations plus détaillées à ce propos en cherchant sur le Web. 
+</P>
+<P><INITIAL value="" count="">Il y a une petite subtilité ici, que j'ai eu du 
+mal à comprendre. La fonction <EM>QueryPerformanceFrequency</EM> de kernel32.dll 
+retourne bien la valeur 1193180. Mais la fonction HalMakeBeep située dans 
+hal.dll retourne une valeur différente, égale à 1193167. J'utiliserais cette 
+valeur qui est probablement une compensation temporelle, je l'ignore. Peu 
+importe, cela ne nous empêche pas de faire des sons avec le haut-parleur. 
+</INITIAL></P>
+<P><INITIAL value="" count="">Nous jouons le premier son (do) de l'accord de do 
+majeur en utilisant la routine <EM>MakeBeep1</EM>.</INITIAL></P><PRE>    mov al, 10110110y
+    out 43h, al
+</PRE>
+<P>En premier lieu nous devons nous occuper du registre de contrôle du timer. 
+Nous devons pour ce faire charger la valeur binaire 10110110 dans le port 
+43h.</P><PRE>    mov eax, dwPitch
+    out 42h, al
+
+    mov al, ah
+    out 42h, al
+</PRE>
+<P>Ensuite, en deux instructions consécutives, nous chargeons l'octet de poids 
+faible et celui de poids fort de la nouvelle valeur du compteur dans le port 
+42h.</P><PRE>    in al, 61h
+    or  al, 11y
+    out 61h, al
+</PRE>
+<P>Maintenant, nous mettons le haut parleur en fonctionnement en mettant les 
+bits 0 et 1 de la valeur sur le port 61h. A présent le haut-parleur produit du 
+son.</P><PRE>DO_DELAY <SPAN class=MACRO>MACRO</SPAN>
+    mov eax, DELAY
+    <SPAN class=IF>.while</SPAN> eax
+        dec eax
+    <SPAN class=IF>.endw</SPAN>
+<SPAN class=MACRO>ENDM</SPAN>
+</PRE>
+<P>Nous laissons le haut-parleur produire du son pendant quelque temps en 
+utilisant la macro DO_DELAY. Oui - c'est primitif, mais c'est assez efficace et 
+cela fonctionne.</P><PRE>    in al, 61h
+    and al, 11111100y
+    out 61h, al
+</PRE>
+<P>Pour arrêter le haut-parleur nous devons effacer les bits 1 et 2 de la valeur 
+sur le port 61h. N'oubliez pas que le timer est une ressource système globale. 
+Ainsi nous enlevons l'interruption matérielle masquable (maskable hardware 
+interrupt) en effaçant le drapeau (flag) d'interruption. Cela serait plus 
+difficile sur une machine multi-processeur. </P>
+<P>Nous jouons le second son (mi) de l'arpège de do majeur en utilisant la 
+routine <EM>MakeBeep2</EM>. Elle diffère seulement de la première car elle 
+utilise les fonctions <EM>WRITE_PORT_UCHAR</EM> et <EM>READ_PORT_UCHAR</EM> de 
+hal.dll au lieu de in et out. HAL cache les détails des dépendances matérielles 
+comme les interfaces d'E/S (c'est ici le cas dans notre exemple) et d'autres 
+choses, rendant ces opérations indépendantes de la machine sur lesquelles elles 
+sont exécutées. </P>
+<P>Le troisième son (sol) de l'accord de do majeur est joué avec la fonction 
+<EM>HalMakeBeep</EM> de hal.dll. Comme paramètre il est n'est pas nécessaire 
+d'utiliser la valeur initiale du compteur, mais plutôt la valeur de fréquence 
+elle même. </P>
+<P>Au début du fichier beeper.bat vous trouverez les douze notes clés. J'utilise 
+seulement trois d'entre elles. Les autres sont laissées pour votre futur 
+synthétiseur ;-). Pour arrêter le haut-parleur il est nécessaire d'appeler 
+<EM>alMakeBeep</EM> une fois de plus, en passant 0 comme argument. </P>
+<P>Le driver du beeper retourne un code d'erreur au système et est enlevé de la 
+mémoire. Je répète : il est nécessaire de retourner un code d'erreur seulement 
+pour provoquer l'effacement du driver de la mémoire par le système. Quand nous 
+verrons des drivers avec de plus amples possibilités, nous devrons retourner 
+STATUS_SUCCESS. </P>
+<H3>3.3.3 Démarrer le driver automatiquement<A name=k3d3d3></A></H3>
+<P>Le programme scp.exe installe le driver beeper.sys de façon à ce qu'il soit 
+démarré à la demande. La dernière fois nous avions abordé les différents types 
+de démarrage des drivers. A présent nous allons forcer le système à démarrer 
+notre driver automatiquement. Cela peut être fait de diverses manières. La plus 
+simple est de mettre en commentaire l'appel à <EM>DeleteService</EM> et de 
+changer SERVICE_DEMAND_START en SERVICE_AUTO_START, puis changer 
+SERVICE_ERROR_IGNORE en SERVICE_ERROR_NORMAL, et enfin recompiler scp.asm et 
+l'exécuter. Après que scp.exe se soit terminé, la base de registre contiendra 
+une nouvelle entrée relative au service. Maintenant vous pouvez tout oubliez à 
+propos de ceci. Durant le prochain boot du système, le driver beeper.sys vous 
+rappellera qu'il est là. Dans l'Event Log (notification des évènements) vous 
+trouverez une entrée relative à propos du problème de démarrage du driver. 
+Depuis le menu "Démarrer", <EM><I>sélectionnez Programmes/Outils 
+d'administration/Observateur d'évènement</I></EM> et choisissez Journal système. 
+Double-cliquez sur une notification d'évènement pour la voir. Vous devriez voir 
+quelque chose comme ceci: </P>
+<P></P>
+<CENTER><IMG 
+src="Tutorial Drivers en Mode Kernel n°3 - Les modules de gestion de périphérique les plus simples_fichiers/imgkmd3-1.png"><BR><BR><B>Figure 
+3-1</B>. Entrée d'erreur dans l'observateur d'évènement. </CENTER>
+<P></P>
+<P>N'oubliez pas d'enlever l'entrée dans la base de registre, sinon vous risquez 
+d'entendre cette petite mélodie chaque fois que votre système démarrera.</P>
+<H2>3.4 Programme de contrôle de service (SCP) pour le driver giveio<A 
+name=k3d4></A></H2>
+<H3>3.4.1 Code source pour le SCP du driver Giveio<A name=k3d4d1></A></H3>
+<P>Jetons maintenant un oeil sur un autre SCP pour contrôler le driver 
+giveio.sys.</P><PRE><SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;  DateTime - Programme de contrôle de service (SCP) pour le driver giveio                          </SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>.386</SPAN>
+<SPAN class=INC>.model</SPAN> flat, stdcall
+<SPAN class=INC>option </SPAN> casemap:none
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                              I N C L U D E   F I L E S                                            </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>include</SPAN> \masm32\include\windows.inc
+
+<SPAN class=INC>include</SPAN> \masm32\include\kernel32.inc
+<SPAN class=INC>include</SPAN> \masm32\include\user32.inc
+<SPAN class=INC>include</SPAN> \masm32\include\advapi32.inc
+
+<SPAN class=INC>includelib</SPAN> \masm32\lib\kernel32.lib
+<SPAN class=INC>includelib</SPAN> \masm32\lib\user32.lib
+<SPAN class=INC>includelib</SPAN> \masm32\lib\advapi32.lib
+
+<SPAN class=INC>include</SPAN> \masm32\Macros\Strings.mac
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                         M A C R O S                                               </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+CMOS <SPAN class=MACRO>MACRO</SPAN> by:REQ
+    mov al, by
+    out 70h, al
+    in al, 71h
+
+    mov ah, al
+    shr al, 4
+    add al, <SPAN class=STRING>'0'</SPAN>
+
+    and ah, 0Fh
+    add ah, <SPAN class=STRING>'0'</SPAN>
+    stosw
+<SPAN class=MACRO>ENDM</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                           C O D E                                                  </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>.code</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                          DateTime                                                 </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=FN>DateTime</SPAN> <SPAN class=PROC>proc</SPAN> <SPAN class=GB>uses</SPAN> edi
+
+<SPAN class=GB>local</SPAN> acDate[16]:CHAR
+<SPAN class=GB>local</SPAN> acTime[16]:CHAR
+<SPAN class=GB>local</SPAN> acOut[64]:CHAR
+
+    <SPAN class=CMT>; voir la list d'interruption de Ralf Brown pour plus de details </SPAN>
+
+    <SPAN class=CMT>;:::::::::::::::::: Choix du format de données  ::::::::::::::::::</SPAN>
+
+    mov al, 0Bh               <SPAN class=CMT>; registre de statut B </SPAN>
+    out 70h, al
+    in al, 71h
+
+    push eax                  <SPAN class=CMT>; sauve l'ancien format de donnée</SPAN>
+    and al, 11111011y         <SPAN class=CMT>; Bit 2: Mode de donnée - 0: BCD, 1: Binaire</SPAN>
+    or al, 010y               <SPAN class=CMT>; Bit 1: sélection du type d'heure (24/12) - 1 : mode 24 heures </SPAN>
+    out 71h, al
+
+    <SPAN class=CMT>;:::::::::::::::::::: retrouvons la date courante ::::::::::::::::::::</SPAN>
+
+    lea edi, acDate
+
+    CMOS 07h                  <SPAN class=CMT>; date du mois</SPAN>
+    mov al, <SPAN class=STRING>'.'</SPAN>
+    stosb
+
+    CMOS 08h                  <SPAN class=CMT>; mois</SPAN>
+    mov al, <SPAN class=STRING>'.'</SPAN>
+    stosb
+
+    CMOS 32h                  <SPAN class=CMT>; deux chiffres les plus significatifs de l'année</SPAN>
+    CMOS 09h                  <SPAN class=CMT>; deux chiffres les moins significatifs de l'année</SPAN>
+
+    xor eax, eax              <SPAN class=CMT>; termine la chaîne avec un zéro</SPAN>
+    stosb
+
+    <SPAN class=CMT>;:::::::::::::::::::: Recherche du temps actuel :::::::::::::::::::</SPAN>
+
+    lea edi, acTime
+
+    CMOS 04h                  <SPAN class=CMT>; heures</SPAN>
+    mov al, <SPAN class=STRING>':'</SPAN>
+    stosb
+
+    CMOS 02h                  <SPAN class=CMT>; minutes </SPAN>
+    mov al, <SPAN class=STRING>':'</SPAN>
+    stosb
+
+    CMOS 0h                   <SPAN class=CMT>; secondes </SPAN>
+
+    xor eax, eax              <SPAN class=CMT>; terminons la chaîne avec un zéro </SPAN>
+    stosb
+
+    <SPAN class=CMT>;:::::::::::::: restaure l'ancien format de donnée :::::::::::::</SPAN>
+
+    mov al, 0Bh
+    out 70h, al
+    pop eax
+    out 71h, al
+
+    <SPAN class=CMT>;::::::::::::::::: Affiche la date et l'heure courante :::::::::::::::</SPAN>
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>wsprintf</SPAN>, <SPAN class=GB>addr</SPAN> acOut, $CTA0(<SPAN class=STRING>"Date:\t%s\nTime:\t%s"</SPAN>), <SPAN class=GB>addr</SPAN> acDate, <SPAN class=GB>addr</SPAN> acTime
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=GB>addr</SPAN> acOut, $CTA0(<SPAN class=STRING>"Current Date and Time"</SPAN>), MB_OK
+
+    <SPAN class=GB>ret</SPAN>
+
+<SPAN class=FN>DateTime</SPAN> <SPAN class=PROC>endp</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                         start                                                     </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=START>start</SPAN> <SPAN class=PROC>proc</SPAN>
+
+<SPAN class=GB>local</SPAN> fOK:BOOL
+<SPAN class=GB>local</SPAN> hSCManager:HANDLE
+<SPAN class=GB>local</SPAN> hService:HANDLE
+<SPAN class=GB>local</SPAN> acDriverPath[MAX_PATH]:CHAR
+
+<SPAN class=GB>local</SPAN> hKey:HANDLE
+<SPAN class=GB>local</SPAN> dwProcessId:DWORD
+
+    and fOK, 0        <SPAN class=CMT>; présume une error </SPAN>
+
+    <SPAN class=CMT>; Ouvre la base de donnée du SCM</SPAN>
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>OpenSCManager</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, SC_MANAGER_CREATE_SERVICE
+    <SPAN class=IF>.if</SPAN> eax != <SPAN class=NL>NULL</SPAN>
+        mov hSCManager, eax
+
+        push eax
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetFullPathName</SPAN>, $CTA0(<SPAN class=STRING>"giveio.sys"</SPAN>), sizeof acDriverPath, <SPAN class=GB>addr</SPAN> acDriverPath, esp
+        pop eax
+
+        <SPAN class=CMT>; Enregistre le driver dans la base de donnée active du SCM</SPAN>
+
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CreateService</SPAN>, hSCManager, $CTA0(<SPAN class=STRING>"giveio"</SPAN>), $CTA0(<SPAN class=STRING>"Current Date and Time fetcher."</SPAN>), \
+                SERVICE_START + DELETE, SERVICE_KERNEL_DRIVER, SERVICE_DEMAND_START, \
+                SERVICE_ERROR_IGNORE, <SPAN class=GB>addr</SPAN> acDriverPath, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>
+
+        <SPAN class=IF>.if</SPAN> eax != <SPAN class=NL>NULL</SPAN>
+            mov hService, eax
+
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>RegOpenKeyEx</SPAN>, HKEY_LOCAL_MACHINE, \
+                                    $CTA0(<SPAN class=STRING>"SYSTEM\\CurrentControlSet\\Services\\giveio"</SPAN>), \
+                                    0, KEY_CREATE_SUB_KEY + KEY_SET_VALUE, <SPAN class=GB>addr</SPAN> hKey
+
+            <SPAN class=IF>.if</SPAN> eax == ERROR_SUCCESS
+
+                <SPAN class=CMT>; Ajoute l'ID du processus courant dans la base de registre</SPAN>
+
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetCurrentProcessId</SPAN>
+                mov dwProcessId, eax
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>RegSetValueEx</SPAN>, hKey, $CTA0(<SPAN class=STRING>"ProcessId"</SPAN>, szProcessId), <SPAN class=NL>NULL</SPAN>, REG_DWORD, \
+                                        <SPAN class=GB>addr</SPAN> dwProcessId, sizeof DWORD
+
+                <SPAN class=IF>.if</SPAN> eax == ERROR_SUCCESS
+
+                    <SPAN class=CMT>; Démarrage du driver </SPAN>
+
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>StartService</SPAN>, hService, 0, <SPAN class=NL>NULL</SPAN>
+                    inc fOK                <SPAN class=CMT>; Met le Flag à OK</SPAN>
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>RegDeleteValue</SPAN>, hKey, <SPAN class=GB>addr</SPAN> szProcessId
+                <SPAN class=IF>.else</SPAN>
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, $CTA0(<SPAN class=STRING>"Can't add Process ID into registry."</SPAN>), \
+                                        <SPAN class=NL>NULL</SPAN>, MB_ICONSTOP
+                <SPAN class=IF>.endif</SPAN>
+                
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>RegCloseKey</SPAN>, hKey
+
+            <SPAN class=IF>.else</SPAN>
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, $CTA0(<SPAN class=STRING>"Can't open registry."</SPAN>), <SPAN class=NL>NULL</SPAN>, MB_ICONSTOP
+            <SPAN class=IF>.endif</SPAN>
+
+            <SPAN class=CMT>; Enlève le driver de la base de donnée du SCM</SPAN>
+
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DeleteService</SPAN>, hService
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CloseServiceHandle</SPAN>, hService
+        <SPAN class=IF>.else</SPAN>
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, $CTA0(<SPAN class=STRING>"Can't register driver."</SPAN>), <SPAN class=NL>NULL</SPAN>, MB_ICONSTOP
+        <SPAN class=IF>.endif</SPAN>
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>CloseServiceHandle</SPAN>, hSCManager
+    <SPAN class=IF>.else</SPAN>
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, $CTA0(<SPAN class=STRING>"Can't connect to Service Control Manager."</SPAN>), \
+                           <SPAN class=NL>NULL</SPAN>, MB_ICONSTOP
+    <SPAN class=IF>.endif</SPAN>
+
+    <SPAN class=CMT>; Si tout est OK, affiche la date et l'heure courante à l'utilisateur</SPAN>
+
+    <SPAN class=IF>.if</SPAN> fOK
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DateTime</SPAN>
+    <SPAN class=IF>.endif</SPAN>
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>ExitProcess</SPAN>, 0
+
+<SPAN class=START>start</SPAN> <SPAN class=PROC>endp</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=START>end start</SPAN>
+</PRE>
+<H3>3.4.2 Utilisation de la base de registre pour passer des informations au 
+driver<A name=k3d4d2></A></H3>
+<P>Il n'y a rien de nouveau ici, à part quelques points.</P><PRE>            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>RegOpenKeyEx</SPAN>, HKEY_LOCAL_MACHINE, \
+                                    $CTA0(<SPAN class=STRING>"SYSTEM\\CurrentControlSet\\Services\\giveio"</SPAN>), \
+                                    0, KEY_CREATE_SUB_KEY + KEY_SET_VALUE, <SPAN class=GB>addr</SPAN> hKey
+
+            <SPAN class=IF>.if</SPAN> eax == ERROR_SUCCESS
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>GetCurrentProcessId</SPAN>
+                mov dwProcessId, eax
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>RegSetValueEx</SPAN>, hKey, $CTA0(<SPAN class=STRING>"ProcessId"</SPAN>, szProcessId), <SPAN class=NL>NULL</SPAN>, REG_DWORD, \
+                                        <SPAN class=GB>addr</SPAN> dwProcessId, sizeof DWORD
+
+                <SPAN class=IF>.if</SPAN> eax == ERROR_SUCCESS                
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>StartService</SPAN>, hService, 0, <SPAN class=NL>NULL</SPAN>
+</PRE>
+<P>Avant de démarrer le driver nous créons une valeur ProcessID additionnelle 
+dans une sous-clé du registre pour le driver. Elle contient l'identifiant du 
+processus actuel, qui est l'ID du SCP lui-même. Notez ici la façon dont 
+j'utilise la macro $CTA0. J'ai spécifié un label szProcessId auquel le texte 
+"ProcessId" sera associé. Cela nous permet d'accéder plus tard à ce texte. Ces 
+macros de texte sont assez flexibles. </P>
+<P>Si la nouvelle valeur de registre est ajoutée avec succès, nous pouvons 
+démarrer le driver. Le pourquoi de cette nouvelle valeur dans la base de 
+registre sera expliqué plus tard. </P><PRE>                    inc fOK
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>RegDeleteValue</SPAN>, hKey, <SPAN class=GB>addr</SPAN> szProcessId
+                <SPAN class=IF>.else</SPAN>
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, $CTA0(<SPAN class=STRING>"Can't add Process ID into registry."</SPAN>), \
+                                        <SPAN class=NL>NULL</SPAN>, MB_ICONSTOP
+                <SPAN class=IF>.endif</SPAN>
+                
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>RegCloseKey</SPAN>, hKey
+</PRE>
+<P>Après le retour de <EM>StartService</EM> nous pouvons considérer que le 
+driver a fait son travail et à mis à OK (1) le drapeau (Flag) fOk. L'appel à 
+<EM>RegDeleteValue</EM> n'est nécessaire ici car toute les valeurs, pour le 
+driver, des clés de la base de registre seront supprimées par l'appel à la 
+fonction <EM>DeleteService</EM>. Néanmoins c'est une bonne habitude de 
+programmation que de le faire explicitement. </P><PRE>    <SPAN class=IF>.if</SPAN> fOK
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DateTime</SPAN>
+    <SPAN class=IF>.endif</SPAN>
+</PRE>
+<P>Après avoir enlever l'entrée du driver de la base de donnée du SCM, nous 
+fermons tout les handles ouvert et, si le drapeau fOk est mis, nous appelons la 
+fonction <EM>DateTime</EM>.</P>
+<H3>3.4.3 Accéder à la CMOS<A name=k3d4d3></A></H3>
+<P>Sur la carte-mére d'un ordinateur se trouve une micro puce utilisée pour 
+stocker certaines informations de configuration du système comme les paramètres 
+des disques, la configuration mémoire, ainsi que la date et l'heure. Cette 
+micropuce est souvent appelée la "CMOS" (CMOS est un acronyme signifiant 
+Complementary Metal Oxide Semiconductor). La micro puce est alimentée par une 
+pile et possède une horloge temps réelle (RTC pour Real-Time clock). Nous 
+pouvons obtenir ses informations en accédant aux ports d'entrée/sortie 70h et 
+71h. Voyez la "liste d'interruption de Ralph Brown" pour de plus amples détails 
+( <A 
+href="http://www-2.cs.cmu.edu/afs/cs/user/ralf/pub/WWW/files.html">http://www-2.cs.cmu.edu/afs/cs/user/ralf/pub/WWW/files.html</A> 
+). </P><PRE>    mov al, 0Bh               <SPAN class=CMT>; registre de statut B </SPAN>
+    out 70h, al
+    in al, 71h
+
+    push eax                  <SPAN class=CMT>; sauve l'ancien format de donnée</SPAN>
+    and al, 11111011y         <SPAN class=CMT>; Bit 2: Mode de donnée - 0: BCD, 1: Binaire</SPAN>
+    or al, 010y               <SPAN class=CMT>; Bit 1: 24/12 hour selection - 1 enables 24 hour mode </SPAN>
+    out 71h, al
+</PRE>
+<P>Premièrement nous utilisons un format de donnée adéquat en utilisant le 
+registre de statut B.</P>
+<P>En utilisant la macro adéquate nous obtenons toutes les informations que nous 
+souhaitons de la CMOS et les formatons par la même occasion.</P><PRE>    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>wsprintf</SPAN>, <SPAN class=GB>addr</SPAN> acOut, $CTA0(<SPAN class=STRING>"Date:\t%s\nTime:\t%s"</SPAN>), <SPAN class=GB>addr</SPAN> acDate, <SPAN class=GB>addr</SPAN> acTime
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MessageBox</SPAN>, <SPAN class=NL>NULL</SPAN>, <SPAN class=GB>addr</SPAN> acOut, $CTA0(<SPAN class=STRING>"Current Date and Time"</SPAN>), MB_OK
+</PRE>
+<P>Ensuite nous affichons les données que nous avons retrouvées. Vous devriez 
+voir quelque chose comme ceci:</P>
+<P></P>
+<CENTER><IMG 
+src="Tutorial Drivers en Mode Kernel n°3 - Les modules de gestion de périphérique les plus simples_fichiers/imgkmd3-2.png"><BR><BR><B>Figure 
+3-2</B>. La sortie de DateTime.exe </CENTER>
+<P></P>
+<P>La chose la plus étrange ici est que nous avons accédé à la mémoire SMOS sans 
+que le système nous ait arrêté. Comme je l'ai mentionné plus haut, l'accès aux 
+ports d'E/S est protégé sous Windows NT. L'exécution des instructions IN et OUT 
+en mode utilisateur cause l'arrêt du processus. Mains nous les avons bien 
+utilisés. Comment cela est-il possible ? Et ça l'est grâce au driver giveio. 
+</P>
+<H2>3.5 Module de gestion de périphérique Giveio <A name=k3d5></A></H2>
+<H3>3.5.1 Code source du driver Giveio<A name=k3d5d1></A></H3><PRE><SPAN class=CMT>;@echo off</SPAN>
+<SPAN class=CMT>;goto make</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;  giveio - Driver en Mode Kernel                                                                   </SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;  Demontre l'accés direct aux ports d'E/S depuis le mode utilisateur</SPAN><SPAN class=CMT>                      </SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>.386</SPAN>
+<SPAN class=INC>.model</SPAN> flat, stdcall
+<SPAN class=INC>option</SPAN> casemap:none
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                              I N C L U D E   F I L E S                                            </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>include</SPAN> \masm32\include\w2k\ntstatus.inc
+<SPAN class=INC>include</SPAN> \masm32\include\w2k\ntddk.inc
+<SPAN class=INC>include</SPAN> \masm32\include\w2k\ntoskrnl.inc
+
+<SPAN class=INC>includelib</SPAN> \masm32\lib\w2k\ntoskrnl.lib
+
+<SPAN class=INC>include</SPAN> \masm32\Macros\Strings.mac
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                     E Q U A T E S                                                 </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+IOPM_SIZE <SPAN class=GB>equ</SPAN> 2000h     <SPAN class=CMT>; taille de la carte de permission d'E/S (sizeof I/O permission map) </SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                        C O D E                                                    </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=INC>.code</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                       DriverEntry                                                 </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=FN>DriverEntry</SPAN> <SPAN class=PROC>proc</SPAN> pDriverObject:PDRIVER_OBJECT, pusRegistryPath:PUNICODE_STRING
+
+<SPAN class=GB>local</SPAN> status:NTSTATUS
+<SPAN class=GB>local</SPAN> oa:OBJECT_ATTRIBUTES
+<SPAN class=GB>local</SPAN> hKey:HANDLE
+<SPAN class=GB>local</SPAN> kvpi:KEY_VALUE_PARTIAL_INFORMATION
+<SPAN class=GB>local</SPAN> pIopm:PVOID
+<SPAN class=GB>local</SPAN> pProcess:LPVOID
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DbgPrint</SPAN>, $CTA0(<SPAN class=STRING>"giveio: Entering DriverEntry"</SPAN>)
+        
+    mov status, STATUS_DEVICE_CONFIGURATION_ERROR
+
+    lea ecx, oa
+    <SPAN class=FN>InitializeObjectAttributes</SPAN> ecx, pusRegistryPath, 0, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>ZwOpenKey</SPAN>, <SPAN class=GB>addr</SPAN> hKey, KEY_READ, ecx
+    <SPAN class=IF>.if</SPAN> eax == STATUS_SUCCESS
+
+        push eax
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>ZwQueryValueKey</SPAN>, hKey, $CCOUNTED_UNICODE_STRING(<SPAN class=STRING>"ProcessId"</SPAN>, 4), \
+                               KeyValuePartialInformation, <SPAN class=GB>addr</SPAN> kvpi, <SPAN class=GB>sizeof</SPAN> kvpi, esp
+        pop ecx
+
+        <SPAN class=IF>.if</SPAN> ( eax != STATUS_OBJECT_NAME_NOT_FOUND ) &amp;&amp; ( ecx != 0 )
+
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DbgPrint</SPAN>, $CTA0(<SPAN class=STRING>"giveio: Process ID: %X"</SPAN>), \
+                                <SPAN class=GB>dword ptr</SPAN> (KEY_VALUE_PARTIAL_INFORMATION PTR [kvpi]).Data
+
+            <SPAN class=CMT>; Alloue un buffer pour la carte de permission d'E/S (I/O permission map) </SPAN>
+
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MmAllocateNonCachedMemory</SPAN>, IOPM_SIZE
+            <SPAN class=IF>.if</SPAN> eax != <SPAN class=NL>NULL</SPAN>
+                mov pIopm, eax
+
+                lea ecx, kvpi
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>PsLookupProcessByProcessId</SPAN>, \
+                        <SPAN class=GB>dword ptr</SPAN> (KEY_VALUE_PARTIAL_INFORMATION PTR [ecx]).Data, <SPAN class=GB>addr</SPAN> pProcess
+                <SPAN class=IF>.if</SPAN> eax == STATUS_SUCCESS
+
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DbgPrint</SPAN>, $CTA0(<SPAN class=STRING>"giveio: PTR KPROCESS: %08X"</SPAN>), pProcess
+
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>Ke386QueryIoAccessMap</SPAN>, 0, pIopm
+                    <SPAN class=IF>.if</SPAN> al != 0
+
+                        <SPAN class=CMT>; Accès E/S pour le port 70h</SPAN>
+
+                        mov ecx, pIopm
+                        add ecx, 70h / 8
+                        mov eax, [ecx]
+                        btr eax, 70h MOD 8
+                        mov [ecx], eax
+
+                       <SPAN class=CMT>; Accès E/S pour le port 71h</SPAN>
+
+                        mov ecx, pIopm
+                        add ecx, 71h / 8
+                        mov eax, [ecx]
+                        btr eax, 71h MOD 8
+                        mov [ecx], eax
+
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>Ke386SetIoAccessMap</SPAN>, 1, pIopm
+                        <SPAN class=IF>.if</SPAN> al != 0
+                            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>Ke386IoSetAccessProcess</SPAN>, pProcess, 1
+                            <SPAN class=IF>.if</SPAN> al != 0
+                                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DbgPrint</SPAN>, $CTA0(<SPAN class=STRING>"giveio: I/O permission is successfully given"</SPAN>)
+                            <SPAN class=IF>.else</SPAN>
+                                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DbgPrint</SPAN>, $CTA0(<SPAN class=STRING>"giveio: I/O permission is failed"</SPAN>)
+                                mov status, STATUS_IO_PRIVILEGE_FAILED
+                            <SPAN class=IF>.endif</SPAN>
+                        <SPAN class=IF>.else</SPAN>
+                            mov status, STATUS_IO_PRIVILEGE_FAILED
+                        <SPAN class=IF>.endif</SPAN>
+                    <SPAN class=IF>.else</SPAN>
+                        mov status, STATUS_IO_PRIVILEGE_FAILED
+                    <SPAN class=IF>.endif</SPAN>
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>ObDereferenceObject</SPAN>, pProcess
+                <SPAN class=IF>.else</SPAN>
+                    mov status, STATUS_OBJECT_TYPE_MISMATCH
+                <SPAN class=IF>.endif</SPAN>
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MmFreeNonCachedMemory</SPAN>, pIopm, IOPM_SIZE
+            <SPAN class=IF>.else</SPAN>
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DbgPrint</SPAN>, $CTA0(<SPAN class=STRING>"giveio: Call to MmAllocateNonCachedMemory failed"</SPAN>)
+                mov status, STATUS_INSUFFICIENT_RESOURCES
+            <SPAN class=IF>.endif</SPAN>
+        <SPAN class=IF>.endif</SPAN>
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>ZwClose</SPAN>, hKey
+    <SPAN class=IF>.endif</SPAN>
+
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DbgPrint</SPAN>, $CTA0(<SPAN class=STRING>"giveio: Leaving DriverEntry"</SPAN>)
+
+    mov eax, status
+    <SPAN class=GB>ret</SPAN>
+
+<SPAN class=FN>DriverEntry</SPAN> <SPAN class=PROC>endp</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+<SPAN class=START>end</SPAN> <SPAN class=FN>DriverEntry</SPAN>
+
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+<SPAN class=CMT>;                                                                                                   </SPAN>
+<SPAN class=CMT>;:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::</SPAN>
+
+:make
+
+set drv=giveio
+
+\masm32\bin\ml /nologo /c /coff %drv%.bat
+\masm32\bin\link /nologo /driver /base:0x10000 /align:32 /out:%drv%.sys /subsystem:native %drv%.obj
+
+del %drv%.obj
+
+echo.
+pause
+</PRE>
+<P>Le code de ce driver est basé sur un exemple bien connu (giveio) par 
+DaleRoberts. J'ai décidé qu'il serait approprié de le mentionner ici.</P>
+<H3>3.5.2 I/O permission bit map<A name=k3d5d2></A></H3>
+<P>Notre driver change la carte des bits de permission d'E/S (I/O permission bit 
+map [IOPM]) qui permet au processus un accès libre aux ports d'E/S. Référez vous 
+aux manuels intel pour plus de détails (Volume #1 - chapitre 13.5.2 - I/O 
+permission Bit Map). </P>
+<P>Chaque processus a sa propre carte des bits de permission d'E/S, ainsi 
+l'accès aux ports d'E/S individuels peut être accordé à chaque processus. Chaque 
+bit de l'IOPM correspond à l'octet du port d'E/S. Si le bit est positionné, 
+l'accès au port correspondant est interdit, s'il n'est pas positionné le 
+processus peut accéder aux port d'E/S. Comme l'espace d'adresse d'E/S (sur un 
+total de 64 Ko) consiste en ports d'E/S individuellement adressable d'une taille 
+de 8 bits, la taille maximale de l'IOPM est donc de 2000h octets.</P>
+<P class=warning>Le but du TSS est de sauver l'état du processeur durant les 
+"switches" (passages ou redirections) d'une tâche ou d'un contexte vers un 
+autre. Pour des raisons de performances, Windows NT n'utilise pas cette 
+possibilité architecturale et maintient un TSS (Task State Segment) de base que 
+tous les processus se partagent. Cela implique aussi que l'IOPM est aussi 
+partagée. Ainsi, tout changement de l'IOPM n'est pas privé (pour un seul 
+processus) mais est valable pour l'ensemble du système.</P>
+<P>Il existe quelques fonctions non documentées de ntoskrnl.exe pour manipuler 
+l'IOPM : <EM>Ke386QueryIoAccessMap</EM> et <EM>Ke386SetIoAccessMap</EM>.</P><PRE><SPAN class=FN>Ke386QueryIoAccessMap</SPAN> <SPAN class=GB>proto stdcall</SPAN> dwFlag:DWORD, pIopm:PVOID
+</PRE>
+<P><EM>Ke386QueryIoAccessMap</EM> copie l'IOPM actuelle (d'une taille de 2000h 
+octets) depuis le TSS vers un buffer mémoire pointé par le paramètre pIopm.</P>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Paramètre</TH>
+    <TH>Description</TH></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>dwFlag</I></EM></P></TD>
+    <TD>
+      <P>0 - Rempli le buffer en mémoire avec des 0FFh (tout les bits sont 
+      positionnés - accès interdit);</P>
+      <P>1 - Copie l'IOPM actuel depuis le TSS vers le buffer mémoire.</P>
+      <P></P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>pIopm</I></EM></P></TD>
+    <TD>
+      <P>Pointe vers un buffer mémoire qui reçoit l'IOPM courant. La taille du 
+      buffer ne peut être inférieure à 2000h octets.</P></TD></TR></TBODY></TABLE>
+<P>Si la fonction réussie, elle retourne une valeur non nulle dans le registre 
+al (pas EAX). Si elle échoue, le registre al (et non pas EAX) est effacé.</P><PRE><SPAN class=FN>Ke386SetIoAccessMap</SPAN> <SPAN class=GB>proto stdcall</SPAN> dwFlag:DWORD, pIopm:PVOID
+</PRE>
+<P><EM>Ke386SetIoAccessMap</EM> copie l'IOPM spécifié (d'une taille de 2000h 
+octets) depuis le buffer mémoire pointé par le paramètre pIopm dans le TSS.</P>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Paramètre</TH>
+    <TH>Description</TH></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>dwFlag</I></EM></P></TD>
+    <TD>
+      <P>Une seule valeur possible: 1 - permet la copie. Toute autre valeur fait 
+      retourner une erreur à la fonction.</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>pIopm</I></EM></P></TD>
+    <TD>
+      <P>Pointe vers un buffer mémoire contenant l'IOPM. La taille du buffer ne 
+      doit pas être inférieure à 2000h octets. </P></TD></TR></TBODY></TABLE>
+<P>Si la fonction réussie, elle retourne une valeur non nulle dans le registre 
+al (pas EAX). Si elle échoue, le registre al (et non pas EAX) est effacé.</P>
+<P>Après que l'IOPM ait été copié vers le TSS, l'offset du pointeur IOPM doit 
+être ajusté pour pointer vers la nouvelle IOPM. Ceci est réalisé en utilisant 
+<EM>Ke386IoSetAccessProcess</EM> - une autre fonction très utile et aussi 
+complètement non documentée de ntoskrnl.exe. </P><PRE><SPAN class=FN>Ke386IoSetAccessProcess</SPAN> <SPAN class=GB>proto stdcall</SPAN> pProcess:PTR KPROCESS, dwFlag:DWORD
+</PRE>
+<P><EM>Ke386IoSetAccessProcess</EM> permet/interdit l'utilisation de l'IOPM pour 
+le processus.</P>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TH>Paramètre</TH>
+    <TH>Description</TH></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>pProcess</I></EM></P></TD>
+    <TD>
+      <P>Pointe vers une structure KPROCESS (Je vous en parlerais plus 
+    tard).</P></TD></TR>
+  <TR vAlign=top>
+    <TD width=100>
+      <P><EM><I>dwFlag</I></EM></P></TD>
+    <TD>
+      <P>0 - Interdit l'accès aux ports d'E/S, mettant l'offset vers l'IOPM à 
+      l'extérieur du segment TSS ;</P>
+      <P>1 - Permet l'accès aux ports d'E/S, mettant l'offset vers l'IOPM dans 
+      les limites du segment TSS (88h).</P></TD></TR></TBODY></TABLE>
+<P>Si la fonction réussie, elle retourne une valeur non nulle dans le registre 
+al (pas EAX). Si elle échoue, le registre al (et non pas EAX) est effacé.</P>
+<P>Il est à noter que presque toutes les fonctions de ntoskrnl.exe sont 
+préfixées. Avec ce préfixe vous pouvez déterminer à quelle composant exécutif 
+principal du système la fonction appartient. </P>
+<P>Les fonctions internes utilisées emploient une variation de préfixe - la 
+première lettre du préfixe suivie par un i (pour interne) ou le préfixe entier 
+suivit par un p (pour privé) ou un f (pour "fastcall"). Par exemple, Ke 
+représente un fonction du kernel, psp se réfère à une fonction de support pour 
+les processus interne, Mm représente les fonctions du gestionnaire de mémoire 
+(Memory Manager) et ainsi de suite. </P>
+<P>Le premier paramètre de la fonction <EM>Ke386IoSetAccessProcess</EM> est un 
+pointeur vers l'objet processus qui est une structure KPROCESS (définie dans 
+\include\w2k\w2kundoc.inc. J'ai spécialement préfixé le nom du fichier avec 
+"w2k" car les structures non documentées différent entre les versions de Windows 
+NT. Donc n'utilisez pas ce fichier include pour Windows XP). 
+<EM>Ke386IoSetAccessProcess</EM> met le membre IopmOffset de la structure 
+KPROCESS à la valeur appropriée. </P>
+<H3>3.5.3 Lire des informations depuis la base de registre<A 
+name=k3d5d3></A></H3>
+<P>Comme nous devons appeler <EM>Ke386IoSetAccessProcess</EM>, nous avons besoin 
+d'un pointeur vers l'objet processus. Celui-ci peut être obtenu de manières 
+différentes. J'ai choisi la plus simple - utiliser l'identificateur du 
+processus. Pour cette raison, dans le programme DateTime.exe, nous avons 
+récupéré l'identificateur de processus courant et l'avons mis dans la base de 
+registre. Dans ce cas, nous utilisons la base de registre pour passer des 
+paramètres entre le code en mode utilisateur et le gestionnaire de module de 
+périphérique en mode kernel. Comme la routine <EM>DriverEntry</EM> fonctionne 
+dans le contexte du processus System, il n'y a aucune manière de trouver quel 
+processus à démarrer le driver. </P>
+<P>Le second paramètre - pusRegistryPath - de la routine <EM>DriverEntry</EM> 
+est un pointeur vers une clé de la base de registre affiliée au processus. Nous 
+l'utilisons pour obtenir l'identificateur depuis la base de registre. </P>
+<P>Voyons maintenant comment tout cela fonctionne : </P><PRE>    lea ecx, oa
+    <SPAN class=FN>InitializeObjectAttributes</SPAN> ecx, pusRegistryPath, 0, <SPAN class=NL>NULL</SPAN>, <SPAN class=NL>NULL</SPAN>
+</PRE>
+<P>Nous devons initialiser la structure OBJECT_ATTRIBUTES 
+(\include\w2k\ntdef.inc) avant de pouvoir appeler <EM>ZwOpenKey</EM>. J'ai 
+utilisé la macro InitializeObjectAttributes pour ce faire, mais vous préférerez 
+peut être le faire manuellement car la macro InitializeObjectAttributes ne se 
+comporte pas toujours comme prévu. Vous pouvez le faire ainsi : </P><PRE>lea ecx, oa
+xor eax, eax
+<SPAN class=GB>assume</SPAN> ecx:ptr OBJECT_ATTRIBUTES
+mov [ecx].dwLength, <SPAN class=GB>sizeof</SPAN> OBJECT_ATTRIBUTES
+mov [ecx].RootDirectory, eax                       <SPAN class=CMT>; NULL </SPAN>
+push pusRegistryPath
+pop [ecx].ObjectName
+mov [ecx].Attributes, eax                          <SPAN class=CMT>; 0 </SPAN>
+mov [ecx].SecurityDescriptor, eax                  <SPAN class=CMT>; NULL </SPAN>
+mov [ecx].SecurityQualityOfService, eax            <SPAN class=CMT>; NULL </SPAN>
+<SPAN class=GB>assume</SPAN> ecx:nothing
+</PRE>
+<P><EM>ZwOpenKey</EM> retourne un handle de la base de registre dans hKey. Le 
+second paramètre spécifie les droits d'accès à cette clé. Vous devriez vous 
+rappelez que le registre ECX contient le pointeur vers les attributs de l'objet 
+initialisé de la clé actuellement ouverte. </P><PRE>    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>ZwOpenKey</SPAN>, <SPAN class=GB>addr</SPAN> hKey, KEY_READ, ecx
+    <SPAN class=IF>.if</SPAN> eax == STATUS_SUCCESS
+
+        push eax
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>ZwQueryValueKey</SPAN>, hKey, $CCOUNTED_UNICODE_STRING(<SPAN class=STRING>"ProcessId"</SPAN>, 4), \
+                               KeyValuePartialInformation, <SPAN class=GB>addr</SPAN> kvpi, <SPAN class=GB>sizeof</SPAN> kvpi, esp
+        pop ecx
+</PRE>
+<P><EM>ZwQueryValueKey</EM> retourne une valeur d'entrée pour la clé de registre 
+ouverte. Nous l'utiliserons pour obtenir l'identificateur du processus depuis la 
+base de registre. Le second paramètre pointe vers le nom de la valeur pour 
+lequel les données sont demandées. J'ai utilisé la macro 
+$CCOUNTED_UNICODE_STRING pour définir une structure UNICODE_STRING (alignée sur 
+4 octets) et la chaîne Unicode elle-même. Si vous n'aimez pas les macros, vous 
+pouvez utiliser la manière habituelle : </P><PRE> usz <SPAN class=GB>dw</SPAN> <SPAN class=STRING>'U'</SPAN>, <SPAN class=STRING>'n'</SPAN>, <SPAN class=STRING>'i'</SPAN>, <SPAN class=STRING>'c'</SPAN>, <SPAN class=STRING>'o'</SPAN>, <SPAN class=STRING>'d'</SPAN>, <SPAN class=STRING>'e'</SPAN>, <SPAN class=STRING>' '</SPAN>, <SPAN class=STRING>'s'</SPAN>, <SPAN class=STRING>'t'</SPAN>, <SPAN class=STRING>'r'</SPAN>, <SPAN class=STRING>'i'</SPAN>, <SPAN class=STRING>'n'</SPAN>, <SPAN class=STRING>'g'</SPAN>, 0
+ us UNICODE_STRING {<SPAN class=GB>sizeof</SPAN> usz - 2, <SPAN class=GB>sizeof</SPAN> usz, <SPAN class=GB>offset</SPAN> usz}
+</PRE>
+<P>Mais je n'aime pas vraiment ceci, j'ai donc écrit les macros suivantes : 
+COUNTED_UNICODE_STRING, $COUNTED_UNICODE_STRING, CCOUNTED_UNICODE_STRING, 
+$CCOUNTED_UNICODE_STRING (\Macros\Strings.mac).</P>
+<P>Le troisième paramètre spécifie le type d'information demandé. 
+KeyValuePartialInformation est une constante symbolique (définie dans 
+\include\w2k\ntddk.inc). Les quatrième et cinquième paramètres sont 
+respectivement des pointeurs vers la structure KEY_VALUE_PARTIAL_INFORMATION et 
+sa taille. Dans le membre Data de cette structure, nous obtiendrons notre 
+identificateur de processus. Le dernier paramètre est un pointeur vers le nombre 
+d'octets retourné. Nous devrions aussi réserver de la place pour celui-ci sur la 
+pile avant d'appeler <EM>ZwQueryValueKey</EM>.</P>
+<H3>3.5.4 Donner l'accès aux ports d'E/S à un processus en mode utilisateur <A 
+name=k3d5d4></A></H3><PRE>        <SPAN class=IF>.if</SPAN> ( eax != STATUS_OBJECT_NAME_NOT_FOUND ) &amp;&amp; ( ecx != 0 )
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MmAllocateNonCachedMemory</SPAN>, IOPM_SIZE
+            <SPAN class=IF>.if</SPAN> eax != <SPAN class=NL>NULL</SPAN>
+                mov pIopm, eax
+</PRE>
+<P>Si <EM>ZwQueryValueKey</EM> retourne avec succès, nous allouons une plage 
+d'adresse virtuelle de mémoire non-cachée et de cache alignée (non-cached and 
+cache aligned cpu memory) pour l'IOPM en appelant 
+<EM>MmAllocateNonCachedMemory</EM>.</P><PRE>                lea ecx, kvpi
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>PsLookupProcessByProcessId</SPAN>, \
+                        <SPAN class=GB>dword ptr</SPAN> (KEY_VALUE_PARTIAL_INFORMATION PTR [ecx]).Data, <SPAN class=GB>addr</SPAN> pProcess
+                <SPAN class=IF>.if</SPAN> eax == STATUS_SUCCESS
+                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>Ke386QueryIoAccessMap</SPAN>, 0, pIopm
+</PRE>
+<P>En passant l'identificateur du processus à PsLookupProcessByProcessId nous 
+obtenons dans pProcess, le pointeur vers notre objet processus. 
+<EM>Ke386QueryIoAccessMap</EM> copie l'IOPM dans le buffer mémoire. </P><PRE>                    <SPAN class=IF>.if</SPAN> al != 0
+
+                        mov ecx, pIopm
+                        add ecx, 70h / 8
+                        mov eax, [ecx]
+                        btr eax, 70h MOD 8
+                        mov [ecx], eax
+
+                        mov ecx, pIopm
+                        add ecx, 71h / 8
+                        mov eax, [ecx]
+                        btr eax, 71h MOD 8
+                        mov [ecx], eax
+
+                        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>Ke386SetIoAccessMap</SPAN>, 1, pIopm
+                        <SPAN class=IF>.if</SPAN> al != 0
+                            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>Ke386IoSetAccessProcess</SPAN>, pProcess, 1
+                            <SPAN class=IF>.if</SPAN> al != 0
+                            <SPAN class=IF>.else</SPAN>
+                                mov status, STATUS_IO_PRIVILEGE_FAILED
+                            <SPAN class=IF>.endif</SPAN>
+                        <SPAN class=IF>.else</SPAN>
+                            mov status, STATUS_IO_PRIVILEGE_FAILED
+                        <SPAN class=IF>.endif</SPAN>
+                    <SPAN class=IF>.else</SPAN>
+                        mov status, STATUS_IO_PRIVILEGE_FAILED
+                    <SPAN class=IF>.endif</SPAN>
+</PRE>
+<P>Maintenant nous allons effacer les bits correspondant aux ports 70h et 71h, 
+réécrire l'IOPM modifiée et appeler <EM>Ke386IoSetAccessProcess</EM> pour 
+permettre un accès en E/S. </P><PRE>                    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>ObDereferenceObject</SPAN>, pProcess
+                <SPAN class=IF>.else</SPAN>
+                    mov status, STATUS_OBJECT_TYPE_MISMATCH
+                <SPAN class=IF>.endif</SPAN>
+</PRE>
+<P>Le précédent appel à PsLookupProcessByProcessId à incrémenté un compteur de 
+référence pour l'objet processus. Le gestionnaire d'objet (Object Manager) 
+incrémente un compteur de référence pour un objet chaque fois qu'il fourni un 
+pointeur vers cet objet en retour. Quand les composants en mode kernel ont finis 
+d'utiliser le pointeur, ils appellent le gestionnaire d'objet pour décrémenter 
+le compteur de référence d'objet. Le système incrémente aussi le compteur de 
+référence quand il incrémente le compteur de handle (par exemple si quelqu'un 
+donne un handle à l'objet), et logiquement il décrémente le compteur de 
+référence quand le compteur de handle se décrémente (quelqu'un fermant un 
+handle), parce qu'un handle est aussi une référence à l'objet qui doit être 
+surveillé. Même si un compteur d'handle pour un objet atteint 0, la référence de 
+l'objet peut rester positive, indiquant que le système d'exploitation utilise 
+toujours l'objet. Tôt ou tard le compteur de référence fini par atteindre 0. 
+Quand cela arrive le gestionnaire d'objet efface l'objet de la mémoire. </P>
+<P>Nous décrémentons le compteur de référence d'objet du processus en appelant 
+<EM>ObDereferenceObject</EM>. Ainsi le compteur retourne à son état précédent. 
+</P><PRE>                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MmFreeNonCachedMemory</SPAN>, pIopm, IOPM_SIZE
+            <SPAN class=IF>.else</SPAN>
+                <SPAN class=GB>invoke</SPAN> <SPAN class=FN>DbgPrint</SPAN>, $CTA0(<SPAN class=STRING>"giveio: Call to MmAllocateNonCachedMemory failed"</SPAN>)
+                mov status, STATUS_INSUFFICIENT_RESOURCES
+            <SPAN class=IF>.endif</SPAN>
+        <SPAN class=IF>.endif</SPAN>
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>ZwClose</SPAN>, hKey
+    <SPAN class=IF>.endif</SPAN>
+</PRE>
+<P>En appellant <EM>MmFreeNonCachedMemory</EM> nous relâchons le buffer mémoire, 
+et fermons le handle sur la base de registre en appelant <EM>ZwClose</EM>.</P>
+<P>Le travail est fini - le driver n'est plus utile à présent. Comme il retourne 
+un code d'erreur, le système l'enlève de la mémoire. Mais maintenant, le 
+processus en mode utilisateur possède un accès direct à deux ports d'E/S.</P>
+<P>Dans cet exemple nous avons accédé à la mémoire CMOS juste pour l'exemple. 
+Nous pourrions faire des bips avec le haut-parleur comme dans l'exemple 
+précédent avec le driver beeper.sys. Je vous laisse faire ceci. Mais rappelez 
+vous que vous ne devez pas utiliser les instructions privilégiées cli et sti. Et 
+vous ne devez pas appelez de fonctions de hal.dll car ce sont des fonctions de 
+l'espace d'adressage du kernel. La seule chose que vous pouvez faire et de vous 
+donnez un accès sur les 65535 ports d'E/S avec ce bout de code: </P><PRE><SPAN class=GB>invoke</SPAN> <SPAN class=FN>MmAllocateNonCachedMemory</SPAN>, IOPM_SIZE
+<SPAN class=IF>.if</SPAN> eax != <SPAN class=NL>NULL</SPAN>
+    mov pIopm, eax
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>RtlZeroMemory</SPAN>, pIopm, IOPM_SIZE
+    lea ecx, kvpi
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>PsLookupProcessByProcessId</SPAN>, \
+                <SPAN class=GB>dword ptr</SPAN> (KEY_VALUE_PARTIAL_INFORMATION PTR [ecx]).Data, addr pProcess
+    <SPAN class=IF>.if</SPAN> eax == STATUS_SUCCESS
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>Ke386SetIoAccessMap</SPAN>, 1, pIopm
+        <SPAN class=IF>.if</SPAN> al != 0
+            <SPAN class=GB>invoke</SPAN> <SPAN class=FN>Ke386IoSetAccessProcess</SPAN>, pProcess, 1
+        <SPAN class=IF>.endif</SPAN>
+        <SPAN class=GB>invoke</SPAN> <SPAN class=FN>ObDereferenceObject</SPAN>, pProcess
+    <SPAN class=IF>.endif</SPAN>
+    <SPAN class=GB>invoke</SPAN> <SPAN class=FN>MmFreeNonCachedMemory</SPAN>, pIopm, IOPM_SIZE
+<SPAN class=IF>.else</SPAN>
+    mov status, STATUS_INSUFFICIENT_RESOURCES
+<SPAN class=IF>.endif</SPAN>
+</PRE>
+<P>Gardez toujours en mémoire que jouer avec le haut-parleur système et lire la 
+mémoire CMOS est plutôt sans danger. Mais accéder à d'autres ports d'E/S peut 
+être potentiellement plus dangereux, car vous ne pouvez pas les synchroniser en 
+mode utilisateur. </P>
+<H2>3.6 Quelques mots à propos du débogage de driver<A name=k3d6></A></H2>
+<P>A présent nous pouvons parlez parler du débogage de driver avec un peu plus 
+de détails. Comme je l'ai déjà mentionné, vous devriez plutôt utiliser 
+<EM>SoftICE</EM> comme débuggeur.</P>
+<P>Pour forcer un breakpoint dans le code du driver nous devons exécuter une 
+instruction de breakpoint par le CPU. Vous pouvez faire ceci en plaçant une "int 
+3" quelque part dans votre code de driver. l'"int 3" provoque une exception qui 
+est gérer par un débuggeur kernel comme <EM>SoftICE</EM>. Mais avant de réaliser 
+ceci, soyer sûr d'avoir enclencher la gestion d'INT 3. Utilisez pour ce faire la 
+commande I3HERE de façon à spécifier que toute interruption 3 déclenchera 
+<EM>SoftICE</EM>. Regardez le guide de <EM>SoftICE</EM> pour plus de détails 
+(<EM><I>SoftICE Command Reference</I></EM>). Gardez toujours à l'esprit que les 
+exceptions par breakpoint non gérée causeront une erreur résultant en un BSOD ! 
+Alors 'oubliez pas de taper "i3here on" avant de démarrer le driver. Dans les 
+dernières versions de <EM>SoftICE</EM> la gestion des int 3 est en action par 
+défaut pour les adresses en mode kernel.</P>
+<P>J'ai appelé avec répétitions la fonction <EM>DbgPrint</EM> dans le code 
+source du driver giveio. Cette fonction permet d'afficher des chaîne de 
+caractère dans la fenêtre du débuggeur. <EM>SoftICE</EM> comprend parfaitement 
+cette fonction. Vous pouvez aussi utiliser <EM>DebugView </EM>par Mark 
+Russinovich ( <A 
+href="http://www.sysinternals.com/">http://www.sysinternals.com/</A> ) pour 
+surveiller les sorties de débogage. </P>
+<HR width="100%" color=#8088a0 SIZE=1>
+
+<DIV>
+<P>Copyright © 2002-2004 Four-F, <A 
+href="mailto:four-f@mail.ru">four-f@mail.ru</A></P>
+<P>Tradutction par Neitsa, <A 
+href="mailto:tzcorporation@hotmail.com">tzcorporation@hotmail.com</A></P></DIV></BODY></HTML>

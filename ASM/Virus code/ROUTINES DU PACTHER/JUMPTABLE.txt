@@ -1,0 +1,10 @@
+GetProcAddress
+VirtualAlloc
+filename
+CreateFile
+GetFileSize
+nbFileRead
+page_allouée
+ReadFile
+WriteProcessMemory
+EPbase

@@ -1,0 +1,30 @@
+routine de copie du fichier texte en mémoire (on dispose déjà d'une page allouée, addr dans jumptable)
+
+invoke CreateFile,addr FileName,GENERIC_READ,FILE_SHARE_WRITE,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL
+
+push NULL
+push FILE_ATTRIBUTE_NORMAL
+push OPEN_EXISTING
+PUSH NULL
+push FILE_SHARE_WRITE
+push GENERIC_READ
+push dword ptr [adresse filename]
+call CreateFile
+mov  ebx, eax
+push ebx
+
+invoke GetFileSize, eax, NULL
+
+push NULL
+push eax
+call GetFileSize
+pop ebx
+
+invoke ReadFile,ebx,addr page_allouée,eax,addr nbFileRead,NULL
+
+push NULL
+push addr nbFileRead
+push eax
+push addr page_allouée
+push ebx
+call ReadFile

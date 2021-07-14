@@ -1,0 +1,25 @@
+
+Installation softice sous windows xp
+
+En fait j'ai trouvé la solution après des recherches sur internet.
+Voici la procédure complète sous windows xp de l'installation de softice 4.05.
+Je l'ai testée sous windows xp édition familiale et ça marche.
+
+1/Tu récupères softice 4.05 sur 
+http://asi.insa-rouen.fr/~lfallet/softice.htm
+2/Tu installes softice 4.05
+3/Tu récupère le patch pour xp 
+http://asi.insa-rouen.fr/~lfallet/docs/logiciels/softice/nticexp.zip
+(normalement il est dans ce zip)
+4/Tu mets les 3 fichiers de nticexp.zip dans C:\WINDOWS\system32\drivers
+5/Tu choisis le mode system (ou boot) dans démarrer->programmes->numega softice->startup mode setup.
+6/Tu redémarres
+7/Une fois sous windows xp tu fais CTRL D et tu passes sous softice (CTRL D pour revenir à windows)
+
+Voila
+
+Pifoman le 20/09/2004
+pifoman@yahoo.com
+
+
+5109-0122DF-FF'

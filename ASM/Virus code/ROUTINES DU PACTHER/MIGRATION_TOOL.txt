@@ -1,0 +1,25 @@
+Cahier des charges du programme de migration CNCE:
+
+17/11/06
+
+Le programme de migration doit récupérer le contenu (dossiers, sous-dossiers et fichiers) de certains répertoires, propriété de l'utilisateur.
+La liste non-exhaustive de ces répertoires est:
+ - Favoris Réseaux (mapping) et Internet
+ - Mes Documents
+ - Bureau
+Ce contenu doit être crypté et stocké dans un fichier .dat unique, organisé selon un schéma prédéfini à la manière de
+l'organisation d'un PE file.
+L'interface graphique proposera le stockage crypté sur un lecteur réseau et le destockage sur un poste XP.
+Eventuellement, trouver un moyen de sauvegarder quotidiennement l'état courant des-dits répertoires.
+Trouver comment gérer ce contenu s'il se trouve sur un poste XP qui ne boot plus (méthode ci-dessus?)?
+
+A priori le stockage se fera par le biais des APIs CreateFile, ReadFile (éventuellement SetFilePointer), Virtual/FreeAlloc (stockage temporaire des fichiers dans l'espace mémoire avant la copie cryptée sur un lecteur réseau).
+Le contenu d'un fichier .dat sera du type:
+
+offset du début des données à l'intérieur du .dat
+offset du tableau de pointeurs sur les noms des fichiers
+nombre de fichiers
+tableau parallèle du type:
+	TYPE DE FICHIER ------ TAILLE DU FICHIER
+le migration tool créera un fichier des extension et taille du tableau, au path récupéré dans le nom du fichier ("C:\Documents and Settings\UtilisateurX\Bureau\FichierTmp.Tmp")
+Une fois le fichier créé il le remplira du contenu décrypté stocké en réseau (type Ghost).

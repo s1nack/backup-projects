@@ -1,0 +1,11 @@
+56		push esi
+33C0		xor eax,eax
+648B4030	mov eax,fs:[eax+0x30]
+8B400C		mov eax,dword ptr ds:[eax+C] (olly) // mov eax,[eax+C] (doc)
+8B701C		mov esi,dword ptr ds:[eax+1C] (olly) // mov esi,[eax+0x1C] (doc)
+ad		lods dword ptr ds:[esi] (olly) // lodsd (doc)
+8B4008		mov eax,dword ptr ds:[eax+8] (olly) // mov eax,[eax+8] (doc)
+5E		pop esi
+c3		ret
+
+19o

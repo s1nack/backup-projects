@@ -1,0 +1,473 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Simple Device Manager - The Code Project - System</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<META NAME="MS.LOCALE"          content="en-US" />
+<meta NAME="Description"        content="This article demonstrates a simple enumeration device and a dynamic, driver load/unload facility." />
+<meta name="Search.TopicType"   content="kbArticle" />
+<meta name="Author"             content="Chuan-Liang Teng" />
+<meta name="Search.PublishDate" content="15 Jun 2006 0:36:00 GMT" />
+<meta name="Search.RevisedDate" content="15 Jun 2006 0:36:00 GMT" />
+
+<!--<meta name="Search.UserRating"  content="86 %" /> -->
+<meta NAME="keywords" Content="Free source code, System, Visual C++, MFC, Windows, device manager enumerate driver load unload">
+<meta NAME="Copyright" CONTENT="Article content copyright Chuan-Liang Teng, 2006, everthing else Copyright © CodeProject, 1999-2006, All Rights Reserved.">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Lounge Postings" href="http://www.codeproject.com/webservices/LoungeRSS.aspx">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - All topics" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=1">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - MFC / C++" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=2">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - C#" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=3">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - ASP.NET" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=4">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - .NET" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=5">
+<meta http-equiv="Reply-to" CONTENT="mailto:webmaster@codeproject.com">
+<link rel="icon" href="/favicon.ico" type="image/ico">
+<link rel="SHORTCUT ICON" href="/favicon.ico">
+
+<link rel="stylesheet" type=text/css href="/styles/global.css">
+<script language="javascript" src="/script/oncopy.js"></script>
+
+</head>
+<body text=black bgColor=white aLink=red link=blue vLink=purple topmargin=3 leftmargin=3 
+      oncopy="return copyCode();">
+
+
+<!-- COPYRIGHT 2006 I/PRO Corporation ALL RIGHTS RESERVED. - Page view auditing -->
+<script language="JavaScript">
+var LSPT="";
+LSPT += "?durl=" + escape(document.URL);
+LSPT += "&hostname=" + location.hostname;
+LSPT += "&url=" + location.pathname;
+LSPT += "&query=" + escape(location.search) + escape(location.hash);
+LSPT += "&referrer=" + escape(document.referrer);
+LSPT += "&browser=" + escape(navigator.appName);
+LSPT += "&version=" + escape(navigator.appVersion);
+LSPT += "&os=" + escape(navigator.platform);
+LSPT += "&xdomain=codeproject.com";
+LSPT += "&custid=codeproject";
+</script>
+<script  Language="Javascript">
+document.write('<img src=http://'+'content.ipro.com/images/pixel.gif'+LSPT+' height="1" width="1" style="position:absolute; top:0px; left:0px">');
+</script>
+<noscript>
+<img src="http://content.ipro.com/images/pixel?version=nonjava" height="1" width="1" style="position:absolute;top:0px;left:0px">
+</noscript>
+<!-- END I/PRO PAGE TAG -->
+
+
+<table bgColor=#ff9900 border=0 cellPadding=0 cellSpacing=0 width='100%'>
+<tr><td width="100%">
+<table bgColor=#ff9900 border=0 cellPadding=0 cellSpacing=1 width="100%"><tr>
+
+<td valign=top><a href="http://www.codeproject.com">
+<img border=0 width=225 height=72 src="/images/standard/logo225x72.gif" alt="The Code Project"></a></td>
+<td align=right><span id=AdBanner4><table cellspacing=0 cellpadding=0><tr><td><a class=AdLink href='/script/admentor/ads.asp'>View our advertisers</a></td><td align=right><a class=AdLink href='/info/mediakit'>Advertise with us</a></td></tr><td colspan=2><script language=javascript>document.write("<a href=\"/script/admentor/admentorredir.asp?id=1810&way=ban\" target=_blank><img src=\"/script/ann/ServeImg.aspx?File=%2Fscript%2Fadmentor%2Fimages%2FToolbox%5F468x60%2Egif&C=False&id=1810&cb=4165516\" alt=\"\" border=0 width=468 height=60></a>");</script></td></tr></table></span></td>
+
+</tr>
+
+<tr><td colspan=2 bgcolor=#FBEDBB>
+<table cellpadding=3 width=100% border=0 bgcolor=#FBEDBB>
+
+<tr valign=top>
+	<td width=100%>
+		<font style="font-size:8pt"><a href='/?cat=1'>All Topics</a>, <a href='/?cat=2'>MFC / C++</a> &gt;&gt; <a href='/system/'>System</a> &gt;&gt; <a href='/system/#General'>General</a></font><br>
+
+		<br><b><font size=4 style="font-size:16pt">Simple Device Manager</font></b><br><b>
+		By <a href="/script/profile/whos_who.asp?id=64973">Chuan-Liang Teng</a>
+		</b>
+		<br><br><font style="font-size:9pt">This article demonstrates a simple enumeration device and a dynamic, driver load/unload facility.&nbsp;</font>
+	</td>
+	<td align=right valign=top>
+		<table border=0 cellspacing=0 cellpadding=1 width=200>	
+
+		<tr valign=top><td>&nbsp;</td><td class=SmallText>C++<br> Windows<br> Win32, VS<br> Dev</td></tr>
+		<tr><td>&nbsp;</td><td nowrap class=SmallText>Posted 15 Jun 2006 10:36</td></tr>
+	
+		<tr valign=top><td><img src="/images/hlp.gif" width=16 height=16></td><td nowrap class=SmallText><a href='/script/Articles/list_articles.asp?userid=64973'>Articles by this author</a></td></tr>
+
+		<tr valign=top><td></td><td nowrap class=SmallText><b>719</b> views</td></tr>
+
+		</table>
+	</td>
+</tr>
+
+
+</table>
+</td></tr>
+
+<tr><td colspan=2>
+
+
+
+<TABLE BORDER=0 CELLPADDING=1 CELLSPACING=0 width=100% id=tblSiteToolbar><TR>
+<form method="post" action="/info/search.asp" name="Search">
+<TD VALIGN=top ALIGN=left width=100%>
+<TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR VALIGN=center>
+<td class=smallText><b><font color=white>Search:</font></b></td>
+<TD class=navbar nowrap><input class=smallText name="target" 
+
+size="18"
+
+maxlength="255"></TD><td valign=top><select class=smallText name=st>
+<option value="kw">Articles</option>
+<option value="au">Authors</option>
+</select></td>
+<TD><INPUT class=formButton type="submit" value="Go"></TD>
+</TR></TABLE></td>
+</FORM>
+
+
+<TD>
+<div id='MenuPos' style='position:relative;width:380;height:20;'>
+
+<table width=375 cellpadding=2 cellspacing=0 height=20><tr>
+<td><A href='/info/faq.asp' class=NavMenuItem>Help!</a></td>
+<td><A href='/info/latest.asp' class=NavMenuItem>Articles</td>
+<td><A href='/script/comments/forums.asp' class=NavMenuItem>Message Boards</td>
+<td><A href='/store/' class=NavMenuItem>StoreFront</td>
+<td><A href='/lounge.asp' class=NavMenuItem>Lounge</td>
+</tr></table>
+</div>
+</td>
+
+
+</TR></table>
+
+
+<script type='text/javascript'>function Go(){return}</script>
+<script type='text/javascript' src='/script/HVMenu/cpmenu_var.js'></script>
+<script type='text/javascript' src='/script/HVMenu/menu10_com.js'></script>
+
+</td></tr>
+
+</table></td></tr></table>
+
+<table cellspacing=0 cellpadding=1 border=0>
+
+<tr valign=top>
+	<td rowspan=2 valign=top bgcolor=#FBEDBB>
+	<table border=0 cellspacing=0 cellpadding=0>
+		
+
+<script language=javascript>
+function ErrorHandle() {}
+window.onerror = ErrorHandle;
+
+function OnNLSubmit(option)
+{
+	if (option=="up")
+		document.subForm.action = "/script/profile/modify.asp?ct=%2Fsystem%2FDevMgr%2Easp";
+	else if (option=="in")
+		document.subForm.action = "/script/profile/process_logon.asp?ct=%2Fsystem%2FDevMgr%2Easp";
+	document.subForm.submit();
+	return true;
+}
+</script>
+
+
+<tr><td>
+<table cellspacing=3 cellpadding=0>
+<tr valign=top><td></td><td></td></tr><tr valign=top><td><img src=/script/images/support_icon.gif width=16 height=16></td><td class=smallText><A HREF='/store/'><b>Ultimate Combo<br>MFC tools $449</b></A></td></tr><tr valign=top><td></td><td></td></tr>
+<tr valign=top>	
+      <td><img src="/images/mail.gif" width=16 height=16></td>
+      <td class=SmallText><a href='/script/recommend/form.asp?guid=DevMgr%2Fsystem6%2F15%2F2006'>Send to a friend</a></td>
+</tr>
+<tr valign=top><td></td><td></td></tr><tr><td colspan=2 bgcolor=black><img src='/images/space.gif' height=1 width=1></td></tr><tr valign=top><td colspan=2 class=InfoBarHeader><br>Sign in / Sign up</td></tr>
+</table></td></tr>
+
+<tr><td class=smallText>
+<form name="subForm" id=subForm action="/script/profile/process_logon.asp?ct=%2Fsystem%2FDevMgr%2Easp" method=post>
+<table width=125 border=0 cellpadding=0 cellspacing=0 bgcolor=#ffcc99>
+	<tr><td colspan=2><img src='/images/space.gif' height=3></td></tr>
+
+	<tr>
+		<td class=smallText>&nbsp;Email</td>
+		<td class=smallText><input class=smallText type="text" name="Email" id="Email" style="width: 60px;">
+		</td>
+	</tr>
+	<tr>
+		<td class=smallText>&nbsp;Password</td>
+		<td><input class=smallText type="password" name="Password" id="Password" style="width: 60px;"></td>
+	</tr>
+	<tr>
+		<td colspan=2 class=smallText valign=middle><input type=checkbox checked name=cookie>Remember me</td>
+	</tr>
+	<tr><td colspan=2><img src='/images/space.gif' height=3></td></tr>
+
+
+	<tr>
+		<td align=center><a href='/script/profile/modify.asp'><img border=0 src="/images/signup.gif"></a></td>
+		<td align=center><input border=0 type="image" src="/images/signin.gif"></td>
+	</tr>
+
+
+	<tr><td colspan=2><img src='/images/space.gif' height=3></td></tr>
+</form></table>
+</td></tr>
+
+<tr><td class=smallText><a class=smallText href="/script/profile/forgot.asp" name='HLLink'>Lost your Password?</a></td></tr>
+
+		<tr><td>&nbsp;</td></tr>
+		<tr><td>
+		
+<center><script language=javascript>document.write("<IFRAME src=\"/script/ann/ServeHTML.aspx?C=False&id=1910&cb=4165522\" border=0 frameborder=0 scrolling=no width=120 height=600></IFRAME>");</script><br>
+
+</center><br>
+
+		</td></tr>
+	</table>
+	</td>
+	<td width=5 rowspan=2>
+		<img src='/images/space.gif' width=5 height=1>	
+	</td>
+
+
+
+	<td width=100% align=right bgcolor=white>
+
+
+<table width=100%><tr valign=top><td nowrap valign=top class=smallText><table ><tr><td bgcolor=#ffffff class=smallText><img align=absmiddle src='/images/print.gif'> <a href='/system/DevMgr.asp?print=true' target=_print>Print</a></td><td bgcolor=#ffffff class=smallText><img align=absmiddle src='/script/images/sitebuild_icon.gif'><a href="/script/submit/ReportProblem.asp?GUID=DevMgr%2Fsystem6%2F15%2F2006">Broken Article?</a></td><td bgcolor=#ffffff class=smallText><img align=absmiddle src='/images/link.gif'><a href="/script/profile/add_bookmark.asp?t=0&ct=%2Fsystem%2FDevMgr%2Easp&guid=DevMgr%2Fsystem6%2F15%2F2006">Bookmark</a></td><td bgcolor=#ffffff class=smallText><img align=absmiddle src='/images/mail_small.gif'> <a href='#__comments'>Discuss</a></td></tr></table>
+</td>
+<td align=right nowrap><a name="__top"></a><table><tr><td align=right class=smallText>1 vote has for this article.</td><td>
+<table border="2" cellpadding="0" cellspacing="0"><tr>
+<td><img src='/script/images/red.gif' width='20' height='5' border='0'></td>
+<td><img src='/script/images/red.gif' width='20' height='5' border='0'></td>
+<td><img src='/script/images/red.gif' width='20' height='5' border='0'></td>
+<td><img src='/script/images/red.gif' width='20' height='5' border='0'></td>
+<td><img src='/script/images/red.gif' width='20' height='5' border='0'></td>
+</tr></table>
+</td></tr><tr><td colspan=2 align=right class=smallText><a href='/script/articles/top_articles.asp?st=2' title='Calculated as rating x Log10(# votes)'>Popularity: 0</a>. Rating: <b>5</b> out of 5.</td></tr></table></td></tr></table>
+
+	</td>
+</tr>
+<tr>
+	<td width=100% valign=top>
+
+<div id="contentdiv">
+
+
+<!-- Article Starts -->
+
+
+<UL class=download>
+<LI><A href="DevMgr/DevMgr-DEMO.zip">Download demo project - 29.8 Kb</A> 
+<LI><A href="DevMgr/DevMgr-SRC.zip">Download source - 26.4 Kb</A> </LI></UL>
+<H2>Introduction</H2>
+<P>This article demonstrates a simple enumeration device and a dynamic, driver load/unload facility. I tried to prepare four very simple functionality for everyone's use.</P>
+<H2>Device enumeration</H2>
+<P>First of all, let us look at the image below which shows a window with device manager information. It is easy, the device manager enumerates devices when we expand the tree for a particular device.</P>
+<P>The idea of device enumeration is not difficult for understanding:</P>
+<P><IMG height=498 src="DevMgr/full.jpg" width=600></P>
+<P>Get the device information for a device using the <CODE>SetupDiGetClassDevs</CODE> function. When first calling the function, the first and the second parameters should be set to “0”, and the last parameter should be set to the <CODE>DIGCF_ALLCLASSES</CODE> constant to get all devices.</P><PRE>hDevInfo = SetupDiGetClassDevs(<span class='cpp-literal'>0L</span>, <span class='cpp-literal'>0L</span>, _hDlg, DIGCF_PRESENT |
+                               DIGCF_ALLCLASSES | DIGCF_PROFILE);</PRE>
+<H2>Getting the information</H2>
+<P>Use the <CODE>SetupDiEnumDeviceInfo</CODE> function to enumerate all devices:</P><PRE>SetupDiEnumDeviceInfo(hDevInfo,  wIndex, &amp;spDevInfoData));</PRE>
+<P>The second parameter is supplied a zero-based index of the device to be retrieved. Get the device name from the Registry via the <CODE>SetupDiGetDeviceRegistryPropertyA</CODE> function.</P><PRE>SetupDiGetDeviceRegistryProperty(hDevInfo,
+                                 &amp;spDevInfoData,
+  <span class='cpp-comment'>// Supplies one of the following values,</span>
+  <span class='cpp-comment'>// indicating the property to be retrieved.</span>
+                                 SPDRP_CLASS, 
+                                 <span class='cpp-literal'>0L</span>,
+                                 (PBYTE)szBuf,
+                                 <span class='cpp-literal'>2048</span>,
+                                 <span class='cpp-literal'>0</span>);</PRE>
+<H2>Device resource</H2>
+<P>As you can see in the picture below, a device class has a name and a GUID (so it can be found in the Registry). The class can also have a description. For example, for class "<CODE>Ports</CODE>" has the description: "Ports (COM &amp; LPT)". A class can also have devices that are present in the configuration.</P>
+<UL>
+<LI>Get information about the current configuration using the <CODE>CM_Get_First_Log_Conf</CODE> function. 
+<LI>Get the resource descriptor from the current configuration using the <CODE>CM_Get_Next_Res_Des</CODE> function. Do this and follow the same steps for every resource till they exist. 
+<LI>Get information about the size of a resource data using the <CODE>CM_Get_Res_Des_Data_Size</CODE> function. 
+<LI>Get resource data using the <CODE>CM_Get_Res_Des_Data</CODE> function. </LI></UL>
+<H2>Load/unload non-PNP driver</H2>
+<P>Windows allows loading drivers at runtime using the Service Control Manager. Yes, the Service Control Manager in Windows can not only be used to load and manage services, but you can use it with device drivers to load/unload/start/stop Windows services.</P>
+<P>If you want to send/receive data to the device driver loaded, you have to get a handle to the driver. For this purpose, you can use the function <CODE>CreateFile</CODE>, and pass the driver name as the file name. You can see that Windows is so abstract in this aspect.</P>
+<P><IMG height=493 src="DevMgr/AddLegacy.jpg" width=600></P>
+<H2>Load/unload class driver</H2>
+<P>Windows allows loading class drivers at runtime using the <CODE>SetupDiXXXX</CODE> API. You can use it with Windows device drivers as you use it to load/unload your device driver.</P>
+
+<!-- Article Ends -->
+
+</div>
+<h2>Chuan-Liang Teng</h2>
+<table width='100%' border=0><tr valign=top><td nowrap class=smallText ><br></td><td class=smallText width='100%'><p class=smallText>Click <a href='/script/profile/whos_who.asp?vt=arts&id=64973'>here</a> to view Chuan-Liang Teng's online profile.</p></td></tr></table><br><table cellpadding=4 width='100%' border=0><tr valign=top><td width='100%'><h2>Other popular  articles:</h2><ul><li><a href="/system/driverdev.asp">Driver Development Part 1: Introduction to Drivers</a><br><span class=smalltext>This article will go into the basics of creating a simple driver.</span><li><a href="/system/NoDeleteDelay.asp">Eliminating Explorer's delay when deleting an in-use file</a><br><span class=smalltext>How to track down and patch an annoyance in Windows Explorer's code.</span><li><a href="/system/driverdev2.asp">Driver Development Part 2: Introduction to Implementing IOCTLs</a><br><span class=smalltext>This article will go deeper into the basics of creating a simple driver.</span><li><a href="/system/WDM_Driver_development.asp">A simple demo for WDM Driver development</a><br><span class=smalltext>WDM Driver programming introduction with three Pseudo Drivers.</span></ul></td><td width=360><script language=javascript>document.write("<IFRAME src=\"/script/ann/ServeHTML.aspx?C=False&id=786&cb=4165523\" border=0 frameborder=0 scrolling=no width=300 height=250></IFRAME>");</script></td></tr></table>
+		<form action="/script/rating/code/app/insert_vote.asp" method="post">
+		<input type="hidden" name="vote_name" value="DevMgr/system6/15/2006">
+		<input type="hidden" name="goal" value="/system/DevMgr.asp">
+
+<table bgColor=#ff9900 border=0 cellPadding=1 cellSpacing=0 width="100%">
+<tr><td width="100%">
+<table bgColor=#FBEDBB border=0 cellPadding=4 cellSpacing=0 width="100%"><tr>
+<td valign=middle class=smalltext>[<a href="#__top">Top</a>]</td>
+<td align=right valign=middle nowrap >
+<a href='/script/profile/logon.asp?ct=%2Fsystem%2FDevMgr%2Easp'><b>Sign in</b></a> to vote for this article:&nbsp;&nbsp;&nbsp;&nbsp; <i>Poor</i><input type=radio value='1' style='disabled:true;' name=rate><input type=radio value='2' style='disabled:true;' name=rate><input type=radio value='3' style='disabled:true;' name=rate><input type=radio value='4' style='disabled:true;' name=rate><input type=radio value='5' style='disabled:true;' name=rate><i>Excellent</i>&nbsp;&nbsp;<input type=submit value=Vote class=FormButton style='disabled:true;'>
+</td></tr>
+</table></td></tr></table>
+</form>
+<table width=100% cellspacing=0 cellpadding=0 border=0><tr valign=top>
+<td valign=top><center><script language=javascript>document.write("<a href=\"/script/admentor/admentorredir.asp?id=1407&way=ban\" target=_blank><img src=\"/script/ann/ServeImg.aspx?File=%2Fscript%2Fadmentor%2Fimages%2Fdundas%5Fbluelogo%5F12060CP%2Egif&C=False&id=1407&cb=4165525\" alt=\"Dundas for .NET\" border=0 width=120 height=60></a>");</script></center><br></td>
+<td valign=top nowrap align=center><span id=AdBanner5><script language=javascript>document.write("<a href=\"/script/admentor/admentorredir.asp?id=1811&way=ban\" target=_blank><img src=\"/script/ann/ServeImg.aspx?File=%2Fscript%2Fadmentor%2Fimages%2FToolbox%5F468x60%2Egif&C=False&id=1811&cb=4165519\" alt=\"\" border=0 width=468 height=60></a>");</script></span></td>
+</tr></table>
+
+</td></tr></table>
+
+<a name='__comments'></a>
+
+<script language="JavaScript">
+var Selected = "";
+
+var AdTime = new Date();
+
+
+// Ensures the expanded message appears reasonably close to where 
+// it should appear: on screen, and if possible, under the mouse cursor.
+function SwitchMessage(e)
+{
+   if ( !e ) e = window.event;
+   var target = e.target ? e.target : e.srcElement;
+
+   // is it a post?
+   while ( target && target.id != 'DynMessLink' )
+      target = target.parentNode;
+   if ( !target || target.id != 'DynMessLink' )
+      return;
+
+   if (Selected)
+   {
+      var body = document.getElementById(Selected + "_h1");
+      if (body)
+         body.style.display = 'none';
+      var head = document.getElementById(Selected + "_h0");
+      if (head)
+         head.bgColor = '#FEF9E7';
+   }
+
+   if (Selected == target.name) // just collapse
+      Selected="";
+   else
+   {
+      Selected = target.name;
+      var body = document.getElementById(Selected + "_h1");
+      if (body)
+      {
+         if (body.style.display=='none')
+            body.style.display='';
+         else
+            body.style.display = 'none';
+      }
+      var head = document.getElementById(Selected + "_h0");
+      if (head)
+         head.bgColor = '#99CCFF';
+
+      if ( body && head && body.style.display != 'none' )
+      {
+         // the bit that keeps the post on-screen and under the cursor
+         //var dif = (getRealPos(head, "Top") + head.offsetHeight/2) - (document.body.scrollTop+e.clientY);
+         //document.body.scrollTop += dif;
+         document.body.scrollTop = getRealPos(head, "Top") - document.body.clientHeight/10;
+         EnsureMessageVisible(target.name, true);
+      }
+   }
+
+   if ( e.preventDefault )
+      e.preventDefault();
+   else
+      e.returnValue = false;
+   return false;
+}
+
+// does its best to make a message visible on-screen (vs. scrolled off somewhere).
+function EnsureMessageVisible(msgID, bShowTop) {
+   var msgHeader = document.getElementById(msgID + "_h0");
+   var msgBody = document.getElementById(msgID + "_h1");
+
+   // determine scroll position of top and bottom
+   var scrollContainer = document.body;
+   var top = getRealPos(msgHeader, 'Top');
+   var bottom = getRealPos(msgBody, 'Top') + msgBody.offsetHeight;
+
+   // if not already visible, scroll to make it so
+   if ( scrollContainer.scrollTop > top && !bShowTop)
+      scrollContainer.scrollTop = top - document.body.clientHeight/10;
+   if ( scrollContainer.scrollTop+scrollContainer.clientHeight < bottom )
+      scrollContainer.scrollTop = bottom-scrollContainer.clientHeight;
+   if ( scrollContainer.scrollTop > top && bShowTop)
+      scrollContainer.scrollTop = top - document.body.clientHeight/10;
+}
+
+// utility
+function getRealPos(i,which)
+{
+   iPos = 0
+   while (i!=null)
+   {
+      iPos += i["offset" + which];
+      i = i.offsetParent;
+   }
+   return iPos
+}
+
+
+</script>
+<div id="_MessageBoard" onclick="SwitchMessage(event)"><table border=0 bgcolor='#ff9900' width=100% cellpadding=0 cellspacing=0><tr><td width='100%'><table border=0 id=ForumTable bgcolor='#ff9900' width=100% cellpadding=0 cellspacing=1><tr><td class=smallText bgcolor='#ffcc99'><b class=forum_hilite>Note</b>: You must <a href='/script/profile/logon.asp?ct=%2Fsystem%2FDevMgr%2Easp'><b>Sign in</b></a> to post to this message board.</td></tr><form action='/script/comments/app/do_filtermessages.asp?main=/system/DevMgr.asp&df=100&forumid=316690' method=post><tr><td><table width=100% bgcolor=white border=0 cellspacing=0 cellpadding=3><tr bgcolor=#FBEDBB><td nowrap class=smalltext><a href='/script/comments/faq.asp'><img src='/script/images/forum_faq.GIF' border=0 width=16 height=16 align=absmiddle> <b>FAQ</b></a>&nbsp;</td><td nowrap valign=top align=right class=smalltext>Noise tolerance <select size=1 name=noise class=smalltext><option value="1">Very High</option>
+<option value="2">High</option>
+<option selected value="3">Medium</option>
+<option value="4">Low</option>
+<option value="5">Very low</option>
+</select>&nbsp;&nbsp;</td><td class=smalltext nowrap align=right valign=middle colspan=2><a href='/script/comments/search_comments.asp?forumid=316690'><img src="/script/images/forum_search.gif" width=16 height=15 border=0> Search comments</a> &nbsp;</td><td valign=top align=right><input type=submit value='Set Options' name=submit class=FormButton></td></tr><tr bgcolor='#ff9900'><td width='100%'>&nbsp;</td><td nowrap align=right valign=top class=smalltext>View <select size=1 name=expand class=smalltext><option value="0">Normal (slow)</option>
+<option value="2">Preview (slow)</option>
+<option selected value="5">Message View</option>
+<option value="6">Topic View</option>
+<option value="1">Thread View</option>
+<option value="3">Expanded (Supporters only)</option>
+</select>&nbsp;&nbsp;</td><td nowrap valign=top class=smalltext>Per page <select size=1 name=perpage class=smalltext><option value="10">10</option>
+<option selected value="25">25</option>
+<option value="50">50 (must logon)</option>
+</select></td><td colspan=2>&nbsp;</td></tr></table>
+</td></tr></form><tr bgcolor=#FBEDBB><td><a name=xx0xx></a><table border=0 cellpadding=2 width=100% bgcolor=#FBEDBB><tr><td>&nbsp;</td><td class=messagetitle>Total Messages for this article: 0 (<a href='/system/DevMgr.asp?df=100&forumid=316690'>Refresh</a>)</td><td align=right nowrap>&nbsp;</td></tr></table>
+</td></tr><tr bgcolor=white><td><table border=0 cellspacing=0 cellpadding=0 width='100%' border=0><tr><td width='100%'><table bgcolor=#FBEDBB border=0 cellspacing=0 cellpadding=2><tr><td width='100%' class=messagetitle>Subject&nbsp;</td><td width=140 nowrap class=messagetitle>Author&nbsp;</td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle>Date&nbsp;</font></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr><td align=center colspan=1 class=messagetitle>-- No entries --</td></tr><tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr></table></td></tr></table></td></tr></table>
+</div><p class=smallText><img align=absmiddle src='/script/images/news_general.gif'> General comment &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_info.gif'> News / Info &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_question.gif'> Question &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_answer.gif'> Answer &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_game.gif'> Joke / Game &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_sticky.gif'> Admin message</p>
+<br>
+
+
+<table width=100% cellspacing=5>
+<tr valign=top><td>
+<font size=1 style="font-size:7pt"><a href='/?cat=1'>All Topics</a>, <a href='/?cat=2'>MFC / C++</a> &gt;&gt; <a href='/system/'>System</a> &gt;&gt; <a href='/system/#General'>General</a>
+<br>Updated: 15 Jun 2006 10:36
+</font>
+</td><td align=right>
+<font size=1 style="font-size:7pt">
+Article content copyright Chuan-Liang Teng, 2006<br>
+everything else Copyright © <A href='mailto:webmaster@codeproject.com'>CodeProject</A>, 1999-2006</a>.
+
+<br>
+Web04 |
+<a href='/info/MediaKit'>Advertise on The Code Project</a> | <a href="/info/privacy.asp">Privacy</a>
+
+</td></tr>
+</table>
+
+<br>
+<center>
+<table border="0" cellspacing="0" cellpadding="0" width="95%">
+<tr><td height=1 bgcolor=#ff9900><img src='/images/space.gif' height=1></td></tr>
+<tr>
+<td align=center><font size=1>
+
+<a href="http://www.theultimatetoolbox.com">The Ultimate Toolbox</a> •
+<a href="http://www.ASPAlliance.com/">ASP Alliance</a> •
+<a href="http://www.developerfusion.co.uk/">Developer Fusion</a> •
+<a href="http://www.developersdex.com/">Developersdex</a> •
+<a href="http://www.devguru.com/">DevGuru</a> •
+<a href="http://www.programmersheaven.com/">Programmers Heaven</a> •
+<A href="http://www.planet-source-code.com/">Planet Source Code</a> •
+<a href="http://www.tek-tips.com/">Tek-Tips Forums</a> •
+
+</font>	
+</td>
+</tr>
+</table>
+</center>
+
+</body>
+</html>

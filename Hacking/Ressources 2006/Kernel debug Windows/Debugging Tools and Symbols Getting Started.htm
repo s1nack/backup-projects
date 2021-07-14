@@ -1,0 +1,670 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0064)http://www.microsoft.com/whdc/devtools/debugging/debugstart.mspx -->
+<HTML dir=ltr><HEAD><TITLE>Debugging Tools and Symbols: Getting Started</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content=en-us name=MS.LOCALE>
+<META 
+content="Provides tips for using Debugging Tools for Windows, with links to presentations and papers on best practices." 
+name=description>
+<META content=MNP2.GenericArticle name=search.mnp.template><LINK 
+href="Debugging Tools and Symbols Getting Started_fichiers/templatecss.css" 
+type=text/css rel=Stylesheet><LINK 
+href="Debugging Tools and Symbols Getting Started_fichiers/css.css" 
+type=text/css rel=Stylesheet>
+<SCRIPT language=Javascript 
+src="Debugging Tools and Symbols Getting Started_fichiers/js.aspx" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT language=Javascript 
+src="Debugging Tools and Symbols Getting Started_fichiers/menujs.config&amp;clicktrax=False" 
+type=text/javascript></SCRIPT>
+<LINK 
+href="E:\Driver\Debugging Tools and Symbols Getting Started_fichiers\css(1).css" 
+type=text/css rel=stylesheet>
+<SCRIPT language=JavaScript>var doImage=doImage;var TType=TType;
+function mhHover(tbl,idx,cls){var t,d;if(document.getElementById)t=document.getElementById(tbl);else t=document.all(tbl);if(t==null)return;if(t.getElementsByTagName)d=t.getElementsByTagName("TD");else d=t.all.tags("TD");if(d==null)return;if(d.length<=idx)return;d[idx].className=cls;}
+function footerjs(doc){if(doImage==null){var tt=TType==null?"PV":TType;doc.write('<layer visibility="hide"><div style="display:none"><img src="http://c.microsoft.com/trans_pixel.asp?source=www&TYPE=' + tt + '&p=whdc_devtools_debugging&URI=%2fwhdc%2fdevtools%2fdebugging%2fdebugstart.mspx&GUID=1F4FC18C-F71E-47FB-8FC9-612F8EE59C61&r=http%3a%2f%2fwww.microsoft.com%2ftechnet%2fsysinternals%2fSystemInformation%2fLiveKd.mspx&lc=en-us" width=0 height=0 hspace=0 vspace=0 border=0 alt=""/></div></layer>');}}msvi_qllc = "en-us";msvi_qldir = "LTR";msvi_qlhost = "http://www.microsoft.com";</SCRIPT>
+
+<META content=_whdc_ name=WT.sp>
+<SCRIPT language=JavaScript 
+src="Debugging Tools and Symbols Getting Started_fichiers/broker.js"></SCRIPT>
+<LINK href="Debugging Tools and Symbols Getting Started_fichiers/ql.css" 
+type=text/css rel=stylesheet>
+<SCRIPT src="Debugging Tools and Symbols Getting Started_fichiers/ql.js" 
+type=text/javascript></SCRIPT>
+
+<SCRIPT language=Javascript>
+					if (self.name == "MNPMainFrame") top.location.href = self.location.href;
+				</SCRIPT>
+
+<META content=favorite name=save>
+<META content="MSHTML 6.00.2900.2995" name=GENERATOR></HEAD>
+<BODY bgColor=#ffffff leftMargin=0 topMargin=0 marginheight="0" marginwidth="0"><!--NOINDEX_START--><A name=top></A>
+<DIV id=msviMasthead>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD width="100%">
+      <TABLE height=22 cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR>
+          <TD id=msviRegionIdGraphic bgColor=#ffffff></TD>
+          <TD id=msviRegionGradient1 
+          style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#FFFFFF', endColorStr='#AEC0EC', gradientType='1')" 
+          width="50%"></TD>
+          <TD id=msviRegionGradient2 
+          style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#AEC0EC', endColorStr='#6487DB', gradientType='1')" 
+          width="50%"></TD></TR></TBODY></TABLE></TD>
+    <TD id=msviGlobalToolbar dir=ltr noWrap align=left bgColor=#6487db 
+height=22>
+      <TABLE cellSpacing=0 cellPadding=0 border=0>
+        <TBODY>
+        <TR>
+          <TD class=gt0 id=panelTd noWrap><A 
+            href="http://go.microsoft.com/?linkid=4412889">Quick Links&nbsp;</A>
+            <SCRIPT>document.write('<img src="/library/mnp/2/gif/ql.gif" width="11px" height="4px" alt="">');</SCRIPT>
+
+            <DIV id=panelDiv 
+            style="Z-INDEX: 100; VISIBILITY: hidden; POSITION: absolute"></DIV></TD>
+          <TD class=gtsep>|</TD>
+          <TD class=gt0 onmouseover="this.className='gt1'" 
+          onmouseout="this.className='gt0'" noWrap><A onclick=trackInfo(this) 
+            href="http://go.microsoft.com/?linkid=4412890" 
+            LinkID="                GT_Drop2" 
+          LinkArea="GlobalToolbar">Home</A></TD>
+          <TD class=gtsep>|</TD>
+          <TD class=gt0 onmouseover="this.className='gt1'" 
+          onmouseout="this.className='gt0'" noWrap><A onclick=trackInfo(this) 
+            href="http://go.microsoft.com/?linkid=4412891" 
+            LinkID="                GT_Drop3" 
+            LinkArea="GlobalToolbar">Worldwide</A></TD>
+          <TD class=msviPPSpace></TD></TR></TBODY></TABLE></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=top>
+    <TD width="100%">
+      <TABLE height=42 cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR vAlign=top>
+          <TD id=msviBrandBanner bgColor=#ffffff><A onclick=trackInfo(this) 
+            href="http://www.microsoft.com/windows" LinkID="Banner" 
+            LinkArea="Masthead"><IMG title="" height=42 alt=Windows 
+            src="Debugging Tools and Symbols Getting Started_fichiers/windows_masthead_ltr.gif" 
+            width=225 border=0></A></TD>
+          <TD 
+          style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#FFFFFF', endColorStr='#B6C5EE', gradientType='1')" 
+          width="100%"></TD></TR></TBODY></TABLE></TD>
+    <TD id=msviGlobalSearch bgColor=#b6c5ee>Search Microsoft.com for:<BR>
+      <FORM id=msviSearchForm 
+      onsubmit="return trackSearch(msviSearchLink, msviSearchBox)" 
+      action=/library/toolbar/3.0/search.aspx target=_top><INPUT type=hidden 
+      value=en-us name=View><INPUT type=hidden value=iso-8859-1 
+      name=charset><NOBR>
+      <DIV style="HEIGHT: 18px"><INPUT id=msviSearchBox maxLength=255 name=qu><INPUT id=msviGoButton type=submit value=Go></DIV></NOBR><A 
+      id=msviSearchLink style="DISPLAY: none" 
+      href="http://www.microsoft.com/library/toolbar/3.0/search.aspx?View=en-us&amp;charset=iso-8859-1&amp;qu=" 
+      LinkID="Search" LinkArea="Search"></A></FORM></TD></TR></TBODY></TABLE>
+<TABLE id=msviSubbanner cellSpacing=0 cellPadding=0 width="100%" bgColor=#5076c9 
+border=0>
+  <TBODY>
+  <TR>
+    <TD><IMG title="" height=26 alt="Windows Hardware Developer Central" 
+      src="Debugging Tools and Symbols Getting Started_fichiers/subbanner.jpg" 
+      width=467 border=0></TD>
+    <TD width="100%">&nbsp;</TD></TR></TBODY></TABLE>
+<DIV id=msviLocalToolbar>
+<TABLE height=19 cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD id=msviHomePageLink noWrap><A onclick=trackInfo(this) 
+      href="http://www.microsoft.com/whdc/default.mspx" LinkID="LT_Drop1" 
+      LinkArea="LocalToolbar">WHDC Home</A></TD>
+    <TD><SPAN class=ltsep>|</SPAN></TD>
+    <TD class=lt0 onmouseover="mhHover('msviLocalToolbar', 2, 'lt1')" 
+    onmouseout="mhHover('msviLocalToolbar', 2, 'lt0')" noWrap><A 
+      onclick=trackInfo(this) href="http://www.microsoft.com/japan/whdc/" 
+      target=_blank LinkID="            LT_Drop2" LinkArea="LocalToolbar">WHDC 
+      Japan</A></TD>
+    <TD><SPAN class=ltsep>|</SPAN></TD>
+    <TD class=lt0 onmouseover="mhHover('msviLocalToolbar', 4, 'lt1')" 
+    onmouseout="mhHover('msviLocalToolbar', 4, 'lt0')" noWrap><A 
+      onclick=trackInfo(this) href="http://www.microsoft.com/Taiwan/whdc/" 
+      target=_blank LinkID="            LT_Drop3" LinkArea="LocalToolbar">WHDC 
+      Taiwan</A></TD>
+    <TD><SPAN class=ltsep>|</SPAN></TD>
+    <TD class=lt0 onmouseover="mhHover('msviLocalToolbar', 6, 'lt1')" 
+    onmouseout="mhHover('msviLocalToolbar', 6, 'lt0')" noWrap><A 
+      onclick=trackInfo(this) href="http://www.microsoft.com/whdc/sitemap.mspx" 
+      LinkID="            LT_Drop4" LinkArea="LocalToolbar">WHDC Site Map</A></TD>
+    <TD width="100%"></TD></TR></TBODY></TABLE></DIV></DIV>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=top>
+    <TD style="OVERFLOW-X: hidden" width=181 height="100%">
+      <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR>
+          <TD class=mnpQuickSearch dir=ltr 
+          style="BACKGROUND: #cccccc; COLOR: #000000">
+            <FORM style="MARGIN: 0px" action=/whdc/simplesearch.aspx><NOBR><FONT 
+            color=#000000>Search WHDC for</FONT><BR>
+            <TABLE cellSpacing=0 cellPadding=0 border=0>
+              <TBODY>
+              <TR>
+                <TD class=mnpQuickSearch 
+                style="PADDING-RIGHT: 0px; PADDING-LEFT: 0px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px"><SPAN 
+                  style="WIDTH: 137px"><INPUT class=mnpSearchBox id=qu 
+                  style="WIDTH: 100%" maxLength=255 name=qu></SPAN></TD>
+                <TD><INPUT class=mnpSearchButton type=submit value=Go><BR></TD></TR></TBODY></TABLE></NOBR></FORM></TD></TR></TBODY></TABLE>
+      <DIV class=mnpMenuTop id=mnpMenuTop dir=ltr 
+      style="OVERFLOW-X: hidden; WIDTH: 181px" 
+      parent="/whdc/DevTools/Debugging/default.mspx" 
+      url="/whdc/DevTools/Debugging/debugstart.mspx">
+      <DIV class=mnpInherit>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1"><IMG 
+      class=mnpMenuArrow title="" style="LEFT: 166px; VISIBILITY: hidden" 
+      height=7 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/arrowLTR.gif" 
+      width=4 border=0><A 
+      href="http://www.microsoft.com/whdc/resources/current.mspx">What's 
+      New</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1" 
+      menu="m10b0105d1304bd7a0f56172ce909e12a"><IMG class=mnpMenuArrow title="" 
+      style="LEFT: 166px; VISIBILITY: hidden" height=7 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/arrowLTR.gif" 
+      width=4 border=0><A 
+      href="http://www.microsoft.com/whdc/system/default.mspx">PC 
+      Fundamentals</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1" 
+      menu="m9bba6c84c217a460369e94ba23cef969"><IMG class=mnpMenuArrow title="" 
+      style="LEFT: 166px; VISIBILITY: hidden" height=7 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/arrowLTR.gif" 
+      width=4 border=0><A 
+      href="http://www.microsoft.com/whdc/device/default.mspx">Device 
+      Fundamentals</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1" 
+      menu="mb0cc768b1298027b621b031f6ac60875"><IMG class=mnpMenuArrow title="" 
+      style="LEFT: 166px; VISIBILITY: hidden" height=7 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/arrowLTR.gif" 
+      width=4 border=0><A 
+      href="http://www.microsoft.com/whdc/driver/default.mspx">Driver 
+      Fundamentals</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1" 
+      menu="mef4848974a184dedd092d96b8e7ed272"><IMG class=mnpMenuArrow title="" 
+      style="LEFT: 166px; VISIBILITY: hidden" height=7 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/arrowLTR.gif" 
+      width=4 border=0><A 
+      href="http://www.microsoft.com/whdc/DevTools/default.mspx">WDK and 
+      Developer Tools</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1" 
+      menu="mcddbd1f2e034c8725ff4dbbd36baab91"><IMG class=mnpMenuArrow title="" 
+      style="LEFT: 166px; VISIBILITY: hidden" height=7 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/arrowLTR.gif" 
+      width=4 border=0><A 
+      href="http://www.microsoft.com/whdc/resources/default.mspx">Developer 
+      Community</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1" 
+      menu="mcb3799b6e8634d6780b0fa8c0a0de420"><IMG class=mnpMenuArrow title="" 
+      style="LEFT: 166px; VISIBILITY: hidden" height=7 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/arrowLTR.gif" 
+      width=4 border=0><A 
+      href="http://www.microsoft.com/whdc/winlogo/default.mspx">Windows Logo and 
+      Driver Signing</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1" 
+      menu="ma342df9dde3515be1415f40fcef58f3b"><IMG class=mnpMenuArrow title="" 
+      style="LEFT: 166px; VISIBILITY: hidden" height=7 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/arrowLTR.gif" 
+      width=4 border=0><A 
+      href="http://www.microsoft.com/whdc/whql/default.mspx">WHQL Testing and 
+      Winqual Services</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1" 
+      menu="m10c2e1bb21b8ed527d56b9fb9ee2d7f8"><IMG class=mnpMenuArrow title="" 
+      style="LEFT: 166px; VISIBILITY: hidden" height=7 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/arrowLTR.gif" 
+      width=4 border=0><A 
+      href="http://www.microsoft.com/whdc/winhec/default.mspx">WinHEC</A></DIV>
+      <DIV class=mnpMenuBorder style="WIDTH: 180px"></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1" 
+      menu="me7feb252a4f7596c96962604562ff957"><IMG class=mnpMenuArrow title="" 
+      style="LEFT: 166px; VISIBILITY: hidden" height=7 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/arrowLTR.gif" 
+      width=4 border=0><A 
+      href="http://www.microsoft.com/whdc/xps/default.mspx">XPS</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1" 
+      menu="ma1cc41ded5e4459bb2930677bc359301"><IMG class=mnpMenuArrow title="" 
+      style="LEFT: 166px; VISIBILITY: hidden" height=7 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/arrowLTR.gif" 
+      width=4 border=0><A 
+      href="http://www.microsoft.com/whdc/rally/default.mspx">Windows 
+      Rally</A></DIV>
+      <DIV class=mnpMenuRow 
+      style="BORDER-LEFT-COLOR: #f1f1f1; BACKGROUND: #f1f1f1; OVERFLOW-X: hidden; BORDER-BOTTOM-COLOR: #f1f1f1; WIDTH: 176px; BORDER-TOP-COLOR: #f1f1f1; BORDER-RIGHT-COLOR: #f1f1f1" 
+      menu="mdb6b0e129db009206b14b7b84168a7d9"><IMG class=mnpMenuArrow title="" 
+      style="LEFT: 166px; VISIBILITY: hidden" height=7 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/arrowLTR.gif" 
+      width=4 border=0><A 
+      href="http://www.microsoft.com/whdc/flexgo/default.mspx">Microsoft 
+      FlexGo</A></DIV>
+      <DIV class=mnpMenuBorder 
+      style="MARGIN-BOTTOM: 0px; WIDTH: 180px"></DIV></DIV></DIV>
+      <DIV class=mnpAds 
+      style="BORDER-RIGHT: #999999 1px solid; BORDER-TOP: #999999 0px solid; BACKGROUND: #f1f1f1; PADDING-BOTTOM: 20px; BORDER-LEFT: #999999 0px solid; WIDTH: 181px; BORDER-BOTTOM: #999999 0px solid; HEIGHT: 100%">
+      <CENTER>
+      <DIV 
+      style="BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: 20px"></DIV><A 
+      href="http://www.microsoft.com/whdc/system/vista/default.mspx"><IMG 
+      alt="Hardware Design for Windows Vista" 
+      src="Debugging Tools and Symbols Getting Started_fichiers/120x90_UnderHood.gif" 
+      border=0></IMG> </A><BR>
+      <DIV 
+      style="BACKGROUND: none transparent scroll repeat 0% 0%; HEIGHT: 20px"></DIV><A 
+      href="http://www.microsoft.com/windowsvista/getready/expressupgrade.mspx" 
+      target=_blank><IMG alt="Express Upgrade to Windows Vista" 
+      src="Debugging Tools and Symbols Getting Started_fichiers/120x90_ExUpgrade.gif" 
+      border=0></IMG> </A><BR></CENTER></DIV></TD>
+    <TD dir=ltr oncopy="e++; SetFirst('5');" width="100%">
+      <DIV 
+      style="PADDING-RIGHT: 15px; PADDING-LEFT: 20px; PADDING-BOTTOM: 0px; PADDING-TOP: 0px">
+      <DIV class=ancestorLinks><NOBR><A 
+      href="http://www.microsoft.com/whdc/DevTools/default.mspx">WDK and 
+      Developer Tools</A> &gt; </NOBR><NOBR><A 
+      href="http://www.microsoft.com/whdc/DevTools/Debugging/default.mspx">Debugging 
+      Tools for Windows</A></NOBR></DIV>
+      <H1>Debugging Tools and Symbols: Getting Started</H1>
+      <DIV style="MARGIN-TOP: 18px; WIDTH: 100%">
+      <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR vAlign=top>
+          <TD style="PADDING-RIGHT: 15px"><A name=E1></A>
+            <H2></H2>
+            <P>Debugging Tools for Windows is a set of extensible tools for 
+            debugging device drivers for the Microsoft Windows family of 
+            operating systems. Debugging Tools for Windows supports debugging 
+            of:</P>
+            <TABLE cellSpacing=0 cellPadding=0 border=0>
+              <TBODY>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P>Applications, services, drivers, and the Windows 
+                kernel.</P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P>Native 32-bit x86, native Intel Itanium, and native x64 
+                  platforms.</P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P>Microsoft Windows NT 4.0, Windows 2000, Windows XP, 
+                  Microsoft Windows Server 2003, and Windows Vista. </P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P>User-mode programs and kernel-mode programs.</P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P>Live targets and dump files. </P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P>Local and remote targets. </P></TD></TR></TBODY></TABLE>
+            <P>In addition to Debugging Tools for Windows, effective debugging 
+            also requires:</P>
+            <TABLE cellSpacing=0 cellPadding=0 border=0>
+              <TBODY>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P>Special debugging routines, macros, and global variables in 
+                  the Windows Driver Development Kit (DDK). You can use these 
+                  routines in your driver code to send messages to a debugger 
+                  and set breakpoints to aid in debugging.</P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P>Access to Windows symbol files. If you have access to the 
+                  Internet while debugging, you can set your debugger's symbol 
+                  path to point to the Windows symbol server. If you do not have 
+                  access to the Internet while debugging, you can download 
+                  symbols in advance from the Microsoft 
+              website.</P></TD></TR></TBODY></TABLE>
+            <P>Debugging Tools for Windows includes WinDbg, a powerful debugger 
+            with a graphical interface and a console interface, as well as the 
+            console-based debuggers NTSD, CDB, and KD.</P>
+            <P><B>About WinDbg</B><BR>WinDbg provides source-level debugging 
+            through a graphical user interface and a text-based interface.</P>
+            <TABLE cellSpacing=0 cellPadding=0 border=0>
+              <TBODY>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P>WinDbg uses the Microsoft Visual Studio debug symbol 
+                  formats for source-level debugging. It can access any public 
+                  function's names and variables exposed by modules that were 
+                  compiled with Codeview (.pdb) symbol files. </P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P>WinDbg can view source code, set breakpoints, view 
+                  variables (including C++ objects), stack traces, and memory. 
+                  It includes a command window to issue a wide variety of 
+                  commands not available through the drop-down menus. For 
+                  kernel-mode debugging, WinDbg typically requires two computers 
+                  (the host machine and the target machine). It also allows you 
+                  to remotely debug user-mode code.</P></TD></TR></TBODY></TABLE>
+            <P><B>To Prepare for a Debugging Session</B></P>
+            <TABLE class=numberedList cellSpacing=0 cellPadding=0 border=0>
+              <TBODY>
+              <TR vAlign=top>
+                <TD class=listNumber noWrap align=right>
+                  <P>1.</P></TD>
+                <TD>
+                  <P>If you want to debug kernel-mode code, set up a host 
+                  computer to run the debugger and a target computer to run the 
+                  code being debugged. Connect the two computers using either an 
+                  IEEE 1394 cable or a null-modem cable between two serial 
+                  ports.</P></TD></TR>
+              <TR vAlign=top>
+                <TD class=listNumber noWrap align=right>
+                  <P>2.</P></TD>
+                <TD>
+                  <P>Download and install the latest version of Debugging Tools 
+                  for Windows on the host computer. The tools can also be 
+                  installed from the Windows DDK, the Platform SDK, or the 
+                  Customer Support Diagnostics CD.</P></TD></TR>
+              <TR vAlign=top>
+                <TD class=listNumber noWrap align=right>
+                  <P>3.</P></TD>
+                <TD>
+                  <P>Use Windows Symbol Server to access the symbol files from 
+                  the host computer.</P></TD></TR></TBODY></TABLE>
+            <P><B>About the Microsoft Symbol Server</B></P>
+            <P>Symbol server technology is built into Debugging Tools for 
+            Windows. Microsoft provides access to an Internet symbol server that 
+            contains symbol files for the Microsoft Windows Server 2003, Windows 
+            XP, and Windows 2000 operating systems, as well as other Microsoft 
+            products. </P>
+            <P>The Internet symbol server is populated with a variety of Windows 
+            symbols for Microsoft Windows operating systems, including hot 
+            fixes, Service Packs, Security Rollup Packages, and retail releases. 
+            Symbols are also available on the server for current Betas and 
+            Release Candidates for Windows products, plus a variety of other 
+            Microsoft products, such as Microsoft Internet Explorer.</P>
+            <P>If you have access to the Internet during debugging, you can 
+            configure the debugger to download symbols as needed during a 
+            debugging session, rather than downloading symbol files separately 
+            before a debugging session. The symbols are downloaded to a 
+            directory location that you specify and then the debugger loads them 
+            from there.</P>
+            <P><B>To use the Microsoft Symbol Server</B></P>
+            <TABLE class=numberedList cellSpacing=0 cellPadding=0 border=0>
+              <TBODY>
+              <TR vAlign=top>
+                <TD class=listNumber noWrap align=right>
+                  <P>1.</P></TD>
+                <TD>
+                  <P>Make sure you have installed the latest version of 
+                  Debugging Tools for Windows.</P></TD></TR>
+              <TR vAlign=top>
+                <TD class=listNumber noWrap align=right>
+                  <P>2.</P></TD>
+                <TD>
+                  <P>Start a debugging session. </P></TD></TR>
+              <TR vAlign=top>
+                <TD class=listNumber noWrap align=right>
+                  <P>3.</P></TD>
+                <TD>
+                  <P>Decide where to store the downloaded symbols (the 
+                  "downstream store"). This can be a local drive or a UNC path. 
+                  </P></TD></TR>
+              <TR vAlign=top>
+                <TD class=listNumber noWrap align=right>
+                  <P>4.</P></TD>
+                <TD>
+                  <P>Set the debugger symbol path as follows, substituting your 
+                  downstream store path for <I>DownstreamStore</I>.</P>
+                  <P><B>SRV*<I>DownstreamStore</I>*http://msdl.microsoft.com/download/symbols</B></P></TD></TR></TBODY></TABLE>
+            <P>For example, to download symbols to c:\websymbols, you would add 
+            the following to your symbol 
+            path:<BR><B>SRV*c:\websymbols*http://msdl.microsoft.com/download/symbols</B></P>
+            <P>Note: http://msdl.microsoft.com/download/symbols is not browsable 
+            and is intended only for access by the debugger. For more 
+            information on setting symbol paths and using symbol servers, see 
+            the documentation accompanying Debugging Tools for Windows.</P>
+            <P><B>Debugger and Symbols Downloads</B>
+            <TABLE cellSpacing=0 cellPadding=0 border=0>
+              <TBODY>
+              <TR>
+                <TD style="PADDING-TOP: 5px" vAlign=top align=left width=16 
+                height=19><IMG alt=Other 
+                  src="Debugging Tools and Symbols Getting Started_fichiers/icon_other.gif" 
+                  border=0></TD>
+                <TD 
+                style="FONT-SIZE: 70%; LINE-HEIGHT: 140%; PADDING-TOP: 5px; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif" 
+                vAlign=top align=left><A 
+                  href="http://www.microsoft.com/whdc/devtools/debugging/symbolpkg.mspx">Download 
+                  Windows Symbol Packages</A><IMG height=1 
+                  src="Debugging Tools and Symbols Getting Started_fichiers/space.gif" 
+                  width=1 border=0></TD></TR>
+              <TR>
+                <TD style="PADDING-TOP: 5px" vAlign=top align=left width=16 
+                height=19><IMG alt=Other 
+                  src="Debugging Tools and Symbols Getting Started_fichiers/icon_other.gif" 
+                  border=0></TD>
+                <TD 
+                style="FONT-SIZE: 70%; LINE-HEIGHT: 140%; PADDING-TOP: 5px; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif" 
+                vAlign=top align=left><A 
+                  href="http://www.microsoft.com/whdc/devtools/debugging/installx86.mspx">Install 
+                  Debugging Tools for Windows 32-bit Version</A><IMG height=1 
+                  src="Debugging Tools and Symbols Getting Started_fichiers/space.gif" 
+                  width=1 border=0></TD></TR>
+              <TR>
+                <TD style="PADDING-TOP: 5px" vAlign=top align=left width=16 
+                height=19><IMG alt=Other 
+                  src="Debugging Tools and Symbols Getting Started_fichiers/icon_other.gif" 
+                  border=0></TD>
+                <TD 
+                style="FONT-SIZE: 70%; LINE-HEIGHT: 140%; PADDING-TOP: 5px; FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif" 
+                vAlign=top align=left><A 
+                  href="http://www.microsoft.com/whdc/devtools/debugging/install64bit.mspx">Install 
+                  Debugging Tools for Windows 64-bit Versions</A><IMG height=1 
+                  src="Debugging Tools and Symbols Getting Started_fichiers/space.gif" 
+                  width=1 border=0></TD></TR></TBODY></TABLE></P><BR 
+            style="FONT-SIZE: 0pt" clear=all>
+            <DIV style="MARGIN-TOP: 16px; MARGIN-BOTTOM: 20px; WIDTH: 100%">
+            <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+              <TBODY>
+              <TR>
+                <TD><A 
+                  href="http://www.microsoft.com/whdc/devtools/debugging/debugstart.mspx#top"><IMG 
+                  height=9 alt="Top of page" 
+                  src="Debugging Tools and Symbols Getting Started_fichiers/arrow_px_up.gif" 
+                  width=7 border=0></A><A class=topOfPage 
+                  href="http://www.microsoft.com/whdc/devtools/debugging/debugstart.mspx#top">Top 
+                  of page</A></TD></TR></TBODY></TABLE></DIV></TD>
+          <TD width=165>
+            <DIV style="PADDING-BOTTOM: 12px; WIDTH: 165px"><A 
+            href="http://www.microsoft.com/whdc/pchlp.mspx"><IMG height=3 
+            alt="Looking for help with your personal computer?" 
+            src="E:\Driver\Debugging Tools and Symbols Getting Started_fichiers\space(1).gif" 
+            width=6 border=0><IMG height=54 
+            alt="Looking for help with your personal computer?" 
+            src="Debugging Tools and Symbols Getting Started_fichiers/lost.gif" 
+            width=166 border=0></A></DIV>
+            <DIV class=sidebarHeader></DIV>
+            <DIV class=sidebarContent 
+            style="PADDING-RIGHT: 1px; PADDING-LEFT: 1px; PADDING-BOTTOM: 0px; WIDTH: 165px; PADDING-TOP: 0px">
+            <DIV class=sidebarClass>
+            <H6>Debugging Tools and Symbols</H6>
+            <TABLE cellSpacing=0 cellPadding=0 border=0>
+              <TBODY>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P><A 
+                  href="http://www.microsoft.com/whdc/devtools/debugging/default.mspx">Overview</A></P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P><A 
+                  href="http://www.microsoft.com/whdc/devtools/debugging/debugstart.mspx">Getting 
+                  Started</A></P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P><A 
+                  href="http://www.microsoft.com/whdc/devtools/debugging/whatsnew.mspx">What's 
+                  New</A></P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P><A 
+                  href="http://www.microsoft.com/whdc/devtools/debugging/installx86.mspx">Debugging 
+                  Tools 32-bit Version</A></P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P><A 
+                  href="http://www.microsoft.com/whdc/devtools/debugging/install64bit.mspx">Debugging 
+                  Tools 64-bit Versions</A></P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P><A 
+                  href="http://www.microsoft.com/whdc/DevTools/Debugging/symbolpkg.mspx">Symbol 
+                  Packages</A></P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P><A 
+                  href="http://www.microsoft.com/whdc/devtools/debugging/resources.mspx">Resources</A></P></TD></TR></TBODY></TABLE>
+            <H6>References</H6>
+            <TABLE cellSpacing=0 cellPadding=0 border=0>
+              <TBODY>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P><A 
+                  href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/DevTest_g/hh/DevTest_g/TOC_Debugging_b61a3911-d5dc-42de-96af-deb0d7df233b.xml.asp?frame=true" 
+                  target=_blank>Debugging Tools Documentation 
+(WDK)</A></P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P><A 
+                  href="http://www.microsoft.com/whdc/driver/kernel/KB-drv.mspx">KB 
+                  Articles for Drivers</A></P></TD></TR>
+              <TR>
+                <TD class=listBullet vAlign=top>•</TD>
+                <TD class=listItem>
+                  <P><A 
+                  href="http://www.microsoft.com/whdc/resources/support/default.mspx">Support 
+                  for Driver Development</A></P></TD></TR></TBODY></TABLE></DIV></DIV>
+            <DIV 
+  class=sidebarFooter></DIV></TD></TR></TBODY></TABLE></DIV></DIV></TD></TR></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR vAlign=bottom>
+    <TD class=mnpMenuTop width=180>&nbsp;</TD>
+    <TD>
+      <DIV id=pagetools style="BEHAVIOR: url(#default#savefavorite)" 
+      onsave="c++; SetFirst('3');"><A 
+      onmouseover="window.status='View a printer-friendly version of this page'; return true" 
+      onclick="a++; SetFirst('1');" onmouseout="window.status=''; return true" 
+      href="http://www.microsoft.com/whdc/devtools/debugging/debugstart.mspx?pf=true" 
+      target=_new><IMG title="" height=16 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/print.gif" 
+      width=16 align=absMiddle border=0>&nbsp;Printer-Friendly Version</A><A 
+      onmouseover="window.status='Send this page'; return true" 
+      onclick="b++; SetFirst('2');" onmouseout="window.status=''; return true" 
+      href="mailto:?subject=Debugging Tools and Symbols: Getting Started&amp;body=http://www.microsoft.com/whdc/devtools/debugging/debugstart.mspx"><IMG 
+      title="" height=16 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/mail.gif" 
+      width=16 align=absMiddle border=0>&nbsp;Send This Page</A><A 
+      onmouseover="window.status='Add this page to your favorites'; this.style.cssText='background-color:#ccc; padding:1px 2px 1px 2px; margin: 1px 1px 1px 1px; border: 1px solid #999; height: 20px; color:#000; text-decoration: none; cursor: hand;'; return true" 
+      onclick=fnAddToFavs() 
+      onmouseout="window.status=''; this.style.cssText='padding:2px 3px 2px 3px; margin: 1px 1px 1px 1px; height: 20px; color:#000; text-decoration: none; cursor: hand;'; return true"><IMG 
+      title="" height=16 alt=* 
+      src="Debugging Tools and Symbols Getting Started_fichiers/favs.gif" 
+      width=16 align=absMiddle border=0>&nbsp;Add to Favorites</A></DIV><IFRAME 
+      id=ListenerFrame style="DISPLAY: none" 
+      src="Debugging Tools and Symbols Getting Started_fichiers/listener.htm"></IFRAME>
+      <SCRIPT language=JavaScript>
+      FavUrl = "http://www.microsoft.com/whdc/devtools/debugging/debugstart.mspx"; FavTitle = "Debugging Tools and Symbols: Getting Started"; Rate = 0.0;
+      DialogWidth = 306; lc = "en-us"; DialogHeight = 290;
+      Host = "www.microsoft.com"; HostUrl = "/whdc/devtools/debugging/debugstart.mspx";
+      </SCRIPT>
+    </TD></TR></TBODY></TABLE><BR style="OVERFLOW: hidden; LINE-HEIGHT: 1px" 
+clear=all>
+<TABLE id=msviFooter cellSpacing=0 cellPadding=0 width="100%">
+  <TBODY>
+  <TR vAlign=bottom>
+    <TD id=msviFooter2 
+    style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#FFFFFF', endColorStr='#6487DB', gradientType='1')">
+      <DIV id=msviLocalFooter><NOBR><A onclick=trackInfo(this) 
+      href="http://go.microsoft.com/?linkid=317027" target=_top 
+      LinkID="Footer_Link1" LinkArea="Footer">Manage Your Profile</A> 
+      |</NOBR><WBR></WBR><NOBR><A onclick=trackInfo(this) 
+      href="http://go.microsoft.com/?linkid=2028383" target=_parent 
+      LinkID="            Footer_Link2" LinkArea="Footer">Contact us</A> 
+      |</NOBR><WBR></WBR><NOBR><A onclick=trackInfo(this) 
+      href="http://www.microsoft.com/whdc/newsreq.mspx" target=_top 
+      LinkID="            Footer_Link3" LinkArea="Footer">WHDC Newsletter</A> 
+      |</NOBR><WBR></WBR><NOBR><A onclick=trackInfo(this) 
+      href="http://www.microsoft.com/japan/whdc/" target=_parent 
+      LinkID="            Footer_Link4" LinkArea="Footer">WHDC Japan</A> 
+      |</NOBR><WBR></WBR><NOBR><A onclick=trackInfo(this) 
+      href="http://www.microsoft.com/Taiwan/whdc/" target=_parent 
+      LinkID="            Footer_Link5" LinkArea="Footer">WHDC Taiwan</A> 
+      |</NOBR><WBR></WBR><NOBR><A onclick=trackInfo(this) 
+      href="http://www.microsoft.com/whdc/Legend.mspx" target=_blank 
+      LinkID="            Footer_Link6" LinkArea="Footer">WHDC Icon 
+      Key</A></NOBR></DIV>
+      <DIV id=msviGlobalFooter><SPAN dir=ltr>© 2006 Microsoft Corporation. All 
+      rights reserved.&nbsp;</SPAN><NOBR><A onclick=trackInfo(this) 
+      href="http://go.microsoft.com/?linkid=4412892" target=_parent 
+      LinkID="            Footer_Link7" LinkArea="Footer">Terms of Use</A> 
+      |</NOBR><WBR></WBR><NOBR><A onclick=trackInfo(this) 
+      href="http://go.microsoft.com/?linkid=4412893" target=_parent 
+      LinkID="            Footer_Link8" LinkArea="Footer">Trademarks</A> 
+      |</NOBR><WBR></WBR><NOBR><A onclick=trackInfo(this) 
+      href="http://go.microsoft.com/?linkid=4412894" target=_parent 
+      LinkID="            Footer_Link9" LinkArea="Footer">Privacy 
+      Statement</A></NOBR></DIV></TD>
+    <TD width=105 bgColor=#6487db><IMG title="" height=29 alt=Microsoft 
+      src="Debugging Tools and Symbols Getting Started_fichiers/text.jpg" 
+      width=105 border=0></TD></TR></TBODY></TABLE>
+<SCRIPT language=javascript>        var msviFooter2;        if (document.getElementById)        {        msviFooter2 = document.getElementById("msviFooter2");        msviFooter2.style.filter = "";        }      </SCRIPT>
+
+<TABLE height=58 cellSpacing=0 cellPadding=0 width="100%">
+  <TBODY>
+  <TR vAlign=top>
+    <TD>
+      <DIV style="WIDTH: 200px"></DIV></TD>
+    <TD 
+    style="FILTER: progid:DXImageTransform.Microsoft.Gradient(startColorStr='#FFFFFF', endColorStr='#6487DB', gradientType='1')" 
+    width="100%"></TD></TR></TBODY></TABLE>
+<DIV style="DISPLAY: none">
+<SCRIPT type=text/javascript>var gDomain="m.webtrends.com";var gDcsId="dcsjwb9vb00000c932fd0rjc7_5p3t";var gTrackEvents="1";var gFpc="WT_FPC";if(document.cookie.indexOf(gFpc+"=")==-1){document.write("<SCR"+"IPT TYPE='text/javascript' SRC='"+"http"+(window.location.protocol.indexOf('https:')==0?'s':'')+"://"+gDomain+"/"+gDcsId+"/wtid.js"+"'><\/SCR"+"IPT>");}</SCRIPT>
+
+<SCRIPT src="Debugging Tools and Symbols Getting Started_fichiers/wt.js" 
+type=text/javascript></SCRIPT>
+<NOSCRIPT><IMG height=1 
+src="Debugging Tools and Symbols Getting Started_fichiers/njs.gif" width=1 
+border=0 name=DCSIMG></NOSCRIPT></DIV><LAYER visibility="hide">
+<DIV style="DISPLAY: none"><IMG height=0 alt="" hspace=0 
+src="Debugging Tools and Symbols Getting Started_fichiers/trans_pixel.gif" 
+width=0 border=0></DIV></LAYER></BODY></HTML>

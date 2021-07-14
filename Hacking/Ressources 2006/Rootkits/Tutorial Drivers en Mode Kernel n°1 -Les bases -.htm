@@ -1,0 +1,478 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0043)http://neitsabes.free.fr/ASM/KMD/kmd01.html -->
+<HTML><HEAD><TITLE>Tutorial Drivers en Mode Kernel n°1 -Les bases -</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="KMD kernel programmation programmeur assembleur MASM asm" 
+name=keywords>
+<META content="Assembly programming" name=DESRIPTION>
+<META content=http://neitsabes.online.fr name=Identifier-URL>
+<META content="7 Days" name=revisit-after>
+<META content=FR name=language>
+<META content="Assembly programming" name=abstract>
+<META content=Document name=resource-type>
+<META content=General name=rating>
+<META content=Document name=VW96.object-type>
+<META lang=fr content=Neitsa name=Author>
+<META content="copyright Neitsa" name=COPYRIGHT>
+<META content=index,follow,all name=ROBOTS>
+<META http-equiv=Expires content=never>
+<META content=20040501 name=Date-Creation-yyyymmdd>
+<META content=20040715 name=Date-Revision-yyyymmdd><LINK 
+href="Tutorial Drivers en Mode Kernel n°1 -Les bases -_fichiers/KmdTut.css" 
+type=text/css rel=stylesheet>
+<SCRIPT 
+src="Tutorial Drivers en Mode Kernel n°1 -Les bases -_fichiers/color.js"></SCRIPT>
+
+<STYLE type=text/css>.style1 {
+	FONT-SIZE: xx-small
+}
+</STYLE>
+
+<META content="MSHTML 6.00.2900.2912" name=GENERATOR></HEAD>
+<BODY>
+<TABLE cellSpacing=0 cellPadding=0 width="96%">
+  <TBODY>
+  <TR class=logo>
+    <TD class=logo width="100%" 
+    background="Tutorial Drivers en Mode Kernel n°1 -Les bases -_fichiers/img1px.jpg"><U><IMG 
+      height=110 alt="KmdTut Logo" 
+      src="Tutorial Drivers en Mode Kernel n°1 -Les bases -_fichiers/imgLogo.jpg" 
+      width=350></U></TD>
+    <TD class=logo width="100%" 
+    background="Tutorial Drivers en Mode Kernel n°1 -Les bases -_fichiers/img1px.jpg"><U><IMG 
+      height=110 
+      src="Tutorial Drivers en Mode Kernel n°1 -Les bases -_fichiers/imgLogoRight.jpg" 
+      width=100></U></TD></TR></TBODY></TABLE>
+<P><A href="http://neitsabes.free.fr/ASM/KMD/KMDindex.htm">Retour menu KMD </A>/ 
+<A href="http://neitsabes.free.fr/ASM.html">Retour menu assembleur </A></P>
+<H1>Les Bases </H1>
+<DIV align=center>
+<TABLE>
+  <TBODY>
+  <TR>
+    <TD class=contents vAlign=top><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d1"><B>1.1 Vue 
+      d'ensemble de l'architecture </B></A>
+      <DIV style="MARGIN-LEFT: 2em"><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d1d1">1.1.1 Composants 
+      principaux du système </A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d1d2">1.1.2 Mode 
+      Kernel contre Mode Utilisateur </A><BR></DIV><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d2"><B>1.2 Modules de 
+      gestion de périphérique pour </B></A><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d2"><B>Windows 
+      NT</B></A> 
+      <DIV style="MARGIN-LEFT: 2em"><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d2d1">1.2.1 Types de 
+      Modules de gestion </A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d2d2">1.2.2 Drivers 
+      multicouches et monolithiques (simple couche) </A><BR></DIV><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d3"><B>1.3 Contexte de 
+      Thread </B></A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d4"><B>1.4 Niveaux de 
+      requête d'interruption </B></A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d5"><B>1.5 Arrêt du 
+      système </B></A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d6"><B>1.6 Kit de 
+      développement de drivers </B></A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d7"><B>1.7 Kit de 
+      driver en mode Kernel pour programmeurs MASM</B></A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d8"><B>1.8 Debogage de 
+      drivers </B></A><BR><A 
+      href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d9"><B>1.9 A lire 
+      </B></A></TD></TR></TBODY></TABLE></DIV><BR>
+<P>Ces tutoriaux expliquent comment écrire des modules de gestion de 
+périphérique (device drivers) pour les systemes basés sur Windows NT qui 
+incluent actuellement NT4.0, 2000, XP et 2003 en langage assembleur (en 
+utilisant le compilateur MASM). L'écriture de drivers pour Windows 95/98/ME est 
+en dehors de la portée de ce tutorial. Aussi, aucun doute quant au fait que ces 
+tutoriaux ne soit pas parfait. Si vous trouviez quoi que ce soit qui se révele 
+incorrect, n'hésitez pas a me contacter. </P>
+<H2>1.1 Vue d'ensemble de l'architecture <A name=k1d1></A></H2>
+<H3>1.1.1 Composants principaux du système <A name=k1d1d1></A></H3>
+<P>Intérieurement Windows NT est divisé en deux parties avec des frontieres bien 
+précises, toutes les deux délimitées par l'espace adressage, ainsi que par les 
+droits et devoirs du code s'exécutant. </P>
+<P>Avec le partage de l'espace d'adressage tout est merveilleusement simple. 
+Chacun des quatre gigaoctets de l'espace de mémoire virtuelle offert par 
+l'architecture 32 bits sont divisés en deux parts égales (j'omets le ‘4GT Ram 
+Tuning' et la prolongation d'adresse physique qui sont des cas exotiques). La 
+moitié inférieure des 4-GB de l'espace d'adressage virtuel (de l'adresse 
+00000000h jusqu'a 7FFFFFFFh) est donnée aux processus en mode utilisateur, la 
+moitié supérieure (d'adresses 80000000h a 0FFFFFFFFh) appartient au Kernel et 
+contient les composants systemes tel que les modules de gestion de périphérique, 
+les réserves de mémoire systeme, les structures de donnée du systeme, etc. Les 
+permissions et responsabilités de partages sont légerement plus complexes. </P>
+<P>Les types basiques des processus en mode utilisateur se décrivent comme 
+suit:</P>
+<UL>
+  <LI>
+  <P><EM>Processus de support du systeme</EM> - Par exemple le processus 
+  d'authentification (situé en \%SystemRoot%\System32\Winlogon.exe); </P>
+  <LI>
+  <P><EM><I>Processus de service </I></EM>- Par exemple, le service d'impression 
+  (situé en \%SystemRoot%\System32\spoolsv.exe); </P>
+  <LI>
+  <P><EM><I>Les applications utilisateur</I></EM> - Peuvent etre de cinq types: 
+  Win32, Windows 3.1, MS-DOS, POSIX et OS/2;</P>
+  <LI>
+  <P><EM>Sous-systemes d’environnement</EM> - Windows comprend trois 
+  sous-systemes d’environnement:</P>
+  <UL>
+    <LI>• Win32 (situé dans dans \%SystemRoot%\System32\Csrss.exe); 
+    <LI>• POSIX (situé dans \%SystemRoot%\System32\Psxss.exe); 
+    <LI>• OS/2 (situé dans \%SystemRoot%\System32\os2ss.exe).. </LI></UL></LI></UL>
+<P class=note>Sur Windows XP et suivant les sous-systèmes POSIX et OS/2 ont été 
+supprimés .</P>
+<P>Les composants Kernel incluent ce qui suit :</P>
+<UL>
+  <LI>
+  <P><EM><I>Administration</I></EM> - Gestion mémoire, gestion processus et 
+  thread, sécurité, etc.;</P>
+  <LI>
+  <P><EM><I>Kernel</I></EM> - planification des threads, gestion des 
+  interruptions et des exceptions, etc. (Administration et Kernel situés en 
+  \%SystemRoot%\System32\Ntoskrnl.exe);</P>
+  <LI>
+  <P><EM><I>Module de gestion de périphérique (Device drivers) </I></EM>- 
+  modules de gestion de périphérique matériel , système de fichiers et drivers 
+  réseaux; </P>
+  <LI>
+  <P><EM><I>Couche d’abstraction matérielle [ Hardware Abstraction 
+  Layer</I></EM>, HAL ] -isole le kernel, les drivers systeme, et le composant 
+  d’administration des différences de hardware suivant les plateformes (situé 
+  dans \%SystemRoot%\System32\Hal.dll);</P>
+  <LI>
+  <P><EM><I>Systeme de fenêtrage et de graphisme</I></EM> - implémente les 
+  fonctions de l’interface graphique (GUI) l’administration des fenêtres, les 
+  contrôles de l’interface utilisateur, et le graphisme (situé dans 
+  \%SystemRoot%\System32\Win32k.sys).</P></LI></UL>
+<P></P>
+<CENTER><IMG height=355 
+src="Tutorial Drivers en Mode Kernel n°1 -Les bases -_fichiers/imgkmd1-1_.png" 
+width=642><BR><BR><B>Fig. 1-1</B> Architecture simplifiée de Windows NT 
+</CENTER>
+<P></P>
+<H3>1.1.2 Mode Kernel contre Mode Utilisateur<A name=k1d1d2></A></H3>
+<P class=note>L'architecture du processeur Intel x86 définit quatre niveaux de 
+privilège (connus sous le nom de ‘Ring’). Windows emploie le niveau de privilège 
+0 (ou Ring 0) pour le mode Kernel et le niveau 3 de privilege (ou Ring 3) pour 
+le mode d'utilisateur. La raison pour laquelle Windows utilise seulement deux 
+niveaux est que certaines des architectures matérielles utilisées par le passé 
+(tel que Compaq Alpha et Silicon Graphics MIPS) comprenaient seulement deux 
+niveaux de privilège.</P>
+<P>Chaque composant du mode utilisateur a son propre espace mémoire privé. Les 
+Threads de tels composants fonctionnent a un niveau non privilégié (appelé 
+<STRONG><EM>Mode Utilisateur </EM></STRONG>ou ring 3) et ne peuvent pas exécuter 
+d'instructions privilégiées du processeur. De tels composants ont un acces 
+limité et indirect aux données systeme, ainsi qu'a l'espace d'adressage du 
+systeme, et n'ont aucun acces direct a l'équipement. Par exemple, si une 
+application en mode utilisateur touche n'importe quelle adresse dans la moitié 
+supérieure de l'espace d'adresse de 4-GB, le systeme terminera immédiatement le 
+processus utilisateur. Notez que les threads de ces processus peuvent passer en 
+mode Kernel en appelant des services du systeme, mais dans ce cas la ils perdent 
+completement leurs contrôles d'exécution jusqu'a leurs retours en mode 
+utilisateur. </P>
+<P>Les processus du mode utilisateur sont considérés comme potentiellement 
+dangereux en termes de stabilité du systeme. Leurs droits sont limités. Et 
+toutes les tentatives d'outrepasser ces limitations sont stoppées. </P>
+<P>Les composants du Kernel partagent le meme espace mémoire protégé, 
+fonctionnant a un niveau privilégié ou de surveillance (appelé <STRONG><EM>Mode 
+Kernel </EM></STRONG>ou ring 0), et peuvent exécuter toutes les instructions du 
+processeur, y compris les privilégiées, et ont un acces illimité et sans 
+restriction aux données et code systeme, ainsi qu'au matériel de l'ordinateur. 
+</P>
+<P>Le code fonctionnant dans l'espace d'adresse du systeme est considéré comme 
+completement fiable. Par conséquent, une fois chargé, le driver devient une 
+partie du systeme lui-meme. De cette maniere le driver fonctionne comme 
+composant fiable du Kernel, avec la puissance, apparemment sans restriction, de 
+faire ce qu'il veut. </P>
+<P>A proprement parler les applications utilisateur sont totalement séparées du 
+logiciel d'exploitation lui-meme. Ceci est bénéfique pour l'intégrité du systeme 
+d'exploitation mais mauvais pour un certain type d'application de service tel 
+que les débuggeurs. Heureusement, l'acces sans restriction fourni par les 
+drivers Kernel peut etre employé pour accomplir des tâches normalement 
+impossibles pour des applications en mode utilisateur. Ainsi, si vous voulez 
+avoir un moyen d'accéder aux fonctions du logiciel d'exploitation ou aux 
+structures de données internes qui ne sont pas accessibles a partir du mode 
+utilisateur, le est de charger un driver en mode Kernel dans l'espace adresse de 
+systeme. C'est plutôt simple, fiable et completement autorisé par le systeme 
+d'exploitation lui-meme.</P>
+<H2>1.2 Modules de gestion de périphérique pour Windows NT (Device Drivers)<A 
+name=k1d2></A></H2>
+<H3>1.2.1 Types de drivers de périphérique<A name=k1d2d1></A></H3>
+<P>Windows NT supporte un éventail de différents types de drivers de 
+périphérique, qui peuvent etre divisés suivant les larges catégories suivantes 
+:</P>
+<UL type=disc>
+  <LI>
+  <P><EM><I>Drivers en Mode Utilisateur:</I></EM></P>
+  <UL type=disc>
+    <LI>
+    <P><EM><I>Drivers de périphérique virtuels [Virtual Device Driver 
+    (VDD)]</I></EM> - un composant en mode utilisateur, ils sont utilisés pour 
+    émuler des applications 16 bits de MS-DOS. Bien que ce genre de driver 
+    partage le nom de VxD utilisé dans Windows 95/98, ils sont completement 
+    différents.</P>
+    <LI>
+    <P><EM>Drivers d’impression</EM> - traduit les demandes non tributaires du 
+    type d'unité graphiques en commandes spécifiques d’imprimantes.</P></LI></UL>
+  <LI>
+  <P><EM><I>Drivers en Mode Kernel </I></EM>: </P>
+  <UL type=disc>
+    <LI>
+    <P><EM>Drivers de systeme de fichiers</EM> - Implémente le modele standard 
+    de systeme de fichiers ;</P>
+    <LI>
+    <P><EM><I>Drivers d’héritage [Legacy Drivers]</I></EM> - Contrôle un module 
+    matériel sans aide d'autres drivers et sont écrit pour des versions 
+    antérieures de Windows NT mais ils restent sans changement sur Windows 
+    2000/XP/2003; </P>
+    <LI>
+    <P><EM><I>Drivers Vidéo </I></EM>- Rendu de données visuelles;</P>
+    <LI>
+    <P><EM><I>Drivers de flux [Streaming Drivers]</I></EM> - supportent les 
+    dispositifs multimédia tels que les cartes son;</P>
+    <LI>
+    <P><EM><I>WDM-Drivers</I></EM> - Respectent le modele de drivers Windows 
+    [Windows Model Driver (WDM)]. Le WDM inclut la prise en charge de la gestion 
+    de puissance sous Windows NT et le ‘Plug and Play’. Le WDM est mis en 
+    application sur Windows 2000, Windows 98, et l'édition de Windows 
+    Millennium, ainsi les codes sources WDM sont compatibles entre ces logiciels 
+    d'exploitation et sont dans beaucoup de cas également compatibles au niveau 
+    des fichiers binaires.</P></LI></UL></LI></UL>
+<P>Dans différents documents vous pourrez rencontrer une classification un peu 
+distincte de celle mentionnée ci-dessus, mais ceci n'est pas vraiment important. 
+</P>
+<P>Comme sont nom l'indique, le driver de périphérique est un programme prévu 
+pour commander un dispositif. Il n'est pas nécessaire que le dispositif soit 
+physique. Le dispositif peut tout aussi bien etre virtuel. </P>
+<P>Structurellement le driver de périphérique n'est rien d'autre qu'un fichier 
+au format PE (Portable Executable, PE). Exactement le meme que toute autre 
+application de type EXE ou DLL. Les drivers de périphérique sont des modules 
+chargeables en mode Kernel (finissant typiquement par l'extension ".sys"). La 
+seule différence est que les drivers de périphériques sont chargés et contrôlés 
+d'une maniere completement différente. Les drivers de périphérique peuvent etre 
+considérés en tant que DLL en mode Kernel destinées a l'exécution de tâches non 
+dévolues au mode utilisateur. La différence de base ici (non vu au niveau des 
+privileges) c'est que nous ne pouvons pas directement accéder au driver de 
+périphérique, ni a son code, ni a ses données. La seule maniere possible est de 
+le faire par l'intermédiaire du <STRONG><EM>Gestionnaire d'entrée/sortie [I/O 
+Manager] </EM></STRONG>. Il fournit un environnement primitif dans lequel le 
+driver est chargé et contrôlé. </P>
+<P>En commençant a développer des drivers de périphérique , vous vous sentirez 
+comme un débutant, puisque toute l'expérience précédente consistant a employer 
+des APIs ne vous aidera pas – le Kernel offre un ensemble completement différent 
+de fonctions et de structures. En outre il est nécessaire d'employer des 
+fonctions et des structures de données partiellement (définies seulement dans 
+des fichiers d'en-tete) ou completement non documentées. </P>
+<H3>1.2.2<A href="http://neitsabes.free.fr/ASM/KMD/kmd01.html#k1d2d2"> Drivers 
+multicouches et monolithiques (simple couche)</A><A name=k1d2d2></A></H3>
+<P>La plupart des drivers qui contrôlent les dispositifs physiques sont des 
+drivers multicouches <EM><I>[layered drivers]</I></EM>. Les drivers multicouches 
+sont des drivers qui manipulent des demandes en mode utilisateur, traitant et 
+passant chaque demande du driver de plus haut niveau au driver de bas niveau. 
+Une manipulation de demande d’entrée/sortie [I/O request handling] est divisée 
+entre plusieurs drivers. Par exemple, si une application émet une demande de 
+lecture d’un fichier stocké sur le disque dur, la demande d’entrée/sortie est 
+passée au driver du systeme de fichiers qui simplement reroute celle-ci au 
+driver de disque, lui demandant de lire des données a un certain endroit sur le 
+disque dur. Il est possible d'ajouter n'importe quelle quantité de 
+drivers-filtre dans l'intervalle. Par exemple, dans un but 
+d'encryption/décryption.</P>
+<P>Le <EM><I>driver monolithique</I></EM> est le type le plus simple de driver. 
+Ce type n'a généralement aucune dépendance sur d'autres drivers chargés dans le 
+système. Ils fournissent simplement une interface aux applications du mode 
+utilisateur et ceci sans aucune aide. Développer et corriger de tels drivers est 
+beaucoup plus facile. C'est le type de drivers que nous discuterons ici. Les 
+autres types de drivers dépassent le cadre de ces tutoriaux. </P>
+<H2>1.3 Contexte de Thread<A name=k1d3></A></H2>
+<P>Dans la plupart des cas nous n'avons seulement qu'un seul processeur mais 
+beaucoup d'applications courantes. Pour toutes ces applications, le systeme 
+d'exploitation programme du temps CPU pour chaque thread de chaque application. 
+Il crée l'illusion que tous les threads fonctionnent concurremment en offrant 
+des tranches de temps aux threads a la façon d'un algorithme de ‘Round-Robin' 
+[ndt : Round Robin est un algorithme permettant de simuler un systeme réellement 
+multi-tâches sur une machine en accordant un temps pour chaque travail a 
+accomplir, la rapidité d'exécution de chaque tâche donnant l'illusion du 
+multi-tâche]. Si la machine a de multiples processeurs, l'algorithme du systeme 
+d'exploitation est beaucoup plus complexe pour administrer l'équilibre des 
+threads face aux CPUs. Quand Windows détermine s'il devrait choisir un nouveau 
+thread a faire fonctionner, il exécute un commutateur de contexte sur celui-ci. 
+Un commutateur de contexte est le fait de sauver l'état volatil de machine lié a 
+un thread courant, chargeant l'état volatil d'un autre thread, et commençant 
+l'exécution du nouveau thread. Si le thread choisi appartient a un autre 
+processus, il est nécessaire de charger le pointeur d'annuaire de page de 
+processus dans le registre CR3. </P>
+<P>Chaque processus en mode utilisateur possède son propre espace d’adresse 
+privée, les différents processus se voit doter de différentes projection 
+d'espaces d'adressage, le processeur utilise les différents annuaires pages et 
+les ensembles des tables de page pour traduire les adresses virtuelles en 
+adresses physique. Tout ceci n'a rien a voir directement avec la programmation 
+de drivers. Mais comme la commutation de contexte fait perdre du temps CPU, les 
+drivers ne créent pas leurs propres threads. Par conséquent, pour sauver du 
+temps CPU sur la commutation de contexte, les drivers fonctionnent en mode 
+Kernel dans un de ces trois contextes :</P>
+<P>• Dans le contexte d’un thread utilisateur qui lance une fonction 
+d'entrée/sortie;</P>
+<P>• dans le contexte d'un thread systeme en mode Kernel;</P>
+<P>• Comme résultat d'une interruption (et donc pas dans le contexte d’un 
+processus ou d’un thread particulier – quel qu’est pu etre le processus ou 
+thread courant quand l'interruption s'est produite)</P>
+<P>Nous ne manipulerons ni les interruptions logiciel, ni matériel. En traitant 
+des paquets de demande d'entrée/sortie [Input/output Request Packets(IRPs)] nous 
+fonctionnons toujours dans le meme contexte de processus que le processus 
+appelant en mode utilisateur et nous pouvons ainsi directement adresser son 
+espace mémoire. Quand le driver est chargé/déchargé nous sommes dans le contexte 
+de processus du systeme et pouvons seulement avoir un rapport avec l'espace 
+mémoire du systeme. </P>
+<H2>1.4 Niveaux de requête d'interruption<A name=k1d4></A></H2>
+<P>Les interruptions sont parties intégrante de n'importe quel systeme 
+d'opération. N'importe quelle interruption exige un traitement, ainsi 
+l'accomplissement du code cesse et le contrôle est transféré au processeur 
+d'interruption. Il existe aussi bien des interruptions logicielles que des 
+interruptions matérielles. Les interruptions sont prises en charge dans leur 
+ordre de priorité, ainsi une interruption de haute priorité devance une 
+interruption de basse priorité. </P>
+<P>Windows impose un schéma d'interruption prioritaire connu sous le nom de 
+niveaux de demande d'interruption [ <STRONG><EM>interrupt request levels 
+</EM></STRONG>(IRQLs)]. Le Kernel se représente les IRQLs intérieurement comme 
+des nombres allant de 0 (passif) a 31 (haut), les nombres les plus élevés 
+représentant des interruptions de hautes priorités. Les niveaux de priorités 
+d'IRQL ont une signification completement différente de celui des priorités de 
+thread. </P>
+<P>A proprement parler l'interruption avec IRQL=0 n'est pas une interruption, 
+puisqu'elle ne peut interrompre l'accomplissement d'aucun code (dans ce cas le 
+code devrait fonctionner a un niveau d'IRQL inférieur, mais il n'existe pas de 
+tel niveau). Chaque thread du mode utilisateur fonctionne au niveau passif. Et 
+le code de nos drivers fonctionnera a ce niveau IRQL aussi. Cela ne signifie 
+aucunement que le code de n'importe quel driver est toujours au niveau passif. 
+</P>
+<P>Par conséquent deux conclusions importantes s'imposent : </P>
+<P>Premierement: Le code du driver est toujours préempter par n'importe quelle 
+activité qui s'exécute a un niveau d'IRQL plus élevé, comme tout code d'un 
+thread s'exécutant en mode utilisateur. Il existe des fonctions permettant de 
+connaître le niveau d'IRQL courant, et également de le mettre a un niveau plus 
+élevé ou encore de l'abaisser. </P>
+<P>En second lieu: Il est possible d'appeler n'importe quelle fonction a un 
+niveau d'IRQL passif (le DDK décrit a quel niveau d'IRQL chaque fonction peut 
+etre appelée). Nous pouvons aussi adresser de la mémoire paginée ou non paginée. 
+Une tentative de mettre en référence une mémoire paginée possédant un niveau 
+d'IRQL élevé (égale ou supérieur a DISPATCH_LEVEL) conduit a l'arret du systeme 
+[system crash !], puisque le contrôleur de mémoire devient incapable de 
+s'occuper des fautes de pages. </P>
+<H2>1.5 Arrêt du système <A name=k1d5></A></H2>
+<P>Je présume que chacun, ne serait-ce qu'une fois, a vu cette apparition 
+passionnante connue sous le nom ‘Blue Screen Of Death' (BSOD) [littéralement, 
+"l'écran bleu de la mort"]. Il n'y a probablement aucune nécessité a 
+l'expliquer, ce qu'il est et pourquoi il apparaît dans certains cas. </P>
+<P>En commençant le développement de drivers en mode Kernel, préparez vous au 
+fait que les BSOD se produiront plus souvent sur votre écran. Windows n'assure 
+aucune protection a la mémoire privée du systeme employée par des drivers 
+fonctionnant en mode Kernel. Une fois dans le mode Kernel le driver a un acces 
+complet a la mémoire du systeme et a toutes les données du systeme 
+d'exploitation. Ainsi, concevez et examinez vos drivers soigneusement pour vous 
+assurer qu'ils ne violent pas la sécurité du systeme. Tenant en compte la 
+structure des drivers que vous écrirez est relativement simple, il est possible 
+de se prémunir des erreurs avant l'apparition de BSOD. </P>
+<P>Vous pouvez considérer ce qui a été dit plus haut comme les termes basique de 
+ces principes, qui sont absolument nécessaires a la compréhension. Il est 
+impossible de commencer a développer des drivers en mode Kernel en ne sachant 
+pas des concepts tels que les contextes de threads, niveaux de demande 
+d'interruption, priorités de threads, mode Kernel, mode utilisateur, etc. </P>
+<H2>1.6 Kit de développement de drivers<A name=k1d6></A></H2>
+<P>Le Windows 2000 DDK fait partie de l'abonnement a la MSDN Professionnelle (et 
+Universelle) [MSDN Professional/Universal] (voir <A 
+href="http://www.microsoft.com/ddk/">http://www.microsoft.com/ddk/</A>). Le DDK 
+est une source abondante d'information sur les composants internes de Windows 
+NT, comprenant les routines systeme et les structures de données internes 
+employées par des modules de gestion de périphérique. Malheureusement, Microsoft 
+a arreté la distribution libre de DDK. </P>
+<P>Sans compter seulement la documentation, le DDK inclut un ensemble de 
+bibliotheque (* lib) qui seront completement nécessaire a l'étape de liage. Il y 
+a deux versions de ces fichiers : pour la version libre de Windows (appelé ‘free 
+build') ; et pour une version de débug spéciale (appelée ‘checked build'). Ces 
+fichiers sont respectivement dans les répertoires %ddk%\libfre\i386 et 
+%ddk%\libchk\i386 . La version ‘checked build' est une recompilation du code 
+source de Windows 2000 avec le drapeau DEBUG mis a TRUE au moment de la 
+compilation. Elle exécute une vérification des erreurs plus rigoureuse sur des 
+fonctions en mode Kernel appelées par des modules de gestion de périphérique ou 
+tout autre code du systeme. Il est nécessaire d'employer des dossiers appropriés 
+a votre version de Windows. </P>
+<H2>1.7 Kit de développement de drivers en mode Kernel pour programmeurs MASM<A 
+name=k1d7></A></H2>
+<P>Le KmdKit contient tout ce qui est nécessaire pour commencer la programmation 
+de drivers en Mode Kernel en assembleur: fichiers include, librairies, macros, 
+exemples, outils, ces articles, etc. Vous êtes invité à explorer le contenu de 
+cette archive pour plus de détails. Dans les prochains articles nous analyserons 
+quelques exemples de cette archive. </P>
+<H2>1.8 Débogage de Driver <A name=k1d8></A></H2>
+<P>Comme nous devrons débuguer le code des drivers en mode Kernel, un programme 
+de mise au point approprié est exigé. SoftICE de Compuware (voir <A 
+href="http://www.compuware.com/products/numega/index.htm">http://www.compuware.com/products/numega/index.htm</A>pour 
+les détails) est le meilleur choix. Vous pouvez aussi utiliser le programme de 
+debugging fourni par Microsoft. Il exige deux ordinateurs - une cible et un 
+serveur. La cible est le systeme étant débuggé, et le serveur est le systeme 
+exécutant le programme de mise au point. Mark Russinovich ( <A 
+href="http://www.sysinternals.com/">http://www.sysinternals.com/</A>) a écrit 
+l'utilitaire LiveKd qui permet l'utilisation du débuggeur de Kernel standard de 
+Microsoft sur un systeme, sans avoir besoin de deux ordinateurs. </P>
+<H2>1.9 A lire <A name=k1d9></A></H2>
+<UL>
+  <LI>David Solomon, Mark Russinovich, “Inside Microsoft Windows 2000. Third 
+  Edition”, Microsoft Press, 2000. </LI></UL>
+<BLOCKQUOTE>
+  <P><SPAN class=style1>o <I>Bien qu'il n'y ait aucun code source dans ce livre, 
+  c'est le premier a lire de tous.</I></SPAN></P></BLOCKQUOTE>
+<UL>
+  <LI>Sven B. Schreiber, “Undocumented Windows 2000 Secrets. A Programming 
+  Cookbook”, Addison-Wesley. </LI></UL>
+<BLOCKQUOTE>
+  <P><SPAN class=style1>o <I>Un livre particulierement pratique, ou beaucoup de 
+  secrets de Windows 2000 secrets ont été révélés.</I></SPAN></P></BLOCKQUOTE>
+<UL>
+  <LI>Walter Oney, “Programming the Microsoft Driver Model”, Microsoft Press, 
+  1999 . 
+  <LI>Walter Oney, "Programming the Microsoft Windows Driver Model. 2nd 
+  edition", Microsoft Press, 2003 </LI></UL>
+<BLOCKQUOTE>
+  <P><SPAN class=style1>o <I>Le point central de ce livre est axé sur le driver 
+  Plug and Play, mais les principes de développement de drivers sont 
+  universels.</I></SPAN></P></BLOCKQUOTE>
+<UL>
+  <LI>Jeffrey Richter, “Programming Applications for Microsoft Windows. Fourth 
+  Edition”, Microsoft Press, 1999. </LI></UL>
+<BLOCKQUOTE>
+  <P><SPAN class=style1>o <I>Ce livre n'a rien a voir avec la programmation de 
+  drivers, mais est tres intéressant aussi ; -)</I></SPAN></P></BLOCKQUOTE>
+<UL>
+  <LI>Art Baker &#269; Jerry Lozano, "The Windows 2000 Device Driver Book, A Guide 
+  for Programmers, Second Edition", Prentice Hall, 2000 </LI></UL>
+<BLOCKQUOTE>
+  <P><SPAN class=style1>o <I>Un très bon livre sur le sujet 
+</I></SPAN></P></BLOCKQUOTE>
+<UL>
+  <LI>Rajeev Nagar, "Windows NT File System Internals. A Developer's Guide", 
+  O'Reilly </LI></UL>
+<BLOCKQUOTE>
+  <P><SPAN class=style1>o <I>Le titre parle de lui même 
+</I></SPAN></P></BLOCKQUOTE>
+<UL>
+  <LI>Prasad Dabak, Sandeep Phadke, and Milind Borate, "Undocumented Windows 
+  NT", M&amp;T Books, 1999 
+  <P><SPAN class=style1>o<I> Vous découvrirez dans ce livre quelques structures 
+  non documentées de Windows NT.</I></SPAN></P>
+  <LI>Gary Nebbett, " Windows NT-2000 Native API Reference", MacMillan Technical 
+  Publishing, 2000 
+  <P><SPAN class=style1>o <I>Si vous pensez utiliser quelques fonctions et 
+  structures non documentées dans vos drivers, ce livre est pour 
+  vous.</I></SPAN></P></LI></UL>
+<P>Cette liste n’est aucunement intégrale. En ce qui concerne les livres que je 
+viens de citer, ce sont tous des "must have".</P>
+<HR width="100%" color=#8088a0 SIZE=1>
+
+<DIV>
+<P>Copyright © 2002-2004 Four-F, <A 
+href="mailto:four-f@mail.ru">four-f@mail.ru</A></P>
+<P>Traduction Neitsa, <A 
+href="mailto:tzcorporation@hotmail.com">tzcorporation@hotmail.com</A></P></DIV></BODY></HTML>

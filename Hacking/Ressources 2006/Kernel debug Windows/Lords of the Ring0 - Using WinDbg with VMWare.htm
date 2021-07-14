@@ -1,0 +1,132 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0051)http://silverstr.ufies.org/lotr0/windbg-vmware.html -->
+<HTML><HEAD><TITLE>Lords of the Ring0 - Using WinDbg with VMWare</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><LINK 
+href="Lords of the Ring0 - Using WinDbg with VMWare_fichiers/styles.css" 
+type=text/css rel=stylesheet>
+<META content="MSHTML 6.00.2900.2995" name=GENERATOR></HEAD>
+<BODY bgColor=green><IMG 
+src="Lords of the Ring0 - Using WinDbg with VMWare_fichiers/lotr0-title.gif" 
+border=0> 
+<DIV id=content>
+<DIV class=title>Driver Debugging with WinDbg and VMWare </DIV>
+<DIV class=mainbody>
+<P>One of the first useful things you will want to do when in the bowels of ring 
+0 is attack the thing from a debugger point of view. In my case I like using 
+Windows Debugger [windbg] (hey its free, fully functional and does remote 
+debugging really well), and found it neccessary to find a way to have it work 
+with VMWare. 
+<P>The trick to get it to work in VMWare is to get the host OS to believe it is 
+able to connect to a serial port. Through VMWare, to accomplish this, you need 
+to create a named pipe. The following steps will guide you to configuring VMWare 
+(in my case v3.2): 
+<OL>
+  <LI>Open up the Configuration Editor (<B><FONT 
+  color=white>Settings-&gt;Configuration Editor</FONT></B>)
+  <P>
+  <P></P>
+  <LI>Click <B><FONT color=white>Add</FONT></B> to run the Hardware Wizard
+  <P>
+  <P></P>
+  <LI>Select <B><FONT color=white>Serial Port</FONT></B>, and then click the 
+  <B><FONT color=white>Next</FONT></B> button
+  <P><IMG 
+  src="Lords of the Ring0 - Using WinDbg with VMWare_fichiers/vmware-config.png" 
+  border=0>
+  <P>
+  <P></P>
+  <LI>Select the <B><FONT color=white>Use named pipe</FONT></B> radio button
+  <P>
+  <P></P>
+  <LI>Use the default pipe name. It SHOULD be <B><FONT 
+  color=white>\\.\pipe\com_1</FONT></B>. If it is not, change it to that.
+  <P>
+  <P></P>
+  <LI>Select <B><FONT color=white>This end is the Server</FONT></B>.
+  <P>
+  <P></P>
+  <LI>Select <B><FONT color=white>The other end is an application</FONT></B>.
+  <P>
+  <P></P>
+  <LI>Click the <B><FONT color=white>Advanced</FONT></B> Button.
+  <P>
+  <P></P>
+  <LI>Select the <B><FONT color=white>Yield CPU on poll</FONT></B> checkbox
+  <P><IMG 
+  src="Lords of the Ring0 - Using WinDbg with VMWare_fichiers/vmware-config-advanced.png" 
+  border=0>
+  <P>This is an important step as the Kernel in the target virtual machine uses 
+  the port in polled mode, not interrupt mode.
+  <P>
+  <P></P>
+  <LI>Click the <B><FONT color=white>Finish</FONT></B> button, and then click 
+  <B><FONT color=white>Ok</FONT></B> to close the Configuration Editor. 
+  <UL></UL>
+  <P>Once you have configured your VMWare session, you need to power it on. You 
+  will be able to confirm that the new virtual serial port is added by clicking 
+  on the <B><FONT color=white>Devices-&gt;serial0</FONT></B> menu item. You 
+  should note it is saying <B>"Connecting"</B>. This means its now ready for a 
+  remote connection. 
+  <P>Once the actual virtual machine is configured, you need to configure the 
+  target operating system installed in the virtual machine to support remote 
+  debugging. This is accomplished by editing the <B>boot.ini</B> found in the 
+  root of the C:\ drive. To do this, you need to add a <B><FONT 
+  color=white>/debugport=some_com_port /baudrate=some_baud_rate</FONT></B> to 
+  the end of an <B>[operating systems]</B> line. I would not recommend doing it 
+  to the one that is there. It would be better to copy the line and paste it 
+  with the ammendments, and then use the OS's menu selection to determine which 
+  mode you would like to boot into. This is what my boot.ini looks like for XP 
+  Pro as the operating system in the virtual machine: 
+  <P>
+  <DIV class=bootbody><PRE>[boot loader]
+timeout=30
+default=multi(0)disk(0)rdisk(0)partition(1)\WINDOWS
+[operating systems]
+multi(0)disk(0)rdisk(0)partition(1)\WINDOWS="Microsoft Windows XP Professional" /fastdetect
+multi(0)disk(0)rdisk(0)partition(1)\WINDOWS="Microsoft Windows XP Professional - Debug" /fastdetect <B>/debugport=com1 /baudrate=115200</B><BR>
+</PRE></DIV>
+  <P>You will notice that the second option sets the debugport to com1, and sets 
+  the baudrate to 115200. I am told you can tweak this out to get even more 
+  speed out. But it seems fine for me at this speed, so I haven't mucked with it 
+  at all. If you do try this, drop me an <A 
+  href="mailto:dana@vulscan.com">email</A> and let me know how it works out. 
+  <P>If you set up your boot.ini fine, save it and reboot. You should be 
+  prompted with something that looks like this: </P><IMG 
+  src="Lords of the Ring0 - Using WinDbg with VMWare_fichiers/xp-debug-menu.png" 
+  border=0><BR>
+  <P>At this point you have completed setting up the VMWare side of things. Now 
+  you need to set up the host to connect to it. This is actually rather easy. 
+  You just need to tell windbg at the command like to connect to the pipe, like 
+  this: <PRE>windbg -k com:port=\\.\pipe\com_1,pipe
+</PRE>If you are using WinDbg 6.x or newer, a better alternative is to use: <PRE>windbg -b -k com:pipe,port=\\.\pipe\com_1,resets=0
+</PRE>
+  <P>Thanks needs to go to <A href="mailto:randhir@calsoftinc.com">Randhir 
+  Dugal</A> for pointing out the new format for the latest Windbg version. </P>
+  <P>I am a rather anal type guy when it comes to security, so I actually made a 
+  shortcut on my desktop to WinDbg and added these command line arguments to the 
+  <B>Target</B> line. Originally this was so I could run WinDbg with differnet 
+  credentials as I do not run with administrator privileges on a day to day 
+  basis. I found that with XP's normal security settings for com ports, you can 
+  still work in a least privileged environment while doing the development 
+  WITHOUT having to use 'runas'. (You are logged into W2K/XP as a least 
+  priviledged environment aren't you? If not, you really should read my <A 
+  href="http://www.codeproject.com/useritems/runas.asp">article</A> on how, and 
+  why this is important to do so.) 
+  <P>At this point fire up the debugger. With any luck you should see something 
+  that looks like this: </P><IMG 
+  src="Lords of the Ring0 - Using WinDbg with VMWare_fichiers/windbg.png" 
+  border=0><BR>
+  <P>If you are using a WinDbg version earlier than 6.x, you will find one issue 
+  with this approach. If you cannot seem to connect right away, close Windbg and 
+  restart it... it will then work. Seems flaky to me. But it works. And thats a 
+  Good Thing™. With the latest versions of WIndbg (6.x and newer) a new resets 
+  flag prevents this sort of hanging. 
+  <P>That is all there is to it. At this point, you can now go nuts with remote 
+  debugging. To make sure it works for ya just add some <B>DbgPrint()</B> 
+  messages to your ring 0 driver and watch them echo to the screen. Past that, I 
+  will leave it to your imagination how to use the debugger :) 
+  <P>Good luck! </P></LI></OL></DIV></DIV>
+<DIV id=links>
+<DIV class=links>
+<DIV class=subtitle><A href="http://silverstr.ufies.org/lotr0/index.html">Return 
+to Main Menu</A> </DIV></DIV></DIV></BODY></HTML>

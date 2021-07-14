@@ -1,0 +1,863 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Driver Development Part 1: Introduction to Drivers - The Code Project - System</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<META NAME="MS.LOCALE"          content="en-US" />
+<meta NAME="Description"        content="This article will go into the basics of creating a simple driver." />
+<meta name="Search.TopicType"   content="kbArticle" />
+<meta name="Author"             content="Toby Opferman" />
+<meta name="Search.PublishDate" content="05 Feb 2005 17:29:00 GMT" />
+<meta name="Search.RevisedDate" content="05 Feb 2005 17:29:00 GMT" />
+
+<!--<meta name="Search.UserRating"  content="86 %" /> -->
+<meta NAME="keywords" Content="Free source code, System, Visual C++, MFC, Windows, driver C">
+<meta NAME="Copyright" CONTENT="Article content copyright Toby Opferman, 2005, everthing else Copyright © CodeProject, 1999-2006, All Rights Reserved.">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Lounge Postings" href="http://www.codeproject.com/webservices/LoungeRSS.aspx">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - All topics" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=1">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - MFC / C++" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=2">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - C#" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=3">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - ASP.NET" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=4">
+<link rel="alternate" type="application/rss+xml" title="CodeProject Latest articles - .NET" href="http://www.codeproject.com/webservices/articlerss.aspx?cat=5">
+<meta http-equiv="Reply-to" CONTENT="mailto:webmaster@codeproject.com">
+<link rel="icon" href="/favicon.ico" type="image/ico">
+<link rel="SHORTCUT ICON" href="/favicon.ico">
+
+<link rel="stylesheet" type=text/css href="/styles/global.css">
+<script language="javascript" src="/script/oncopy.js"></script>
+
+</head>
+<body text=black bgColor=white aLink=red link=blue vLink=purple topmargin=3 leftmargin=3 
+      oncopy="return copyCode();">
+
+
+<!-- COPYRIGHT 2006 I/PRO Corporation ALL RIGHTS RESERVED. - Page view auditing -->
+<script language="JavaScript">
+var LSPT="";
+LSPT += "?durl=" + escape(document.URL);
+LSPT += "&hostname=" + location.hostname;
+LSPT += "&url=" + location.pathname;
+LSPT += "&query=" + escape(location.search) + escape(location.hash);
+LSPT += "&referrer=" + escape(document.referrer);
+LSPT += "&browser=" + escape(navigator.appName);
+LSPT += "&version=" + escape(navigator.appVersion);
+LSPT += "&os=" + escape(navigator.platform);
+LSPT += "&xdomain=codeproject.com";
+LSPT += "&custid=codeproject";
+</script>
+<script  Language="Javascript">
+document.write('<img src=http://'+'content.ipro.com/images/pixel.gif'+LSPT+' height="1" width="1" style="position:absolute; top:0px; left:0px">');
+</script>
+<noscript>
+<img src="http://content.ipro.com/images/pixel?version=nonjava" height="1" width="1" style="position:absolute;top:0px;left:0px">
+</noscript>
+<!-- END I/PRO PAGE TAG -->
+
+
+<table bgColor=#ff9900 border=0 cellPadding=0 cellSpacing=0 width='100%'>
+<tr><td width="100%">
+<table bgColor=#ff9900 border=0 cellPadding=0 cellSpacing=1 width="100%"><tr>
+
+<td valign=top><a href="http://www.codeproject.com">
+<img border=0 width=225 height=72 src="/images/standard/logo225x72.gif" alt="The Code Project"></a></td>
+<td align=right><span id=AdBanner4><table cellspacing=0 cellpadding=0><tr><td><a class=AdLink href='/script/admentor/ads.asp'>View our advertisers</a></td><td align=right><a class=AdLink href='/info/mediakit'>Advertise with us</a></td></tr><td colspan=2><script language=javascript>document.write("<a href=\"/script/admentor/admentorredir.asp?id=1711&way=ban\" target=_blank><img src=\"/script/ann/ServeImg.aspx?File=%2Fscript%2Fadmentor%2Fimages%2FBCG%5F468x60%5F2005%2Dbanner%2EGIF&C=False&id=1711&cb=4119944\" alt=\"Business Components Gallery Pro - Windows GUI solutions.\" border=0 width=468 height=60></a>");</script></td></tr></table></span></td>
+
+</tr>
+
+<tr><td colspan=2 bgcolor=#FBEDBB>
+<table cellpadding=3 width=100% border=0 bgcolor=#FBEDBB>
+
+<tr valign=top>
+	<td width=100%>
+		<font style="font-size:8pt"><a href='/?cat=1'>All Topics</a>, <a href='/?cat=2'>MFC / C++</a> &gt;&gt; <a href='/system/'>System</a> &gt;&gt; <a href='/system/#Device+Drivers'>Device Drivers</a></font><br>
+
+		<br><b><font size=4 style="font-size:16pt">Driver Development Part 1: Introduction to Drivers</font></b><br><b>
+		By <a href="/script/profile/whos_who.asp?id=961412">Toby Opferman</a>
+		</b>
+		<br><br><font style="font-size:9pt">This article will go into the basics of creating a simple driver.&nbsp;</font>
+	</td>
+	<td align=right valign=top>
+		<table border=0 cellspacing=0 cellpadding=1 width=200>	
+
+		<tr><td>&nbsp;</td><td><font size=1 class=SmallText color=green><b>Beginner</b></font></td></tr>
+
+		<tr valign=top><td>&nbsp;</td><td class=SmallText>C++, C<br> Windows (Win2003, Win2K, WinXP)<br> Win32, VS<br> Dev</td></tr>
+		<tr><td>&nbsp;</td><td nowrap class=SmallText>Posted 6 Feb 2005 3:29</td></tr>
+	
+		<tr valign=top><td><img src="/images/hlp.gif" width=16 height=16></td><td nowrap class=SmallText><a href='/script/Articles/list_articles.asp?userid=961412'>Articles by this author</a></td></tr>
+
+		<tr valign=top><td></td><td nowrap class=SmallText><b>162,912</b> views</td></tr>
+
+		</table>
+	</td>
+</tr>
+
+
+</table>
+</td></tr>
+
+<tr><td colspan=2>
+
+
+
+<TABLE BORDER=0 CELLPADDING=1 CELLSPACING=0 width=100% id=tblSiteToolbar><TR>
+<form method="post" action="/info/search.asp" name="Search">
+<TD VALIGN=top ALIGN=left width=100%>
+<TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0"><TR VALIGN=center>
+<td class=smallText><b><font color=white>Search:</font></b></td>
+<TD class=navbar nowrap><input class=smallText name="target" 
+
+size="18"
+
+maxlength="255"></TD><td valign=top><select class=smallText name=st>
+<option value="kw">Articles</option>
+<option value="au">Authors</option>
+</select></td>
+<TD><INPUT class=formButton type="submit" value="Go"></TD>
+</TR></TABLE></td>
+</FORM>
+
+
+<TD>
+<div id='MenuPos' style='position:relative;width:380;height:20;'>
+
+<table width=375 cellpadding=2 cellspacing=0 height=20><tr>
+<td><A href='/info/faq.asp' class=NavMenuItem>Help!</a></td>
+<td><A href='/info/latest.asp' class=NavMenuItem>Articles</td>
+<td><A href='/script/comments/forums.asp' class=NavMenuItem>Message Boards</td>
+<td><A href='/store/' class=NavMenuItem>StoreFront</td>
+<td><A href='/lounge.asp' class=NavMenuItem>Lounge</td>
+</tr></table>
+</div>
+</td>
+
+
+</TR></table>
+
+
+<script type='text/javascript'>function Go(){return}</script>
+<script type='text/javascript' src='/script/HVMenu/cpmenu_var.js'></script>
+<script type='text/javascript' src='/script/HVMenu/menu10_com.js'></script>
+
+</td></tr>
+
+</table></td></tr></table>
+
+<table cellspacing=0 cellpadding=1 border=0>
+
+<tr valign=top>
+	<td rowspan=2 valign=top bgcolor=#FBEDBB>
+	<table border=0 cellspacing=0 cellpadding=0>
+		
+
+<script language=javascript>
+function ErrorHandle() {}
+window.onerror = ErrorHandle;
+
+function OnNLSubmit(option)
+{
+	if (option=="up")
+		document.subForm.action = "/script/profile/modify.asp?ct=%2Fsystem%2Fdriverdev%2Easp";
+	else if (option=="in")
+		document.subForm.action = "/script/profile/process_logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp";
+	document.subForm.submit();
+	return true;
+}
+</script>
+
+
+<tr><td>
+<table cellspacing=3 cellpadding=0>
+<tr valign=top><td></td><td></td></tr><tr valign=top><td><img src=/script/images/support_icon.gif width=16 height=16></td><td class=smallText><A HREF='/store/'><b>Ultimate Combo<br>MFC tools $449</b></A></td></tr><tr valign=top><td></td><td></td></tr>
+<tr valign=top>	
+      <td><img src="/images/mail.gif" width=16 height=16></td>
+      <td class=SmallText><a href='/script/recommend/form.asp?guid=driverdev%2Fwin322%2F6%2F2005'>Send to a friend</a></td>
+</tr>
+<tr valign=top><td></td><td></td></tr><tr><td colspan=2 bgcolor=black><img src='/images/space.gif' height=1 width=1></td></tr><tr valign=top><td colspan=2 class=InfoBarHeader><br>Sign in / Sign up</td></tr>
+</table></td></tr>
+
+<tr><td class=smallText>
+<form name="subForm" id=subForm action="/script/profile/process_logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp" method=post>
+<table width=125 border=0 cellpadding=0 cellspacing=0 bgcolor=#ffcc99>
+	<tr><td colspan=2><img src='/images/space.gif' height=3></td></tr>
+
+	<tr>
+		<td class=smallText>&nbsp;Email</td>
+		<td class=smallText><input class=smallText type="text" name="Email" id="Email" style="width: 60px;">
+		</td>
+	</tr>
+	<tr>
+		<td class=smallText>&nbsp;Password</td>
+		<td><input class=smallText type="password" name="Password" id="Password" style="width: 60px;"></td>
+	</tr>
+	<tr>
+		<td colspan=2 class=smallText valign=middle><input type=checkbox checked name=cookie>Remember me</td>
+	</tr>
+	<tr><td colspan=2><img src='/images/space.gif' height=3></td></tr>
+
+
+	<tr>
+		<td align=center><a href='/script/profile/modify.asp'><img border=0 src="/images/signup.gif"></a></td>
+		<td align=center><input border=0 type="image" src="/images/signin.gif"></td>
+	</tr>
+
+
+	<tr><td colspan=2><img src='/images/space.gif' height=3></td></tr>
+</form></table>
+</td></tr>
+
+<tr><td class=smallText><a class=smallText href="/script/profile/forgot.asp" name='HLLink'>Lost your Password?</a></td></tr>
+
+		<tr><td>&nbsp;</td></tr>
+		<tr><td>
+		
+<center><script language=javascript>document.write("<IFRAME src=\"/script/ann/ServeHTML.aspx?C=False&id=1910&cb=4119948\" border=0 frameborder=0 scrolling=no width=120 height=600></IFRAME>");</script><br>
+
+</center><br>
+
+		</td></tr>
+	</table>
+	</td>
+	<td width=5 rowspan=2>
+		<img src='/images/space.gif' width=5 height=1>	
+	</td>
+
+
+
+	<td width=100% align=right bgcolor=white>
+
+
+<table width=100%><tr valign=top><td nowrap valign=top class=smallText><img align=absmiddle src="/images/prize_winner.gif"> &nbsp;<b>Prize winner: February, 2005</b><br><table ><tr><td bgcolor=#ffffff class=smallText><img align=absmiddle src='/images/print.gif'> <a href='/system/driverdev.asp?print=true' target=_print>Print</a></td><td bgcolor=#ffffff class=smallText><img align=absmiddle src='/script/images/sitebuild_icon.gif'><a href="/script/submit/ReportProblem.asp?GUID=driverdev%2Fwin322%2F6%2F2005">Broken Article?</a></td><td bgcolor=#ffffff class=smallText><img align=absmiddle src='/images/link.gif'><a href="/script/profile/add_bookmark.asp?t=0&ct=%2Fsystem%2Fdriverdev%2Easp&guid=driverdev%2Fwin322%2F6%2F2005">Bookmark</a></td><td bgcolor=#ffffff class=smallText><img align=absmiddle src='/images/mail_small.gif'> <a href='#__comments'>Discuss</a></td></tr></table>
+</td>
+<td align=right nowrap><a name="__top"></a><table><tr><td align=right class=smallText>216 votes  for this article.</td><td>
+<table border="2" cellpadding="0" cellspacing="0"><tr>
+<td><img src='/script/images/red.gif' width='20' height='5' border='0'></td>
+<td><img src='/script/images/red.gif' width='20' height='5' border='0'></td>
+<td><img src='/script/images/red.gif' width='20' height='5' border='0'></td>
+<td><img src='/script/images/red.gif' width='20' height='5' border='0'></td>
+<td><img src='/script/images/red.gif' width='19' height='5' border='0'><img src='/script/images/white.gif' width='1' height='5' border='0'></td>
+</tr></table>
+</td></tr><tr><td colspan=2 align=right class=smallText><a href='/script/articles/top_articles.asp?st=2' title='Calculated as rating x Log10(# votes)'>Popularity: 11.53</a>. Rating: <b>4.94</b> out of 5.</td></tr></table></td></tr></table>
+
+	</td>
+</tr>
+<tr>
+	<td width=100% valign=top>
+
+<div id="contentdiv">
+
+
+<!-- Article Starts -->
+
+
+<UL class=download>
+<LI><A href="driverdev/driverdev_src.zip">Download source files - 10.4 Kb</A> </LI></UL>
+<H2>Introduction</H2>
+<P>This tutorial will attempt to describe how to write a simple device driver for Windows NT. There are various resources and tutorials on the internet for writing device drivers, however, they are somewhat scarce as compared to writing a “hello world” GUI program for Windows. This makes the search for information on starting to write device drivers a bit harder. You may think that if there’s already one tutorial, why do you need more? The answer is that more information is always better especially when you are first beginning to understand a concept. It is always good to see information from different perspectives. People write differently and describe certain pieces of information in a different light depending on how familiar they are with a certain aspect or how they think it should be explained. This being the case, I would recommend anyone who wants to write device drivers not to stop here or somewhere else. Always find a variety of samples and code snippets and research the differences. Sometimes there are bugs and things omitted. Sometimes there are things that are being done that aren’t necessary, and sometimes there’s information incorrect or just incomplete.</P>
+<P>This tutorial will describe how to create a simple device driver, dynamically load and unload it, and finally talk to it from user mode.</P>
+<H2>Creating a Simple Device Driver</H2>
+<H3>What is a subsystem?</H3>
+<P>I need to define a starting ground before we begin to explain how to write a device driver. The starting point for this article will be the compiler. The compiler and linker generate a binary in a format that the Operating System understands. In Windows, this format is “PE” for “Portable Executable” format. In this format, there is an idea called a <B>subsystem</B>. A subsystem, along with other options specified in the PE header information, describes how to load an executable which also includes the entry point into the binary.</P>
+<P>Many people use the VC++ IDE to simply create a project with some default pre-set options for the compiler’s (and linker) command line. This is why a lot of people may not be familiar with this concept even though they are most likely already using it if they have ever written Windows applications. Have you ever written a console application? Have you ever written a GUI application for Windows? These are different subsystems in Windows. Both of these will generate a PE binary with the appropriate subsystem information. This is also why a console application uses “<CODE>main</CODE>” where a WINDOWS application uses “<CODE>WinMain</CODE>”. When you choose these projects, VC++ simply creates a project with /SUBSYSTEM:CONSOLE or /SUBSYSTEM:WINDOWS. If you accidentally choose the wrong project, you can simply change this in the linker options menu rather than needing to create a new project.</P>
+<P>There’s a point to all of this? A driver is simply linked using a different subsystem called “NATIVE”. <A href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/vccore/html/_core_.2f.subsystem.asp" target=_blank>MSDN Subsystem compiler options</A>.</P>
+<H3>The Driver’s “main”</H3>
+<P>After the compiler is setup with the appropriate options, it’s probably good to start thinking about the entry point to a driver. The first section lied a little bit about the subsystem. “NATIVE” can also be used to run user-mode applications which define an entry point called “<CODE>NtProcessStartup</CODE>”. This is the “default” type of executable that is made when specifying “NATIVE” in the same way “<CODE>WinMain</CODE>” and “<CODE>main</CODE>” are found when the linker is creating an application. You can override the default entry point with your own, simply by using the “-entry:&lt;functionname&gt;” linker option. If we know we want this to be a driver, we simply need to write an entry point whose parameter list and return type matches that of a driver. The system will then load the driver when we install it and tell the system that it is a driver.</P>
+<P>The name we use can be anything. We can call it <CODE>BufferFly()</CODE> if we want. The most common practice used by driver developers and Microsoft is using the name “<CODE>DriverEntry</CODE>” as its initial entry point. This means we add “-entry:DriverEntry” to the linker’s command line options. If you are using the DDK, this is done for you when you specify “DRIVER” as the type of executable to build. The DDK contains an environment that has pre-set options in the common <I>make</I> file directory which makes it simpler to create an application as it specifies the default options. The actual driver developer can then override these settings in the <I>make</I> file or simply use them as a connivance. This is essentially how “<CODE>DriverEntry</CODE>” became the somewhat “official” name for driver entry points.</P>
+<P>Remember, DLLs actually are also compiled specifying “WINDOWS” as the subsystem, but they also have an additional switch called /DLL. There is a switch which can also be used for drivers: /DRIVER:WDM (which also sets NATIVE behind the scenes) as well as a /DRIVER:UP which means this driver cannot be loaded on a multi-processor system.</P>
+<P>The linker builds the final binary, and based on what the options are in the PE header and how the binary is attempting to be loaded (run as an EXE through the loader, loaded by <CODE>LoadLibrary</CODE>, or attempting to be loaded as a driver) will define how the loading system behaves. The loading system attempts to perform some level of verification, that the image being loaded is indeed supposed to be loaded in this manner, for example. There is even, in some cases, startup code added to the binary that executes before your entry point is reached (<CODE>WinMainCRTStartup</CODE> calling <CODE>WinMain</CODE>, for example, to initialize the CRT). Your job is to simply write the application based on how you want it to be loaded and then set the correct options in the linker so it knows how to properly create the binary. There are various resources on the details of the PE format which you should be able to find if you are interested in further investigation into this area.</P>
+<P>The options we will set for the linker will end up being the following:</P><PRE lang=text>/SUBSYSTEM:NATIVE /DRIVER:WDM –entry:DriverEntry</PRE>
+<H3>Before creating the “DriverEntry”</H3>
+<P>There are some things we need to go over before we simply sit down and write the “<CODE>DriverEntry</CODE>”. I know that a lot of people simply want to jump right into writing the driver and seeing it work. This is generally the case in most programming scenarios as you usually just take the code, change it around, compile it, and test it out. If you remember back to when you were first learning Windows development, it was probably the same way. Your application probably didn’t work right away, probably crashed, or just disappeared. This was a lot of fun and you probably learned a lot, but you know that with a driver, the adventure is a little different. Not knowing what to do can end up in blue screening the system, and if your driver is loaded on boot and executes that code, you now have a problem. Hopefully, you can boot in safe mode or restore to a previous hardware configuration. That being the case, we have a few things to go over before you write the driver in order to help educate you on what you are doing before you actually do it.</P>
+<P>The first rule of thumb is do not just take a driver and compile it with some of your changes. If you do not understand how the driver is working or how to program correctly in the environment, you are likely to cause problems. Drivers can corrupt the integrity of the whole system, they can have bugs that don’t always occur but in some rare circumstances. Application programs can have the same type of bugs in behavior but not in root cause. As an example, there are times when you cannot access memory that is pagable. If you know how Virtual Memory works, you know that the Operating System will remove pages from memory to pull in pages that are needed, and this is how more applications can run than would have been physically possible given the memory limitations of the machine. There are places, however, when pages cannot be read into memory from disk. At these times, those “drivers” who work with memory can only access memory that cannot be paged out.</P>
+<P>Where am I going with this? Well, if you allow a driver which runs under these constraints to access memory that is “pagable”, it may not crash as the Operating System usually tries to keep all pages in memory as long as possible. If you close an application that was running, it may still be in memory, for example! This is why a bug like this may go undetected (unless you try doing things like driver verifier) and eventually may trap. When it does, if you do not understand the basic concepts like this, you would be lost as to what the problem is and how to fix it.</P>
+<P>There are a lot of concepts behind everything that will be described in this document. On IRQL alone, there is a twenty page document you can find on MSDN. There’s an equally large document on IRP. I will not attempt to duplicate this information nor point out every single little detail. What I will attempt to do is give a basic summary and point you in the direction of where to find more information. It’s important to at least know that these concepts exist and understand some basic idea behind them, before writing the driver.</P>
+<H4>What is IRQL?</H4>
+<P><A name=OLE_LINK2>The IRQL</A> is known as the “<B>I</B>nterrupt <B>R</B>e<B>Q</B>uest <B>L</B>evel”. The processor will be executing code in a thread at a particular IRQL. The IRQL of the processor essentially helps determine how that thread is allowed to be interrupted. The thread can only be interrupted by code which needs to run at a higher IRQL on the same processor. Interrupts requiring the same IRQL or lower are masked off so only interrupts requiring a higher IRQL are available for processing. In a multi-processor system, each processor operates independently at its own IRQL.</P>
+<P>There are four IRQL levels which you generally will be dealing with, which are “Passive”, “APC”, “Dispatch” and “DIRQL”. Kernel APIs documented in MSDN generally have a note which specifies the IRQL level at which you need to be running in order to use the API. The higher the IRQL you go, the less APIs that are available for use. The documentation on MSDN defines what IRQL the processor will be running at when the particular entry point of the driver is called. “<CODE>DriverEntry</CODE>”, for example, will be called at <CODE>PASSIVE_LEVEL</CODE>.</P>
+<P><B><A name=OLE_LINK3><CODE>PASSIVE_LEVEL</CODE></A></B></P>
+<P>This is the lowest IRQL. No interrupts are masked off and this is the level in which a thread executing in user mode is running. Pagable memory is accessible.</P>
+<P><B><CODE>APC_LEVEL</CODE></B></P>
+<P>In a processor running at this level, only APC level interrupts are masked. This is the level in which <A href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dllproc/base/asynchronous_procedure_calls.asp" target=_blank>Asynchronous Procedure Calls</A> occur. Pagable memory is still accessible. When an APC occurs, the processor is raised to APC level. This, in turn, also disables other APCs from occurring. A driver can manually raise its IRQL to APC (or any other level) in order to perform some synchronization with APCs, for example, since APCs can’t be invoked if you are already at APC level. There are some APIs which can’t be called at APC level due to the fact that APCs are disabled, which, in turn, may disable some I/O Completion APCs.</P>
+<P><B><CODE>DISPATCH_LEVEL</CODE></B></P>
+<P>The processor running at this level has DPC level interrupts and lower masked off. Pagable memory <B>cannot</B> be accessed, so all memory being accessed must be non-paged. If you are running at Dispatch Level, the APIs that you can use greatly decrease since you can only deal with non-paged memory.</P>
+<P><B><CODE><A name=OLE_LINK4>DIRQL </A>(Device IRQL)</CODE></B></P>
+<P>Generally, higher level drivers do not deal with IRQLs at this level, but all interrupts at this level or less are masked off and do not occur. This is actually a range of IRQLs, and this is a method to determine which devices have priority over other devices.</P>
+<P>In this driver, we will basically only be working at <CODE>PASSIVE_LEVEL</CODE>, so we won’t have to worry about the gotchas. However, it is necessary for you to be aware of what IRQL is, if you intend to continue writing device drivers.</P>
+<P>For more information on IRQLs and thread scheduling, refer to the following <A href="http://download.microsoft.com/download/e/b/a/eba1050f-a31d-436b-9281-92cdfeae4b45/IRQL_thread.doc" target=_blank>documentation</A>, and another good source of information is <A href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/kmarch/hh/kmarch/Intrupts_70fd60c6-4f07-40f7-96aa-eee7cc2a126f.xml.asp" target=_blank>here</A>.</P>
+<H4>What is an IRP?</H4>
+<P><A name=OLE_LINK1>The “IRP”</A> is called the “I/O Request Packet”, and it is passed down from driver to driver in the driver stack. This is a data structure that allows drivers to communicate with each other and to request work to be done by the driver. The I/O manager or another driver may create an IRP and pass it down to your driver. The IRP includes information about the operation that is being requested.</P>
+<P>A description of the IRP data structure can be found <A href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/kmarch/hh/kmarch/k112_39688b8b-4b33-4bce-b71f-e9c183e4d6bd.xml.asp" target=_blank>here</A>.</P>
+<P>The description and usage of an IRP can go from simple to complex very easily, so we will only be describing, in general, what an IRP will mean to you. There is an article on MSDN which describes in a lot more detail (about twenty pages) of what exactly an IRP is and how to handle them. That article can be found <A href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dndevice/html/IRP_Handle.asp" target=_blank>here</A>.</P>
+<P>The IRP will also contain a list of “sub-requests” also known as the “IRP Stack Location”. Each driver in the device stack will generally have its own “sub request” of how to interpret the IRP. This data structure is the “<A href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/kmarch/hh/kmarch/k112_8fcba8ca-d004-4800-87d1-d5c7714a494b.xml.asp">IO_STACK_LOCATION</A>” and is described on MSDN.</P>
+<P>To create an analogy of the IRP and <CODE>IO_STACK_LOCATION</CODE>, perhaps you have three people who do different jobs such as carpentry, plumbing and welding. If they were going to build a house, they could have a common overall design and perhaps a common set of tools like their tool box. This includes things like power drills, etc. All of these common tools and overall design of building a house would be the IRP. Each of them has an individual piece they need to work on to make this happen, for example, the plumber needs the plans on where to put the pipe, how much pipe he has, etc. These could be interpreted as the <CODE>IO_STACK_LOCATION</CODE> as his specific job is to do the piping. The carpenter could be building the framework for the house and the details of that would be in his <CODE>IO_STACK_LOCATION</CODE>. So, while the entire IRP is a request to build a house, each person in the stack of people has their own job as defined by the <CODE>IO_STACK_LOCATION</CODE> to make this happen. Once everyone has completed their job, they then complete the IRP.</P>
+<P>The device driver we will be building will not be that complex and will basically be the only driver in the stack.</P>
+<H4>Things to Avoid</H4>
+<P>There are a lot of pitfalls that you will need to avoid but they are mostly unrelated to our simple driver. To be more informed, however, here is a list of items called “<A href="http://support.microsoft.com/default.aspx?scid=KB;EN-US;Q186775&amp;" target=_blank>things to avoid</A>” when it comes to driver development.</P>
+<H3>Create the DriverEntry routine</H3>
+<P>There is so much to explain, however, I think it’s time we simply started to develop the driver and explain as we go. It is hard to digest theory or even how code is supposed to work, without actually doing anything. You need some hands on experience so you can bring these ideas out of space and into reality.</P>
+<P>The prototype for the <A href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/kmarch/hh/kmarch/DrvrRtns_dc503a23-7c31-421d-ac7b-ff6f4651e44e.xml.asp" target=_blank>DriverEntry</A> is the following.</P><PRE>NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING pRegistryPath);</PRE>
+<P>The <CODE>DRIVER_OBJECT</CODE> is a data structure used to represent this driver. The <CODE>DriverEntry</CODE> routine will use it to populate it with other entry points to the driver for handling specific I/O requests. This object also has a pointer to a <CODE>DEVICE_OBJECT</CODE> which is a data structure which represents a particular device. A single driver may actually advertise itself as handling multiple devices, and as such, the <CODE>DRIVER_OBJECT</CODE> maintains a linked list pointer to all the devices this particular driver services request for. We will simply be creating one device.</P>
+<P>The “Registry Path” is a string which points to the location in the registry where the information for the driver was stored. The driver can use this location to store driver specific information.</P>
+<P>The next part is to actually put things in the <CODE>DriverEntry</CODE> routine. The first thing we will do is create the device. You may be wondering how we are going to create a device and what type of device we should create. This is generally because a driver is usually associated with hardware but this is not the case. There are a variety of different types of drivers which operate at different levels, not all drivers work or interface directly with hardware. Generally, you maintain a stack of drivers each with a specific job to do. The highest level driver is the one that communicates with user mode, and the lowest level drivers generally just talk to other drivers and hardware. There are network drivers, display drivers, file system drivers, etc., and each has their own stack of drivers. Each place in the stack breaks up a request into a more generic or simpler request for the lower level driver to service. The highest level drivers are the ones which communicate themselves to user mode, and unless they are a special device with a particular framework (like display drivers), they can behave generally the same as other drivers just as they implement different types of operations.</P>
+<P>As an example, take the hard disk drive. The driver which communicates to user mode does not talk directly to hardware. The high level driver simply manages the file system itself and where to put things. It then communicates where it wants to read or write from the disk to the lower level driver which may or may not talk directly to hardware. There may be another layer which then communicates that request to the actual hardware driver which then physically reads or writes a particular sector off a disk and then returns it to the higher level. The highest level may interpret them as file data, but the lowest level driver may simply be stupid and only manage requests as far as when to read a sector based off where the read/write head is located on the disk. It could then determine what sector read requests to service, however, it has no idea what the data is and does not interpret it.</P>
+<P>Let’s take a look at the first part of our “<CODE>DriverEntry</CODE>”.</P><PRE>NTSTATUS DriverEntry(PDRIVER_OBJECT  pDriverObject, PUNICODE_STRING  pRegistryPath)
+{
+    NTSTATUS NtStatus = STATUS_SUCCESS;
+    UINT uiIndex = <span class='cpp-literal'>0</span>;
+    PDEVICE_OBJECT pDeviceObject = NULL;
+    UNICODE_STRING usDriverName, usDosDeviceName;
+
+    DbgPrint(<span class='cpp-string'>"DriverEntry Called \r\n"</span>);
+
+    RtlInitUnicodeString(&amp;usDriverName, L<span class='cpp-string'>"\\Device\\Example"</span>);
+    RtlInitUnicodeString(&amp;usDosDeviceName, L<span class='cpp-string'>"\\DosDevices\\Example"</span>); 
+
+    NtStatus = IoCreateDevice(pDriverObject, <span class='cpp-literal'>0</span>,
+                              &amp;usDriverName, 
+                              FILE_DEVICE_UNKNOWN,
+                              FILE_DEVICE_SECURE_OPEN, 
+                              FALSE, &amp;pDeviceObject);</PRE>
+<P>The first thing you will notice is the <CODE>DbgPrint</CODE> function. This works just like “<CODE>printf</CODE>” and it prints messages out to the debugger or debug output window. You can get a tool called “DBGVIEW” from <A href="http://www.sysinternals.com/" target=_blank>www.sysinternals.com</A> and all of the information in those messages will be displayed.</P>
+<P>You will then notice that we use a function called “<CODE>RtlInitUnicodeString</CODE>” which basically initializes a <CODE>UNICODE_STRING</CODE> data structure. This data structure contains basically three entries. The first is the size of the current Unicode string, the second is the maximum size that the Unicode string can be, and the third is a pointer to the Unicode string. This is used to describe a Unicode string and used commonly in drivers. The one thing to remember with <CODE>UNICODE_STRING</CODE> is that they are <B>not</B> required to be <CODE>NULL</CODE> terminated since there is a size parameter in the structure! This causes problems for people new to driver development as they assume a <CODE>UNICODE_STRING</CODE> is <CODE>NULL</CODE> terminated, and they blue-screen the driver. Most Unicode strings passing into your driver will not be <CODE>NULL</CODE> terminated, so this is something you need to be aware of.</P>
+<P>Devices have names just like anything else. They are generally named <I>\Device\&lt;somename&gt;</I> and this is the string we were creating to pass into <CODE>IoCreateDevice</CODE>. The second string, “\DosDevices\Example”, we will get into later as it’s not used in the driver yet. To the <CODE>IoCreateDevice</CODE>, we pass in the driver object, a pointer to the Unicode string we want to call the driver, and we pass in a type of driver “<CODE>UNKNOWN</CODE>” as it’s not associated with any particular type of device, and we also pass in a pointer to receive the newly created device object. The parameters are explained in more detail at “<A href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/kmarch/hh/kmarch/k104_1e38a631-7e65-4b4b-8d51-3150a8073511.xml.asp" target=_blank>IoCreateDevice</A>”.</P>
+<P>The second parameter we passed 0, and it says to specify the number of bytes to create for the device extension. This is basically a data structure that the driver writer can define which is unique to that device. This is how you can extend the information being passed into a device and create device contexts, etc. in which to store instance data. We will not be using this for this example.</P>
+<P>Now that we have successfully created our <I>\Device\Example</I> device driver, we need to setup the Driver Object to call into our driver when certain requests are made. These requests are called IRP Major requests. There are also Minor requests which are sub-requests of these and can be found in the stack location of the IRP.</P>
+<P>The following code populates certain requests:</P><PRE>        <span class='cpp-keyword'>for</span>(uiIndex = <span class='cpp-literal'>0</span>; uiIndex &lt; IRP_MJ_MAXIMUM_FUNCTION; uiIndex++)
+             pDriverObject-&gt;MajorFunction[uiIndex] = Example_UnSupportedFunction;
+    
+        pDriverObject-&gt;MajorFunction[IRP_MJ_CLOSE]             = Example_Close;
+        pDriverObject-&gt;MajorFunction[IRP_MJ_CREATE]            = Example_Create;
+        pDriverObject-&gt;MajorFunction[IRP_MJ_DEVICE_CONTROL]    = Example_IoControl;
+        pDriverObject-&gt;MajorFunction[IRP_MJ_READ]              = Example_Read;
+        pDriverObject-&gt;MajorFunction[IRP_MJ_WRITE]             = USE_WRITE_FUNCTION;</PRE>
+<P>We populate the <CODE>Create</CODE>, <CODE>Close</CODE>, <CODE>IoControl</CODE>, <CODE>Read</CODE> and <CODE>Write</CODE>. What do these refer to? When communicating with the user-mode application, certain APIs call directly to the driver and pass in parameters!</P>
+<UL>
+<LI><CODE>CreateFile</CODE> -&gt; <CODE>IRP_MJ_CREATE</CODE> 
+<LI><CODE>CloseHandle</CODE> -&gt; <CODE>IRP_MJ_CLEANUP &amp; IRP_MJ_CLOSE</CODE> 
+<LI><CODE>WriteFile</CODE> -&gt; <CODE>IRP_MJ_WRITE</CODE> 
+<LI><CODE>ReadFile</CODE>-&gt; <CODE>IRP_MJ_READ</CODE> 
+<LI><CODE>DeviceIoControl</CODE> -&gt; <CODE>IRP_MJ_DEVICE_CONTROL</CODE> </LI></UL>
+<P>To explain, one difference is <CODE>IRP_MJ_CLOSE</CODE> is not called in the context of the process which created the handle. If you need to perform process related clean up, then you need to handle <CODE>IRP_MJ_CLEANUP</CODE> as well.</P>
+<P>So as you can see, when a user mode application uses these functions, it calls into your driver. You may be wondering why the user mode API says “file” when it doesn’t really mean “file”. That is true, these APIs can talk to any device which exposes itself to user mode, they are not only for accessing files. In the last piece of this article, we will be writing a user mode application to talk to our driver and it will simply do <CODE>CreateFile</CODE>, <CODE>WriteFile</CODE>, <CODE>CloseHandle</CODE>. That’s how simple it is. <CODE>USE_WRITE_FUNCTION</CODE> is a constant I will explain later.</P>
+<P>The next piece of code is pretty simple, it’s the driver unload function.</P><PRE>        pDriverObject-&gt;DriverUnload =  Example_Unload;</PRE>
+<P>You can technically omit this function but if you want to unload your driver dynamically, then it must be specified. If you do not specify this function once your driver is loaded, the system will not allow it to be unloaded.</P>
+<P>The code after this is actually using the <CODE>DEVICE_OBJECT</CODE>, not the <CODE>DRIVER_OBJECT</CODE>. These two data structures may get a little confusing since they both start with “D” and end with “_OBJECT”, so it’s easy to confuse which one we’re using.</P><PRE>        pDeviceObject-&gt;Flags |= IO_TYPE;
+        pDeviceObject-&gt;Flags &amp;= (~DO_DEVICE_INITIALIZING);</PRE>
+<P>We are simply setting the flags. “<CODE>IO_TYPE</CODE>” is actually a constant which defines the type of I/O we want to do (I defined it in <I>example.h</I>). I will explain this in the section on handling user-mode write requests.</P>
+<P>The “<CODE>DO_DEVICE_INITIALIZING</CODE>” tells the I/O Manager that the device is being initialized and not to send any I/O requests to the driver. For devices created in the context of the “<CODE>DriverEntry</CODE>”, this is not needed since the I/O Manager will clear this flag once the “<CODE>DriverEntry</CODE>” is done. However, if you create a device in any function outside of the <CODE>DriverEntry</CODE>, you need to manually clear this flag for any device you create with <CODE>IoCreateDevice</CODE>. This flag is actually set by the <CODE>IoCreateDevice</CODE> function. We cleared it here just for fun even though we weren’t required to.</P>
+<P>The last piece of our driver is using both of the Unicode strings we defined above. “\Device\Example” and “\DosDevices\Example”.</P><PRE>IoCreateSymbolicLink(&amp;usDosDeviceName, &amp;usDriverName);</PRE>
+<P>“<CODE>IoCreateSymbolicLink</CODE>” does just that, it creates a “Symbolic Link” in the object manager. To view the object manager, you may download my tool “<A href="http://www.opferman.net/Files/setup_qv.exe" target=_blank>QuickView</A>”, or go to <A href="http://www.sysinternals.com/" target=_blank>www.sysinternals.com</A> and download “WINOBJ”. A Symbolic Link simply maps a “DOS Device Name” to an “NT Device Name”. In this example, “Example” is our DOS Device Name and “\Device\Example” is our NT Device Name.</P>
+<P>To put this into perspective, different vendors have different drivers and each driver is required to have its own name. You cannot have two drivers with the same NT Device name. Say, you have a memory stick which can display itself to the system as a new drive letter which is any available drive letter such as E:. If you remove this memory stick and say you map a network drive to E:. Application can talk to E: the same way, they do not care if E: is a CD ROM, Floppy Disk, memory stick or network drive. How is this possible? Well, the driver needs to be able to interpret the requests and either handle them within themselves such as the case of a network redirector or pass them down to the appropriate hardware driver. This is done through symbolic links. E: is a symbolic link. The network mapped drive may map E: to <I>\Device\NetworkRedirector</I> and the memory stick may map E: to <I>\Device\FujiMemoryStick</I>, for example.</P>
+<P>This is how applications can be written using a commonly defined name which can be abstracted to point to any device driver which would be able to handle requests. There are no rules here, we could actually map <I>\Device\Example</I> to <I>E:</I>. We can do whatever we wish to do, but in the end, however, the application attempts to use the device as how the device driver needs to respond and act. This means supporting IOCTLs commonly used by those devices as applications will try to use them. COM1, COM2, etc. are all examples of this. COM1 is a DOS name which is mapped to an NT Device name of a driver which handles serial requests. This doesn’t even need to be a real physical serial port!</P>
+<P>So we have defined “Example” as a DOS Device which points to “<I>\Device\Example</I>”. In the “communicating with usermode” portion, we will learn more about how to use this mapping.</P>
+<H3>Create the Unload Routine</H3>
+<P>The next piece of code we will look at is the unload routine. This is required in order to be able to unload the device driver dynamically. This section will be a bit smaller as there is not much to explain.</P><PRE>VOID Example_Unload(PDRIVER_OBJECT  DriverObject)
+{    
+    
+    UNICODE_STRING usDosDeviceName;
+    
+    DbgPrint(<span class='cpp-string'>"Example_Unload Called \r\n"</span>);
+    
+    RtlInitUnicodeString(&amp;usDosDeviceName, L<span class='cpp-string'>"\\DosDevices\\Example"</span>);
+    IoDeleteSymbolicLink(&amp;usDosDeviceName);
+
+    IoDeleteDevice(DriverObject-&gt;DeviceObject);
+}</PRE>
+<P>You can do whatever you wish in your unload routine. This unload routine is very simple, it just deletes the symbolic link we created and then deletes the only device that we created which was <I>\Device\Example</I>.</P>
+<H3>Creating the IRP_MJ_WRITE</H3>
+<P>The rest of the functions should be self explanatory as they don’t do anything. This is why I am only choosing to explain the “Write” routine. If this article is liked, I may write a second tutorial on implementing the IO Control function.</P>
+<P>If you have used <CODE>WriteFile</CODE> and <CODE>ReadFile</CODE>, you know that you simply pass a buffer of data to write data to a device or read data from a device. These parameters are sent to the device in the IRP as we explained previously. There is more to the story though as there are actually three different methods that the I/O Manager will use to marshal this data before giving the IRP to the driver. That also means that how the data is marshaled is how the driver’s Read and Write functions need to interpret the data.</P>
+<P>The three methods are “Direct I/O”, “Buffered I/O” and “Neither”.</P><PRE><span class='cpp-preprocessor'>#ifdef __USE_DIRECT__</span>
+<span class='cpp-preprocessor'>#define IO_TYPE DO_DIRECT_IO</span>
+<span class='cpp-preprocessor'>#define USE_WRITE_FUNCTION  Example_WriteDirectIO</span>
+<span class='cpp-preprocessor'>#endif</span>
+ 
+<span class='cpp-preprocessor'>#ifdef __USE_BUFFERED__</span>
+<span class='cpp-preprocessor'>#define IO_TYPE DO_BUFFERED_IO</span>
+<span class='cpp-preprocessor'>#define USE_WRITE_FUNCTION  Example_WriteBufferedIO</span>
+<span class='cpp-preprocessor'>#endif</span>
+
+<span class='cpp-preprocessor'>#ifndef IO_TYPE</span>
+<span class='cpp-preprocessor'>#define IO_TYPE 0</span>
+<span class='cpp-preprocessor'>#define USE_WRITE_FUNCTION  Example_WriteNeither</span>
+<span class='cpp-preprocessor'>#endif</span></PRE>
+<P>The code was written so if you define “<CODE>__USE_DIRECT__</CODE>” in the header, then <CODE>IO_TYPE</CODE> is now <CODE>DO_DIRECT_IO</CODE> and <CODE>USE_WRITE_FUNCTION</CODE> is now <CODE>Example_WriteDirectIO</CODE>. If you define “<CODE>__USE_BUFFERED__</CODE>” in the header, then <CODE>IO_TYPE</CODE> is now <CODE>DO_BUFFERED_IO</CODE> and <CODE>USE_WRITE_FUNCTION</CODE> is now <CODE>Example_WriteBufferedIO</CODE>. If you don’t define <CODE>__USE_DIRECT__</CODE> or <CODE>__USE_BUFFERED__</CODE>, then <CODE>IO_TYPE</CODE> is defined as 0 (neither) and the write function is <CODE>Example_WriteNeither</CODE>.</P>
+<P>We will now go over each type of I/O.</P>
+<H3>Direct I/O</H3>
+<P>The first thing I will do is simply show you the code for handling direct I/O.</P><PRE>NTSTATUS Example_WriteDirectIO(PDEVICE_OBJECT DeviceObject, PIRP Irp)
+{
+    NTSTATUS NtStatus = STATUS_SUCCESS;
+    PIO_STACK_LOCATION pIoStackIrp = NULL;
+    PCHAR pWriteDataBuffer;
+
+    DbgPrint(<span class='cpp-string'>"Example_WriteDirectIO Called \r\n"</span>);
+    
+    <span class='cpp-comment'>/*
+     * Each time the IRP is passed down
+     * the driver stack a new stack location is added
+     * specifying certain parameters for the IRP to the driver.
+     */</span>
+    pIoStackIrp = IoGetCurrentIrpStackLocation(Irp);
+    
+    <span class='cpp-keyword'>if</span>(pIoStackIrp)
+    {
+        pWriteDataBuffer = 
+          MmGetSystemAddressForMdlSafe(Irp-&gt;MdlAddress, NormalPagePriority);
+    
+        <span class='cpp-keyword'>if</span>(pWriteDataBuffer)
+        {                             
+            <span class='cpp-comment'>/*
+             * We need to verify that the string
+             * is NULL terminated. Bad things can happen
+             * if we access memory not valid while in the Kernel.
+             */</span>
+           <span class='cpp-keyword'>if</span>(Example_IsStringTerminated(pWriteDataBuffer, 
+              pIoStackIrp-&gt;Parameters.Write.Length))
+           {
+                DbgPrint(pWriteDataBuffer);
+           }
+        }
+    }
+
+    <span class='cpp-keyword'>return</span> NtStatus;
+}</PRE>
+<P>The entry point simply provides the device object for the device for which this request is being sent for. If you recall, a single driver can create multiple devices even though we have only created one. The other parameter is as was mentioned before which is an IRP!</P>
+<P>The first thing we do is call “<CODE>IoGetCurrentIrpStackLocation</CODE>”, and this simply provides us with our <CODE>IO_STACK_LOCATION</CODE>. In our example, the only parameter we need from this is the length of the buffer provided to the driver, which is at <CODE>Parameters.Write.Length</CODE>.</P>
+<P>The way buffered I/O works is that it provides you with a “<CODE>MdlAddress</CODE>” which is a “Memory Descriptor List”. This is a description of the user mode addresses and how they map to physical addresses. The function we call then is “<CODE>MmGetSystemAddressForMdlSafe</CODE>” and we use the <CODE>Irp-&gt;MdlAddress</CODE> to do this. This operation will then give us a system virtual address which we can then use to read the memory.</P>
+<P>The reasoning behind this is that some drivers do not always process a user mode request in the context of the thread or even the process in which it was issued. If you process a request in a different thread which is running in another process context, you would not be able to read user mode memory across process boundaries. You should know this already, as you run two applications they can’t just read/write to each other without Operating System support.</P>
+<P>So, this simply maps the physical pages used by the user mode process into system memory. We can then use the returned address to access the buffer passed down from user mode.</P>
+<P>This method is generally used for larger buffers since it does not require memory to be copied. The user mode buffers are locked in memory until the IRP is completed which is the downside of using direct I/O. This is the only downfall and is why it’s generally more useful for larger buffers.</P>
+<H3>Buffered I/O</H3>
+<P>The first thing I will do is simply show you the code for handling buffered I/O.</P><PRE>NTSTATUS Example_WriteBufferedIO(PDEVICE_OBJECT DeviceObject, PIRP Irp)
+{
+    NTSTATUS NtStatus = STATUS_SUCCESS;
+    PIO_STACK_LOCATION pIoStackIrp = NULL;
+    PCHAR pWriteDataBuffer;
+
+    DbgPrint(<span class='cpp-string'>"Example_WriteBufferedIO Called \r\n"</span>);
+    
+    <span class='cpp-comment'>/*
+     * Each time the IRP is passed down
+     * the driver stack a new stack location is added
+     * specifying certain parameters for the IRP to the driver.
+     */</span>
+    pIoStackIrp = IoGetCurrentIrpStackLocation(Irp);
+    
+    <span class='cpp-keyword'>if</span>(pIoStackIrp)
+    {
+        pWriteDataBuffer = (PCHAR)Irp-&gt;AssociatedIrp.SystemBuffer;
+    
+        <span class='cpp-keyword'>if</span>(pWriteDataBuffer)
+        {                             
+            <span class='cpp-comment'>/*
+             * We need to verify that the string
+             * is NULL terminated. Bad things can happen
+             * if we access memory not valid while in the Kernel.
+             */</span>
+           <span class='cpp-keyword'>if</span>(Example_IsStringTerminated(pWriteDataBuffer, 
+                   pIoStackIrp-&gt;Parameters.Write.Length))
+           {
+                DbgPrint(pWriteDataBuffer);
+           }
+        }
+    }
+
+    <span class='cpp-keyword'>return</span> NtStatus;
+}</PRE>
+<P>As mentioned above, the idea is to pass data down to the driver that can be accessed from any context such as another thread in another process. The other reason would be to map the memory to be non-paged so the driver can also read it at raised IRQL levels.</P>
+<P>The reason you may need to access memory outside the current process context is that some drivers create threads in the SYSTEM process. They then defer work to this process either asynchronously or synchronously. A driver at a higher level than your driver may do this or your driver itself may do it.</P>
+<P>The downfall of using “Buffered I/O” is that it allocates non-paged memory and performs a copy. This is now overhead in processing every read and write into the driver. This is one of the reasons this is best used on smaller buffers. The whole user mode page doesn’t need to be locked in memory as with Direct I/O, which is the plus side of this. The other problem with using this for larger buffers is that since it allocates non-paged memory, it would need to allocate a large block of sequential non-paged memory.</P>
+<H3>Neither Buffered nor Direct</H3>
+<P>The first thing I will do is show you the code for handling neither Buffered nor Direct I/O.</P><PRE>NTSTATUS Example_WriteNeither(PDEVICE_OBJECT DeviceObject, PIRP Irp)
+{
+    NTSTATUS NtStatus = STATUS_SUCCESS;
+    PIO_STACK_LOCATION pIoStackIrp = NULL;
+    PCHAR pWriteDataBuffer;
+
+    DbgPrint(<span class='cpp-string'>"Example_WriteNeither Called \r\n"</span>);
+    
+    <span class='cpp-comment'>/*
+     * Each time the IRP is passed down
+     * the driver stack a new stack location is added
+     * specifying certain parameters for the IRP to the driver.
+     */</span>
+    pIoStackIrp = IoGetCurrentIrpStackLocation(Irp);
+    
+    <span class='cpp-keyword'>if</span>(pIoStackIrp)
+    {
+        <span class='cpp-comment'>/*
+         * We need this in an exception handler or else we could trap.
+         */</span>
+        __try {
+        
+                ProbeForRead(Irp-&gt;UserBuffer, 
+                  pIoStackIrp-&gt;Parameters.Write.Length, 
+                  TYPE_ALIGNMENT(<span class='cpp-keyword'>char</span>));
+                pWriteDataBuffer = Irp-&gt;UserBuffer;
+            
+                <span class='cpp-keyword'>if</span>(pWriteDataBuffer)
+                {                             
+                    <span class='cpp-comment'>/*
+                     * We need to verify that the string
+                     * is NULL terminated. Bad things can happen
+                     * if we access memory not valid while in the Kernel.
+                     */</span>
+                   <span class='cpp-keyword'>if</span>(Example_IsStringTerminated(pWriteDataBuffer, 
+                          pIoStackIrp-&gt;Parameters.Write.Length))
+                   {
+                        DbgPrint(pWriteDataBuffer);
+                   }
+                }
+
+        } __except( EXCEPTION_EXECUTE_HANDLER ) {
+
+              NtStatus = GetExceptionCode();     
+        }
+
+    }
+
+    <span class='cpp-keyword'>return</span> NtStatus;
+}</PRE>
+<P>In this method, the driver accesses the user mode address directly. The I/O manager does not copy the data, it does not lock the user mode pages in memory, it simply gives the driver the user mode address buffer.</P>
+<P>The upside of this is that no data is copied, no memory is allocated, and no pages are locked into memory. The downside of this is that you must process this request in the context of the calling thread so you will be able to access the user mode address space of the correct process. The other downside of this is that the process itself can attempt to change access to the pages, free the memory, etc., on another thread. This is why you generally want to use “<CODE>ProbeForRead</CODE>” and “<CODE>ProbeForWrite</CODE>” functions and surround all the code in an exception handler. There’s no guarantee that at any time the pages could be invalid, you can simply attempt to make sure they are, before you attempt to read or write. This buffer is stored at <CODE>Irp-&gt;UserBuffer</CODE>.</P>
+<H3>What’s this #pragma stuff?</H3>
+<P>These directives you see simply let the linker know what segment to put the code and what options to set on the pages. The “<CODE>DriverEntry</CODE>”, for example, is set as “<CODE>INIT</CODE>” which is a discardable page. This is because you only need that function during initialization.</P>
+<H3>Homework!</H3>
+<P>Your homework is to create the Read routines for each type of I/O processing. You can use the Write routines as reference to figure out what you need to do.</P>
+<H2>Dynamically Loading and Unloading the Driver</H2>
+<P>A lot of tutorials will go and explain the registry, however, I have chosen not to at this time. There is a simple user mode API that you can use to load and unload the driver without having to do anything else. This is what we will use for now.</P><PRE><span class='cpp-keyword'>int</span> _cdecl main(<span class='cpp-keyword'>void</span>)
+{
+    HANDLE hSCManager;
+    HANDLE hService;
+    SERVICE_STATUS ss;
+
+    hSCManager = OpenSCManager(NULL, NULL, SC_MANAGER_CREATE_SERVICE);
+    
+    printf(<span class='cpp-string'>"Load Driver\n"</span>);
+
+    <span class='cpp-keyword'>if</span>(hSCManager)
+    {
+        printf(<span class='cpp-string'>"Create Service\n"</span>);
+
+        hService = CreateService(hSCManager, <span class='cpp-string'>"Example"</span>, 
+                                 <span class='cpp-string'>"Example Driver"</span>, 
+                                  SERVICE_START | DELETE | SERVICE_STOP, 
+                                  SERVICE_KERNEL_DRIVER,
+                                  SERVICE_DEMAND_START, 
+                                  SERVICE_ERROR_IGNORE, 
+                                  <span class='cpp-string'>"C:\\example.sys"</span>, 
+                                  NULL, NULL, NULL, NULL, NULL);
+
+        <span class='cpp-keyword'>if</span>(!hService)
+        {
+            hService = OpenService(hSCManager, <span class='cpp-string'>"Example"</span>, 
+                       SERVICE_START | DELETE | SERVICE_STOP);
+        }
+
+        <span class='cpp-keyword'>if</span>(hService)
+        {
+            printf(<span class='cpp-string'>"Start Service\n"</span>);
+
+            StartService(hService, <span class='cpp-literal'>0</span>, NULL);
+            printf(<span class='cpp-string'>"Press Enter to close service\r\n"</span>);
+            getchar();
+            ControlService(hService, SERVICE_CONTROL_STOP, &amp;ss);
+
+            DeleteService(hService);
+
+            CloseServiceHandle(hService);
+            
+        }
+
+        CloseServiceHandle(hSCManager);
+    }
+    
+    <span class='cpp-keyword'>return</span> <span class='cpp-literal'>0</span>;
+}</PRE>
+<P>This code will load the driver and start it. We load the driver with “<CODE>SERVICE_DEMAND_START</CODE>” which means this driver must be physically started. It will not start automatically on boot, that way we can test it, and if we blue-screen, we can fix the issue without having to boot to safe mode.</P>
+<P>This program will simply pause. You can then run the application that talks to the service, in another window. The code above should be pretty easy to understand that you need to copy the driver to <I>C:\example.sys</I> in order to use it. If the service fails to create, it knows it has already been created and opens it. We then start the service and pause. Once you press Enter, we stop the service, delete it from the list of services, and exit. This is very simple code and you can modify it to serve your purposes.</P>
+<H2>Communicating to the Device Driver</H2>
+<P>The following is the code that communicates to the driver.</P><PRE><span class='cpp-keyword'>int</span> _cdecl main(<span class='cpp-keyword'>void</span>)
+{
+    HANDLE hFile;
+    DWORD dwReturn;
+
+    hFile = CreateFile(<span class='cpp-string'>"\\\\.\\Example"</span>, 
+            GENERIC_READ | GENERIC_WRITE, <span class='cpp-literal'>0</span>, NULL, 
+            OPEN_EXISTING, <span class='cpp-literal'>0</span>, NULL);
+
+    <span class='cpp-keyword'>if</span>(hFile)
+    {
+        WriteFile(hFile, <span class='cpp-string'>"Hello from user mode!"</span>, 
+                  <span class='cpp-keyword'>sizeof</span>(<span class='cpp-string'>"Hello from user mode!"</span>), &amp;dwReturn, NULL); 
+        CloseHandle(hFile);
+    }
+    
+    <span class='cpp-keyword'>return</span> <span class='cpp-literal'>0</span>;
+}</PRE>
+<P>This is probably simpler than you thought. If you compile the driver three times using the three different methods of I/O, the message sent down from user mode should be printed in DBGVIEW. As you notice, you simply need to open the DOS Device Name using <I>\\.\&lt;DosName&gt;</I>. You could even open <I>\Device\&lt;Nt Device Name&gt;</I> using the same method. You will then create a handle to the device and you can call <CODE>WriteFile</CODE>, <CODE>ReadFile</CODE>, <CODE>CloseHandle</CODE>, <CODE>DeviceIoControl</CODE>! If you want to experiment, simply perform actions and use DbgPrint to show what code is being executed in your driver.</P>
+<H2>Conclusion</H2>
+<P>This article showed a simple example of how to create a driver, install it, and access it via a simple user mode application. You may use the associated source files to change and experiment. If you wish to write drivers, it’s best to read up on many of the basic concepts of drivers, especially, some of the ones linked to in this tutorial.</P>
+
+<!-- Article Ends -->
+
+</div>
+<h2>About Toby Opferman</h2>
+<table width='100%' border=0><tr valign=top><td nowrap class=smallText ><img src='/script/profile/images/{1D312E1D-1B8D-47F8-8ED1-2985F85E7E68}.gif'><br></td><td class=smallText width='100%'>Toby Opferman has worked in just about all aspects of Windows development including applications, services and drivers.<br><br>He has also played a variety of roles professionally on a wide range of projects.  This has included pure researching roles, architect roles and developer roles.  He also was also solely responsible for debugging traps and blue screens for a number of years.<br><br>Previously of Citrix Systems he is very experienced in the area of Terminal Services.  His current occupation is unknown.<p class=smallText>Click <a href='/script/profile/whos_who.asp?vt=arts&id=961412'>here</a> to view Toby Opferman's online profile.</p></td></tr></table><br><table cellpadding=4 width='100%' border=0><tr valign=top><td width='100%'><h2>Other popular  articles:</h2><ul><li><a href="/system/DevMgr.asp">Simple Device Manager</a><br><span class=smalltext>This article demonstrates a simple enumeration device and a dynamic, driver load/unload facility.</span><li><a href="/system/NoDeleteDelay.asp">Eliminating Explorer's delay when deleting an in-use file</a><br><span class=smalltext>How to track down and patch an annoyance in Windows Explorer's code.</span><li><a href="/system/driverdev2.asp">Driver Development Part 2: Introduction to Implementing IOCTLs</a><br><span class=smalltext>This article will go deeper into the basics of creating a simple driver.</span><li><a href="/system/WDM_Driver_development.asp">A simple demo for WDM Driver development</a><br><span class=smalltext>WDM Driver programming introduction with three Pseudo Drivers.</span></ul></td><td width=360><script language=javascript>document.write("<IFRAME src=\"/script/ann/ServeHTML.aspx?C=False&id=786&cb=4119950\" border=0 frameborder=0 scrolling=no width=300 height=250></IFRAME>");</script></td></tr></table>
+		<form action="/script/rating/code/app/insert_vote.asp" method="post">
+		<input type="hidden" name="vote_name" value="driverdev/win322/6/2005">
+		<input type="hidden" name="goal" value="/system/driverdev.asp">
+
+<table bgColor=#ff9900 border=0 cellPadding=1 cellSpacing=0 width="100%">
+<tr><td width="100%">
+<table bgColor=#FBEDBB border=0 cellPadding=4 cellSpacing=0 width="100%"><tr>
+<td valign=middle class=smalltext>[<a href="#__top">Top</a>]</td>
+<td align=right valign=middle nowrap >
+<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'><b>Sign in</b></a> to vote for this article:&nbsp;&nbsp;&nbsp;&nbsp; <i>Poor</i><input type=radio value='1' style='disabled:true;' name=rate><input type=radio value='2' style='disabled:true;' name=rate><input type=radio value='3' style='disabled:true;' name=rate><input type=radio value='4' style='disabled:true;' name=rate><input type=radio value='5' style='disabled:true;' name=rate><i>Excellent</i>&nbsp;&nbsp;<input type=submit value=Vote class=FormButton style='disabled:true;'>
+</td></tr>
+</table></td></tr></table>
+</form>
+<table width=100% cellspacing=0 cellpadding=0 border=0><tr valign=top>
+<td valign=top><center><script language=javascript>document.write("<a href=\"/script/admentor/admentorredir.asp?id=1808&way=ban\" target=_blank><img src=\"/script/ann/ServeImg.aspx?File=%2Fscript%2Fadmentor%2Fimages%2FToolbox%5F120x60%2Egif&C=False&id=1808&cb=4119953\" alt=\"\" border=0 width=120 height=60></a>");</script></center><br></td>
+<td valign=top nowrap align=center><span id=AdBanner5><script language=javascript>document.write("<a href=\"/script/admentor/admentorredir.asp?id=1480&way=ban\" target=_blank><img src=\"/script/ann/ServeImg.aspx?File=%2Fscript%2Fadmentor%2Fimages%2FXoreax%5F468x60%5Fred%2Egif&C=False&id=1480&cb=4119945\" alt=\"Xoreax cuts VS build times by up to 90%\" border=0 width=468 height=60></a>");</script></span></td>
+</tr></table>
+
+</td></tr></table>
+
+<a name='__comments'></a>
+
+<script language="JavaScript">
+var Selected = "";
+
+var AdTime = new Date();
+
+
+// Ensures the expanded message appears reasonably close to where 
+// it should appear: on screen, and if possible, under the mouse cursor.
+function SwitchMessage(e)
+{
+   if ( !e ) e = window.event;
+   var target = e.target ? e.target : e.srcElement;
+
+   // is it a post?
+   while ( target && target.id != 'DynMessLink' )
+      target = target.parentNode;
+   if ( !target || target.id != 'DynMessLink' )
+      return;
+
+   if (Selected)
+   {
+      var body = document.getElementById(Selected + "_h1");
+      if (body)
+         body.style.display = 'none';
+      var head = document.getElementById(Selected + "_h0");
+      if (head)
+         head.bgColor = '#FEF9E7';
+   }
+
+   if (Selected == target.name) // just collapse
+      Selected="";
+   else
+   {
+      Selected = target.name;
+      var body = document.getElementById(Selected + "_h1");
+      if (body)
+      {
+         if (body.style.display=='none')
+            body.style.display='';
+         else
+            body.style.display = 'none';
+      }
+      var head = document.getElementById(Selected + "_h0");
+      if (head)
+         head.bgColor = '#99CCFF';
+
+      if ( body && head && body.style.display != 'none' )
+      {
+         // the bit that keeps the post on-screen and under the cursor
+         //var dif = (getRealPos(head, "Top") + head.offsetHeight/2) - (document.body.scrollTop+e.clientY);
+         //document.body.scrollTop += dif;
+         document.body.scrollTop = getRealPos(head, "Top") - document.body.clientHeight/10;
+         EnsureMessageVisible(target.name, true);
+      }
+   }
+
+   if ( e.preventDefault )
+      e.preventDefault();
+   else
+      e.returnValue = false;
+   return false;
+}
+
+// does its best to make a message visible on-screen (vs. scrolled off somewhere).
+function EnsureMessageVisible(msgID, bShowTop) {
+   var msgHeader = document.getElementById(msgID + "_h0");
+   var msgBody = document.getElementById(msgID + "_h1");
+
+   // determine scroll position of top and bottom
+   var scrollContainer = document.body;
+   var top = getRealPos(msgHeader, 'Top');
+   var bottom = getRealPos(msgBody, 'Top') + msgBody.offsetHeight;
+
+   // if not already visible, scroll to make it so
+   if ( scrollContainer.scrollTop > top && !bShowTop)
+      scrollContainer.scrollTop = top - document.body.clientHeight/10;
+   if ( scrollContainer.scrollTop+scrollContainer.clientHeight < bottom )
+      scrollContainer.scrollTop = bottom-scrollContainer.clientHeight;
+   if ( scrollContainer.scrollTop > top && bShowTop)
+      scrollContainer.scrollTop = top - document.body.clientHeight/10;
+}
+
+// utility
+function getRealPos(i,which)
+{
+   iPos = 0
+   while (i!=null)
+   {
+      iPos += i["offset" + which];
+      i = i.offsetParent;
+   }
+   return iPos
+}
+
+
+</script>
+<div id="_MessageBoard" onclick="SwitchMessage(event)"><table border=0 bgcolor='#ff9900' width=100% cellpadding=0 cellspacing=0><tr><td width='100%'><table border=0 id=ForumTable bgcolor='#ff9900' width=100% cellpadding=0 cellspacing=1><tr><td class=smallText bgcolor='#ffcc99'><b class=forum_hilite>Note</b>: You must <a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'><b>Sign in</b></a> to post to this message board.</td></tr><form action='/script/comments/app/do_filtermessages.asp?main=/system/driverdev.asp&df=100&forumid=150661' method=post><tr><td><table width=100% bgcolor=white border=0 cellspacing=0 cellpadding=3><tr bgcolor=#FBEDBB><td nowrap class=smalltext><a href='/script/comments/faq.asp'><img src='/script/images/forum_faq.GIF' border=0 width=16 height=16 align=absmiddle> <b>FAQ</b></a>&nbsp;</td><td nowrap valign=top align=right class=smalltext>Noise tolerance <select size=1 name=noise class=smalltext><option value="1">Very High</option>
+<option value="2">High</option>
+<option selected value="3">Medium</option>
+<option value="4">Low</option>
+<option value="5">Very low</option>
+</select>&nbsp;&nbsp;</td><td class=smalltext nowrap align=right valign=middle colspan=2><a href='/script/comments/search_comments.asp?forumid=150661'><img src="/script/images/forum_search.gif" width=16 height=15 border=0> Search comments</a> &nbsp;</td><td valign=top align=right><input type=submit value='Set Options' name=submit class=FormButton></td></tr><tr bgcolor='#ff9900'><td width='100%'>&nbsp;</td><td nowrap align=right valign=top class=smalltext>View <select size=1 name=expand class=smalltext><option value="0">Normal (slow)</option>
+<option value="2">Preview (slow)</option>
+<option selected value="5">Message View</option>
+<option value="6">Topic View</option>
+<option value="1">Thread View</option>
+<option value="3">Expanded (Supporters only)</option>
+</select>&nbsp;&nbsp;</td><td nowrap valign=top class=smalltext>Per page <select size=1 name=perpage class=smalltext><option value="10">10</option>
+<option selected value="25">25</option>
+<option value="50">50 (must logon)</option>
+</select></td><td colspan=2>&nbsp;</td></tr></table>
+</td></tr></form><tr bgcolor=#FBEDBB><td><a name=xx0xx></a><table border=0 cellpadding=2 width=100% bgcolor=#FBEDBB><tr><td>&nbsp;</td><td class=messagetitle>Msgs 1 to 25 of 200 (Total: 200) (<a href='/system/driverdev.asp?df=100&forumid=150661'>Refresh</a>)</td><td align=right nowrap><font class=messagetitle><span class=HoverLink >First</span> <span class=HoverLink >Prev</span> <a class=HoverLink name=HoverNL href='/system/driverdev.asp?df=100&forumid=150661&fr=26'>Next</a> <span class=HoverLink >&nbsp;&nbsp;&nbsp;&nbsp;</span> </font></td></tr></table>
+</td></tr><tr bgcolor=white><td><table border=0 cellspacing=0 cellpadding=0 width='100%' border=0><tr><td width='100%'><table bgcolor=#FBEDBB border=0 cellspacing=0 cellpadding=2><tr><td width='100%' class=messagetitle>Subject&nbsp;</td><td width=140 nowrap class=messagetitle>Author&nbsp;</td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle>Date&nbsp;</font></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr bgcolor='#FEF9E7' id=1513253_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1513253xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1513253 href='/system/driverdev.asp?df=100&forumid=150661&select=1513253#xx1513253xx'><b>why don't you call IoCompleteRequest?</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=2441245'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>mrnt</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>12:09 1 Jun '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1513253_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>I've read your code, but I don't understand why you don't call IoCompleteRequest to complete the IRP in your dispatch routines; is it possible to ufficially assume that the operating system automatically completes an IRP when it detects that no more work has to be done for it? won't that cause any leak?<br><br>thank you.<br> <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1513253&forumid=150661&select=1513253#xx1513253xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1513253#xx1513253xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1513387_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1513387xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1513387 href='/system/driverdev.asp?df=100&forumid=150661&select=1513387#xx1513387xx'>Re: why don't you call IoCompleteRequest?</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=961412'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Toby Opferman&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >13:33 1 Jun '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1513387_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>I did make a note of this in Part 2 of this series.<br><br>You are correct that every driver should complete it's IRP or else you could "leak" the IRP.  However, in some circumstances the I/O Manager will free/complete the IRP on your behalf.  In any case you should always complete them and not rely on them being completed for you unless specifically documented.  The completion was only omitted here since this is a starter tutorial and was trying to not explain everything all at once.  The series progresses and explains things that were left out.  <br><br> <br><br>8bc7c0ec02c0e404c0cc0680f7018827ebee<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1513253&forumid=150661&select=1513387#xx1513387xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1513387#xx1513387xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1515947_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1515947xx'></a><img height=1 width=36 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1515947 href='/system/driverdev.asp?df=100&forumid=150661&select=1515947#xx1515947xx'>Re: why don't you call IoCompleteRequest?</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=2441245'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >mrnt&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >8:58 3 Jun '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1515947_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=36 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>thank you <img src="/script/images/smiley_smile.gif" align=absmiddle> <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1513253&forumid=150661&select=1515947#xx1515947xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1515947#xx1515947xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1490717_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1490717xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1490717 href='/system/driverdev.asp?df=100&forumid=150661&select=1490717#xx1490717xx'><b>Compile help step by step</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1798892'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>truonghanca</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>19:01 16 May '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1490717_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Hi all,<br> I really need help on this article. After I download the zip file to E:\drivers, I unzip it to driverdev_src. There are so many folders inside. I don't know what should i do next step by step. I am appreciated for your time,help, and patience.<br> I installed the DDK version 2600.1106 in E:\WINDDK. I install ed Visual C++ in C <br>PS; this is my first time to learn about driver.<br><br> -- modified at 19:07 Tuesday 16th May, 2006<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1490717&forumid=150661&select=1490717#xx1490717xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1490717#xx1490717xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1487807_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1487807xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1487807 href='/system/driverdev.asp?df=100&forumid=150661&select=1487807#xx1487807xx'><b>Compilation issue (again)</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=2767925'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>sriharni</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>5:26 15 May '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1487807_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Hi,<br>   I read all the user comments on compilation before writing this email. I am still unable to compile the given code. Here are some details:<br>- Win XP Professional service pack 2.<br>- I have WINDDK (windows IFS kit installed).<br><br>I did this:<br>- downloaded your example code.<br>- unzipped in C:\toby<br>- ran "nmake".<br><br>I got the follwing error:<br>C:\toby\example>nmake<br><br>Microsoft (R) Program Maintenance Utility   Version 7.00.8882<br>Copyright (C) Microsoft Corp 1988-2000. All rights reserved.<br><br>        cl /nologo /MD /W3 /Oxs /Gz /Zi  /I "..\..\..\..\inc"  /I "\NTDDK\inc"<br>/D "WIN32" /D "_WINDOWS"  /Fr.\obj\i386\\ /Fo.\obj\i386\\ /Fd.\obj\i386\\ /c .\e<br>ntry.c .\functions.c<br>entry.c<br>entry.c(15) : fatal error C1083: Cannot open include file: 'wdm.h': No such file<br> or directory<br>functions.c<br>functions.c(15) : fatal error C1083: Cannot open include file: 'wdm.h': No such<br>file or directory<br>Generating Code...<br>NMAKE : fatal error U1077: 'cl' : return code '0x2'<br>Stop.<br><br>C:\toby\example><br>====================================================<br><br>In a few of your responses, you had mentioned about having a "proper" makefile for the system. COuld you please elaborate on it? The following is what I see when I do a "set" to see my env variables:<br><br>C:\toby\example>set<br>ALLUSERSPROFILE=C:\Documents and Settings\All Users<br>APPDATA=C:\Documents and Settings\SS32651\Application Data<br>ASMROOT=C:\Program Files\CA\Unicenter Software Delivery\SD<br>AVENGINE=C:\PROGRA~1\CA\SHARED~1\SCANEN~1<br>CommonProgramFiles=C:\Program Files\Common Files<br>COMPUTERNAME=BSI-PC0006<br>ComSpec=C:\WINDOWS\system32\cmd.exe<br>FP_NO_HOST_CHECK=NO<br>HOMEDRIVE=C:<br>HOMEPATH=\Documents and Settings\SS32651<br>INOCULAN=C:\PROGRA~1\CA\ETRUST~1<br>LIB=D:\WINDDK\3790.1830\lib\wxp\lib;<br>LOGONSERVER=\\BSDADC001<br>NUMBER_OF_PROCESSORS=1<br>OS=Windows_NT<br>Path=C:\Program Files\CA\Dcs\DMScripting\;C:\Program Files\CA\DCS\CAWIN\;C:\Prog<br>ram Files\Perl\bin\;C:\texmf\miktex\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOW<br>S\System32\Wbem;C:\PROGRA~1\CA\SHARED~1\SCANEN~1;C:\PROGRA~1\CA\ETRUST~1;"C:\Pro<br>gram Files\Hummingbird\Connectivity\7.00\Accessories\";D:\Enabler\Runtime;d:\mat<br>lab6p1\bin\win32;D:\Program Files\GTK\2.0\bin;D:\WINDDK\3790.1830\bin;D:\WINDDK\<br>3790.1830\bin\x86;;C:\Program Files\CA\Unicenter Software Delivery\BIN; D:\WINDD<br>K\3790.1830\inc\ddk\wdm\wxp;<br>PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH<br>PROCESSOR_ARCHITECTURE=x86<br>PROCESSOR_IDENTIFIER=x86 Family 15 Model 3 Stepping 4, GenuineIntel<br>PROCESSOR_LEVEL=15<br>PROCESSOR_REVISION=0304<br>ProgramFiles=C:\Program Files<br>PROMPT=$P$G<br>SESSIONNAME=Console<br>SystemDrive=C:<br>SystemRoot=C:\WINDOWS<br>TEMP=C:\DOCUME~1\SS32651\LOCALS~1\Temp<br>TMP=C:\DOCUME~1\SS32651\LOCALS~1\Temp<br>USERDNSDOMAIN=CORP.SATYAM.AD<br>USERDOMAIN=SATYAM<br>USERNAME=SS32651<br>USERPROFILE=C:\Documents and Settings\SS32651<br>WDM_INC_PATH=D:\WINDDK\3790.1830\inc\ddk\wdm\wxp<br>windir=C:\WINDOWS<br>_NT_SYMBOL_PATH=srv*D:\symbols\websymbols*http://msdl.microsoft.com/download/sym<br>bols<br><br>C:\toby\example><br>===============================<br><br>If you guide me in compiling this, it would be great. No, I am not using the DDK to compile. I just use the command prompt, use the default command, "nmake" to do stuff. I gave the proper full-path of the wdm.h file, and still it gives errors on excpt.h. There must be some other env variable which could solve this issue. The wdm.h file is in D:\WINDDK\3790.1830\inc\ddk\wdm\wxp\ and I am trying to compile "example" from C:\toby\example (also tried the same in D:\).<br><br>Please let me know,<br>Thanks,<br><br><br><br> <br><br>Sri.<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1487807&forumid=150661&select=1487807#xx1487807xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1487807#xx1487807xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1489333_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1489333xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1489333 href='/system/driverdev.asp?df=100&forumid=150661&select=1489333#xx1489333xx'>Re: Compilation issue (again)</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=961412'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Toby Opferman&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >4:11 16 May '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1489333_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>You would need to run vcvars32.bat to setup the proper include directories from Visual Studio.  You can then either add the DDK include path to the INCLUDE environment variable or run the setupenv.bat in the DDK. <br><br>8bc7c0ec02c0e404c0cc0680f7018827ebee<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1487807&forumid=150661&select=1489333#xx1489333xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1489333#xx1489333xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1487780_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1487780xx'></a><img align=absmiddle src='/script/images/news_question.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1487780 href='/system/driverdev.asp?df=100&forumid=150661&select=1487780#xx1487780xx'><b>Extend an existing driver</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=2780393'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>derWabe</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>5:13 15 May '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1487780_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Hello!<br><br>I have an existing CyUSB.sys-File and no sourcecode and<br>i want to add a serial port device whenever this driver add a device!<br><br>Has anyone an idea how i can do this or an example or a tutorial or ... <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1487780&forumid=150661&select=1487780#xx1487780xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1487780#xx1487780xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1457373_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1457373xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1457373 href='/system/driverdev.asp?df=100&forumid=150661&select=1457373#xx1457373xx'><b>Great Article!</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=2929501'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>Amy Van Horn</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>16:15 20 Apr '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1457373_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>This is just what I've been looking for!  I've been lost trying to read Microsoft DDK documentation.  Information overload!!  Great job! <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1457373&forumid=150661&select=1457373#xx1457373xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1457373#xx1457373xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle>Score: 1.0 (1 vote). </td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1455532_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1455532xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1455532 href='/system/driverdev.asp?df=100&forumid=150661&select=1455532#xx1455532xx'>Re: Error......Please help me :(</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=961412'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Toby Opferman&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >11:57 19 Apr '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1455532_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent><blockquote class="FQ"><div class="FQA">yogi cool wrote:</div>1. "LINK : fatal error LNK1201: error writing to program database 'C:\Debug\SYMBOLS\example.PDB'; check for insufficient disk space, invalid path, or insufficient privilege " I am having more than 9GB disk space, Path is alive, but what is this privilage?<br>I tried on other system also, same problem</blockquote><br><br><br>You need to create the \debug\symbols directory before building. <br><br>8bc7c0ec02c0e404c0cc0680f7018827ebee<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1455120&forumid=150661&select=1455532#xx1455532xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1455532#xx1455532xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1453049_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1453049xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1453049 href='/system/driverdev.asp?df=100&forumid=150661&select=1453049#xx1453049xx'><b>Compiler the driver and app way</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1356628'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>grantkobe</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>6:12 18 Apr '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1453049_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Hi:<br>	I am a newbie for kernel develop and unfamiliar with nmake. Thus i think the way i am successful in building .sys and app may help others who face the same problems with me.<br>	<br>	Environments:<br>		I use VC 6.0 and WINDDK 2600.1106<br>		VC 6.0 in C:\Program Files\Microsoft Visual Studio\VC98<br>		WINDDK in C:\WINDDK\2600.1106<br>		<br><big>## Compiling examlpe.sys </big><br>	<br>	Step: 1. First unrar it into c:\ , source will in C:\Programming\development\DEBUG\private\src\drivers<br>	<br>	Step 2: manually add directory C:\Programming\development\DEBUG\bin and C:\Programming\development\DEBUG\bin\SYMBOLS.<br>		Ps: Those two directory will not exist even if you run nmake and it will cause LINK: fatal error LNK1201: error writing to program database 'C:\Programming\development\DEBUG\bin\SYMBOLS\example.PDB'; check for insufficient disk space, invalid path, or insufficient privilege<br><br>	Step 3. Change the makefile, i list it below, the part i changed is denoted between #=================changed by wush and #end wush<br>				Ps manly change the WINDDK path<br>	<br><big>## Compiling LoadDriver and usedriver</big><br><br>	Only change the makefile, i list it below, the part i changed is denoted between #=================changed by wush and #end wush<br>	<br>				Ps: Their changes are the same, point the correct lib and inc path into VC98 since it is application in user space.<br><br><br>#make file under example:<br><br>....<br><br><code>#=======changed by wush<br>#REBASE = rebase.exe<br>REBASE = "C:\Program Files\Microsoft Platform SDK\Bin\rebase.exe"<br>#end wush</code><br>.....<br><br><code>CPP_PROJ=/nologo /MD /W3 /Oxs /Gz /Zi \<br>	/I "..\..\..\..\inc" \<br>#=================changed by wush<br>	/I "\WINDDK\2600.1106\inc" \<br>	/I "\WINDDK\2600.1106\inc\crt" \<br>	/I "\WINDDK\2600.1106\inc\ddk\wdm\wxp" \<br>#end wush<br>        /D "WIN32" /D "_WINDOWS" \<br>	/Fr$(OBJDIR)\\ /Fo$(OBJDIR)\\ /Fd$(OBJDIR)\\ /c<br><br>LIB32= link.exe <br>#==========change by wush<br>LIB32_FLAGS = /LIBPATH:\WINDDK\2600.1106\lib\wxp\i386 /LIBPATH:..\..\..\..\lib /LIBPATH:\WINDDK\2600.1106\libfre\i386 /DEBUG /PDB:$(TARGETDIR)\SYMBOLS\$(TARGET).PDB  -entry:DriverEntry  /SUBSYSTEM:NATIVE /nologo $(LIBS) /out:$(TARGETDIR)\$(TARGET).sys<br>#end change</code><br>.....<br>.....<br><br><br><b>#Makefile under usedriver</b><br><br>	......<br><code><br>CPP_PROJ=/nologo /MD /W3 /Oxs /Gz /Zi \<br>	/I "..\..\..\..\inc" \<br>#edit by wush<br>  	/I "\Program Files\Microsoft Visual Studio\VC98\Include" \<br>#end wush<br>	/Fr$(OBJDIR)\\ /Fo$(OBJDIR)\\ /Fd$(OBJDIR)\\ /c<br></code>	<br><br>....<br><br><br><b>#Makefile under  Loaddriver</b><br>	.....<br>	<br><code>	<br>CPP_PROJ=/nologo /MD /W3 /Oxs /Gz /Zi \<br>#edit by wush<br>  	/I "\Program Files\Microsoft Visual Studio\VC98\Include" \<br>#end wush<br>	/I "..\..\..\..\inc" \<br>        /D "WIN32" /D "_WINDOWS" \<br>	/Fr$(OBJDIR)\\ /Fo$(OBJDIR)\\ /Fd$(OBJDIR)\\ /c<br><br>LIB32= link.exe <br>#edif by wush<br>LIB32_FLAGS = /LIBPATH:"\Program Files\Microsoft Visual Studio\VC98\Lib" /LIBPATH:..\..\..\..\lib  /DEBUG /PDB:$(TARGETDIR)\SYMBOLS\$(TARGET).PDB  /SUBSYSTEM:CONSOLE /nologo $(LIBS) /out:$(TARGETDIR)\$(TARGET).exe<br>#end of edit<br><br><br>OBJS   = \<br>	$(OBJDIR)\load.obj<br><br></code><br>	.....<br>	<br>	<br><br>	<br>	<br><br><br>	<br>	<br>	<br> <br><br>No comment.<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1453049&forumid=150661&select=1453049#xx1453049xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1453049#xx1453049xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1453061_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1453061xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1453061 href='/system/driverdev.asp?df=100&forumid=150661&select=1453061#xx1453061xx'>Re: Compiler the driver and app way</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1356628'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >grantkobe&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >6:21 18 Apr '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1453061_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>I forgot to figure out another thing. You must take the example.sys under \bin into c:\ or the application will not run correctly. <br><br>No comment.<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1453049&forumid=150661&select=1453061#xx1453061xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1453061#xx1453061xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1450975_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1450975xx'></a><img align=absmiddle src='/script/images/news_question.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1450975 href='/system/driverdev.asp?df=100&forumid=150661&select=1450975#xx1450975xx'><b>how would I get the windows directory in kernel mode?</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1378905'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>Jimmy6389</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>16:40 15 Apr '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1450975_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>How would I get the current windows directory while in kernel mode?<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1450975&forumid=150661&select=1450975#xx1450975xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1450975#xx1450975xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1451055_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1451055xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_answer.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1451055 href='/system/driverdev.asp?df=100&forumid=150661&select=1451055#xx1451055xx'>Re: how would I get the windows directory in kernel mode?</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=961412'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Toby Opferman&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >20:34 15 Apr '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1451055_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>The current directory would be an attribute of the current process as each process can have a different current directory.  When in the kernel you need to be aware that you could be running in any process and infact you may not even be running in the context of the process which requested you to perform some action (Could be posted to another thread in system for example).<br><br>I would read up on MSDN about files in the kernel.  If you want to open the current directory you may possibly try ZwCreateFile using a "." or ".\" as the file name with "FILE_DIRECTORY_FILE" as the attributes.  Then use the ZwQueryInformationFile() to perhaps get the directory location information.<br><br>This is a bit of work and there is likely a location where this information is stored directly in the current thread's attributes.  However I do not know of a documented method aside from GetCurrentDirectory() from user mode to retrieve this.  I would consult MSDN and OSR.COM on the issue.<br> <br><br>8bc7c0ec02c0e404c0cc0680f7018827ebee<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1450975&forumid=150661&select=1451055#xx1451055xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1451055#xx1451055xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1451500_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1451500xx'></a><img height=1 width=36 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_question.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1451500 href='/system/driverdev.asp?df=100&forumid=150661&select=1451500#xx1451500xx'>Question clarification</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1378905'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Jimmy6389&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >18:00 16 Apr '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1451500_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=36 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Sorry, i guess my question wasn't clear.  what I meant was, i needed to get the <b>windows</b> directory, meaning the directory on the machine where windows was installed (usually "C:\Windows").  Like some kind of kernel mode equivalent of GetWindowsDirectory.<br><br>I've been doing some research and i was thinking that i could read <b>HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRoot</b>.  <br>Is this the right approach?  Is this where Windows stores its installation directory?<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1450975&forumid=150661&select=1451500#xx1451500xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1451500#xx1451500xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1455538_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1455538xx'></a><img height=1 width=54 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_answer.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1455538 href='/system/driverdev.asp?df=100&forumid=150661&select=1455538#xx1455538xx'>Re: Question clarification</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=961412'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Toby Opferman&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >12:00 19 Apr '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1455538_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=54 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Do you need the actual directory name or do you just want to use the Windows path?  You can just say "\SystemRoot" in a driver and it will use whatever the windows directory is.<br><br><br> <br><br>8bc7c0ec02c0e404c0cc0680f7018827ebee<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1450975&forumid=150661&select=1455538#xx1455538xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1455538#xx1455538xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1464344_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1464344xx'></a><img height=1 width=72 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1464344 href='/system/driverdev.asp?df=100&forumid=150661&select=1464344#xx1464344xx'>Thank you</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1378905'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Jimmy6389&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >20:15 26 Apr '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1464344_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=72 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Thank you, that is exactly what i needed and way easier than what i was doing<br><img src="/script/images/smiley_smile.gif" align=absmiddle> <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1450975&forumid=150661&select=1464344#xx1464344xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1464344#xx1464344xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1450871_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1450871xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1450871 href='/system/driverdev.asp?df=100&forumid=150661&select=1450871#xx1450871xx'><b>Excellent Introduction</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=108830'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>Hatem Mostafa</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>11:39 15 Apr '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1450871_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Very very useful.<br><br>Thanks (5)<br>Hatem<br> <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1450871&forumid=150661&select=1450871#xx1450871xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1450871#xx1450871xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1450728_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1450728xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1450728 href='/system/driverdev.asp?df=100&forumid=150661&select=1450728#xx1450728xx'><b>Great work but a small bug in the attached code</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=338354'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>dandy_andy</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>5:17 15 Apr '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1450728_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Is there a small bug in the attached code?<img src="/script/images/smiley_confused.gif" align=absmiddle><br>In \usedriver\load.c it would be better to replace line 28<br><code>if(hFile)</code> by <br><code>if(INVALID_HANDLE_VALUE != hFile)</code>. If not, the app will attempt to write the string either the driver loaded or not. <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1450728&forumid=150661&select=1450728#xx1450728xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1450728#xx1450728xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1451051_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1451051xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1451051 href='/system/driverdev.asp?df=100&forumid=150661&select=1451051#xx1451051xx'>Re: Great work but a small bug in the attached code</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=961412'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Toby Opferman&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >20:11 15 Apr '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1451051_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>You are correct.  The application is just a quick demonstration and was not throughly reviewed or unit tested, the application just shows what apis to use. <br><br>8bc7c0ec02c0e404c0cc0680f7018827ebee<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1450728&forumid=150661&select=1451051#xx1451051xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1451051#xx1451051xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1451049_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1451049xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1451049 href='/system/driverdev.asp?df=100&forumid=150661&select=1451049#xx1451049xx'>Re: Great work but a small bug in ur attached code</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=961412'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Toby Opferman&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >20:10 15 Apr '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1451049_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Yes that's a bug I believe I fixed it in the later tutorials.  The user mode application was just a quick demonstration application. <br><br>8bc7c0ec02c0e404c0cc0680f7018827ebee<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1449441&forumid=150661&select=1451049#xx1451049xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1451049#xx1451049xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1423861_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1423861xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1423861 href='/system/driverdev.asp?df=100&forumid=150661&select=1423861#xx1423861xx'><b>what ddk are you using</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1028806'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>euacela</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>8:46 27 Mar '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1423861_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>because I can't compile with only makefile<br>I need another file called sources.<br>If i put that file then it will compile the code otherwise<br>it only gives me this;<br><br>D:\WINDDK\2600\src\drivers\example>build -cZ<br>BUILD: Object root set to: ==> objchk<br>BUILD: Adding /Y to COPYCMD so xcopy ops won't hang.<br>BUILD: /i switch ignored<br>BUILD: Compile and Link for i386<br>BUILD: Done<br><br>I use the windows xp checked build environment<br>what am I missing. and another thing when I compile your driver my binary is a lot smaller than your.<br>what command u use to build and link ?<br>thank you <br><br>gabby<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1423861&forumid=150661&select=1423861#xx1423861xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1423861#xx1423861xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1424142_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1424142xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1424142 href='/system/driverdev.asp?df=100&forumid=150661&select=1424142#xx1424142xx'>Re: what ddk are you using</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=961412'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Toby Opferman&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >11:45 27 Mar '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1424142_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>You just need to make sure the "makefile" is setup properly and type "nmake".  The source does not use the DDK build environment it just uses plain makefiles. <br><br>8bc7c0ec02c0e404c0cc0680f7018827ebee<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1423861&forumid=150661&select=1424142#xx1424142xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1424142#xx1424142xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1424151_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1424151xx'></a><img height=1 width=36 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1424151 href='/system/driverdev.asp?df=100&forumid=150661&select=1424151#xx1424151xx'>Re: what ddk are you using</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=1028806'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >euacela&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >11:51 27 Mar '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1424151_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=36 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>is it possible to be because of my antivirus or firewall because when I installed winxp ddk the instalation time was: 199 minutes <img src="/script/images/smiley_frown.gif" align=absmiddle> <br>and when I thought that the firewall could be the pb i tried to uninstall the dkk and I saw that the timming would be the same so I uninstalled my antivirus and then uninstalled the ddk in 7 minutes. <br>Now I wonder what firewall do you use ?<br>i see that deviceiocontrol is very much filterd by all firewalls<br>how can I bypass them ?<br>thanks best regards <br><br>gabby<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1423861&forumid=150661&select=1424151#xx1424151xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1424151#xx1424151xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr><tr height=1><td colspan=1 bgcolor='#ff9900'><img src='/script/images/t.gif' width=1 height=1></td></tr><tr bgcolor='#FEF9E7' id=1408349_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1408349xx'></a><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1408349 href='/system/driverdev.asp?df=100&forumid=150661&select=1408349#xx1408349xx'><b>help needed in compiling</b></a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=2274954'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle ><b>lyhlyh</b>&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle ><b>2:37 15 Mar '06</b>&nbsp;</font></td></tr></table></td></tr>
+<tr id=1408349_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>Anyone knows how to solve the linking problem?<br><br>The error message is as follows:<br><br>        link.exe /LIBPATH:..\..\..\..\lib /LIBPATH:\WINDDK\2600\lib\wxp\ia64  /D<br>EBUG /PDB:..\..\..\..\bin\SYMBOLS\example.PDB /DRIVER:WDM -entry:DriverEntry /SU<br>BSYSTEM:NATIVE /nologo wdm.lib  ntoskrnl.lib /out:..\..\..\..\bin\example.sys .\<br>obj\i386\entry.obj  .\obj\i386\functions.obj wdm.lib  ntoskrnl.lib<br>LINK : fatal error LNK1246: '/TMP' not compatible with 'IA64' target machine; li<br>nk without '/TMP'<br>NMAKE : fatal error U1077: 'link.exe' : return code '0x4de'<br>Stop. <br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1408349&forumid=150661&select=1408349#xx1408349xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1408349#xx1408349xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=6></td></tr><tr bgcolor='#FEF9E7' id=1424141_h0><td width='100%' colspan=1><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td bgcolor=white><a name='xx1424141xx'></a><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_general.gif'>&nbsp;</td>
+<td width='100%' class=messagetitle><a class=messagetitle id=DynMessLink name=1424141 href='/system/driverdev.asp?df=100&forumid=150661&select=1424141#xx1424141xx'>Re: help needed in compiling</a></td><td valign=bottom><a href='/script/profile/whos_who.asp?id=961412'><img src='/script/images/userinfo.gif' title='Click for User Profile' border=0 width=14 height=15></a>&nbsp;</td><td width=140 nowrap><font class=messagetitle >Toby Opferman&nbsp;</font></td><td nowrap align=right width='120' style='width:9em'><font class=messagetitle >11:44 27 Mar '06&nbsp;</font></td></tr></table></td></tr>
+<tr id=1424141_h1 style='display:none' ><td colspan=1 width='100%'><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td><img height=1 width=18 src='/script/images/ind.gif'><img align=absmiddle src='/script/images/news_blank.gif'>&nbsp;</td><td bgcolor='#D5EAFF' width='100%'><table border=0 cellspacing=5 cellpadding=0 width='100%'><tr><td><table border=0 cellspacing=0 cellpadding=0 width='100%'><tr><td colspan=2><font class=messagecontent>You are building for Itanium?  If so looks like you need to remove the "/TMP" from the makefile if it exists or whatever option is causing that option.<br><br><a href="http://msdn2.microsoft.com/en-US/library/ybtaftec(VS.80).aspx" rel="nofollow">http://msdn2.microsoft.com/en-US/library/ybtaftec(VS.80).aspx</a>[<a href="http://msdn2.microsoft.com/en-US/library/ybtaftec(VS.80).aspx" target="_blank" rel="nofollow" title="New Window">^</a>] <br><br>8bc7c0ec02c0e404c0cc0680f7018827ebee<br>&nbsp;</font></td></tr><tr valign=top><td class=messagetitle>[<a href='/script/profile/logon.asp?ct=%2Fsystem%2Fdriverdev%2Easp'>Sign in</a>][<a	href='/system/driverdev.asp?df=100&tid=1408349&forumid=150661&select=1424141#xx1424141xx' title='View only messages within this thread'>View Thread</a>][<a	href='/system/driverdev.asp?msg=1424141#xx1424141xx' title='Get the URL for this message'>Get Link</a>]</td><td align=right class=messagetitle></td></tr></table></td></tr></table></td></tr></table></td></tr>
+<tr><td colspan=1><img src='/script/images/t.gif' border=0 width=1 height=5></td></tr></table></td></tr><tr bgcolor=#FBEDBB><td><table width='100%' cellpadding=2><tr><td class=messagetitle>Last Visit: 11:18 Friday 16th June, 2006</td><td align=right nowrap><font class=messagetitle><span class=HoverLink >First</span> <span class=HoverLink >Prev</span> <a class=HoverLink name=HoverNL href='/system/driverdev.asp?df=100&forumid=150661&fr=26'>Next</a> <span class=HoverLink >&nbsp;&nbsp;&nbsp;&nbsp;</span> </font></td></tr></table></td></tr></table></td></tr></table>
+</div><p class=smallText><img align=absmiddle src='/script/images/news_general.gif'> General comment &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_info.gif'> News / Info &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_question.gif'> Question &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_answer.gif'> Answer &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_game.gif'> Joke / Game &nbsp;&nbsp; <img align=absmiddle src='/script/images/news_sticky.gif'> Admin message</p>
+<br>
+
+
+<table width=100% cellspacing=5>
+<tr valign=top><td>
+<font size=1 style="font-size:7pt"><a href='/?cat=1'>All Topics</a>, <a href='/?cat=2'>MFC / C++</a> &gt;&gt; <a href='/system/'>System</a> &gt;&gt; <a href='/system/#Device+Drivers'>Device Drivers</a>
+<br>Updated: 6 Feb 2005 3:29
+</font>
+</td><td align=right>
+<font size=1 style="font-size:7pt">
+Article content copyright Toby Opferman, 2005<br>
+everything else Copyright © <A href='mailto:webmaster@codeproject.com'>CodeProject</A>, 1999-2006</a>.
+
+<br>
+Web6 |
+<a href='/info/MediaKit'>Advertise on The Code Project</a> | <a href="/info/privacy.asp">Privacy</a>
+
+</td></tr>
+</table>
+
+<br>
+<center>
+<table border="0" cellspacing="0" cellpadding="0" width="95%">
+<tr><td height=1 bgcolor=#ff9900><img src='/images/space.gif' height=1></td></tr>
+<tr>
+<td align=center><font size=1>
+
+<a href="http://www.theultimatetoolbox.com">The Ultimate Toolbox</a> •
+<a href="http://www.ASPAlliance.com/">ASP Alliance</a> •
+<a href="http://www.developerfusion.co.uk/">Developer Fusion</a> •
+<a href="http://www.developersdex.com/">Developersdex</a> •
+<a href="http://www.devguru.com/">DevGuru</a> •
+<a href="http://www.programmersheaven.com/">Programmers Heaven</a> •
+<A href="http://www.planet-source-code.com/">Planet Source Code</a> •
+<a href="http://www.tek-tips.com/">Tek-Tips Forums</a> •
+
+</font>	
+</td>
+</tr>
+</table>
+</center>
+
+</body>
+</html>
