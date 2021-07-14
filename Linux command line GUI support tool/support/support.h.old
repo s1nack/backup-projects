@@ -1,0 +1,51 @@
+void makeMenu(int nb_entries, struct menu_item* entries);
+
+void makeMenu(int nb_entries, struct menu_item* entries)
+{
+	WINDOW *menu_win;
+	int highlight = 1;
+	int marc2, ss, c, choice, ret_ssh = 0;
+	startx = (80 - WIDTH) / 2;	
+	starty = (24 - HEIGHT) / 2;
+
+	clear();
+	noecho();
+	cbreak();
+
+	menu_win = newwin(HEIGHT, WIDTH, starty, startx);
+	keypad(menu_win, TRUE);
+	refresh();
+	print_menu(menu_win, highlight);
+
+	while(1)
+	{
+		c = wgetch(menu_win);
+		switch(c)
+		{	case KEY_UP:
+				if(highlight == 1)
+					highlight = n_choices;
+				else
+					--highlight;
+				break;
+			case KEY_DOWN:
+				if(highlight == n_choices)
+					highlight = 1;
+				else
+					++hightlight;
+				break;
+			case 10:
+				choice = highlight;
+				break;
+			default:
+				refresh();
+				break;
+		}	
+		if(choice != 0) 
+
+
+
+		int act = menu_reactor(nb_entries, entries);
+
+	}			
+}
+
