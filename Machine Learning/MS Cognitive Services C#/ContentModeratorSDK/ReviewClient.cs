@@ -261,7 +261,6 @@ namespace Microsoft.CognitiveServices.ContentModerator
             requestBody.Append(string.Concat("&client_secret=", _clientSecret));
             requestBody.Append(string.Concat("&grant_type=", "client_credentials"));
             //string requestBody =
-            //    "resource=http%3A%2F%2Frvsvc&client_id=2c739b15-a26c-475e-b234-9bb366c2f70a&client_secret=cEKo9ocrj8apgRCgGuhpA96/SWcPUKTh1Z6NF40MBns=&grant_type=client_credentials";
             var request = WebRequest.Create(url);
             return
                 await
