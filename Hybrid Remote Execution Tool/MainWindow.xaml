@@ -1,0 +1,146 @@
+﻿<Window x:Class="WpfApplication1.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="600" Width="800"
+        xmlns:local="clr-namespace:WpfApplication1" >
+    
+    <Window.Resources>
+        <!--<XmlDataProvider x:Key="HostsData"  Source="D:\hosts.xml" XPath="Hosts/Host" />-->
+        <XmlDataProvider x:Key="HostsData" />
+        <XmlDataProvider x:Key="ScriptsData" />
+
+<!-- MACHINES LIST -->
+        <Style x:Key="MachinesContainerStyle" TargetType="{x:Type GroupItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Expander Header="{Binding Name}" IsExpanded="True" >
+                            <ItemsPresenter />
+                        </Expander>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!-- Grouping option for machines list -->
+        <CollectionViewSource x:Key="cvs" Source="{Binding Source={StaticResource HostsData}}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="@Vessel" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+        <!-- Display option for groups in machines list -->
+        <DataTemplate x:Key="categoryTemplate">
+            <TextBlock Text="{Binding Path=Name}"  FontWeight="Bold" Background="Gold" Margin="0,5,0,0"/>
+        </DataTemplate>
+        <!-- Display option for machines in machines list -->
+        <DataTemplate x:Key="MachinesTemplate">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/> <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <CheckBox Content="{Binding XPath=HostName}" Margin="1"
+                  IsChecked="{Binding RelativeSource={RelativeSource Mode=FindAncestor, 
+                    AncestorType={x:Type ListBoxItem}}, Path=IsSelected}"/>
+            </Grid>
+        </DataTemplate>
+        
+<!-- SCRIPTS LIST -->
+        <!-- Grouping option for scripts list -->
+        <CollectionViewSource x:Key="cvs2" Source="{Binding Source={StaticResource ScriptsData}}">
+            <CollectionViewSource.GroupDescriptions>
+                <PropertyGroupDescription PropertyName="@Group" />
+            </CollectionViewSource.GroupDescriptions>
+        </CollectionViewSource>
+        <!-- Display option for groups in scripts list -->
+        <DataTemplate x:Key="ScriptsCategoryTemplate">
+            <TextBlock Text="{Binding Path=Name}"  FontWeight="Bold" Background="Green" Margin="0,5,0,0"/>
+        </DataTemplate>
+        <DataTemplate x:Key="ScriptsTemplate">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding XPath=File}"  Grid.Row="0" Grid.Column="1"    Margin="1"/>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+
+    <DockPanel>
+        <local:TextEditorMenu x:Name="menu" DockPanel.Dock="Top" />
+        <local:TextEditorToolbar x:Name="toolbar"   DockPanel.Dock="Top" DataContext="{Binding}" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <!--<RowDefinition Height="212*" />-->
+                <!--<RowDefinition Height="197" />
+                <RowDefinition Height="212*" />-->
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <GridSplitter Grid.Row="0"  Grid.RowSpan="2"    Grid.Column="0" Width="2"   Background="Black"  ResizeBehavior="PreviousAndNext"    ResizeDirection="Columns" />
+            <GridSplitter Grid.Row="0"  Grid.RowSpan="2"    Grid.Column="1" Width="2"   Background="Black"  ResizeBehavior="PreviousAndNext"    ResizeDirection="Columns" />
+            <GridSplitter Grid.Row="0"  Grid.RowSpan="2"    Grid.Column="2" Width="2"   Background="Black"  ResizeBehavior="PreviousAndNext"    ResizeDirection="Columns" />
+                        
+            <!-- List of machines based on XMLFile1.xml content -->
+            <StackPanel Grid.RowSpan="2">
+                <!--<Label Grid.Column="0" Grid.Row="0" FontSize="10">Clients list</Label>-->
+                <!--<Button Content="Add Machine" Grid.Column="0" Height="23" HorizontalAlignment="Left" Margin="2" Name="button3" VerticalAlignment="Top" Width="75" Click="button3_Click" />-->
+                <ListBox Name="MachinesList"
+                         ScrollViewer.VerticalScrollBarVisibility="Visible"
+                     Grid.Row="0"    Grid.Column="0"    TextBlock.FontSize="9" Margin="4"
+                     ItemsSource="{Binding Source={StaticResource cvs}}"
+                     ItemTemplate="{StaticResource MachinesTemplate}"
+                     SelectionMode="Multiple" Height="483">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border Name="Border" Padding="0" SnapsToDevicePixels="True">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected"  Value="true">
+                                                <Setter TargetName="Border" Property="Background"   Value="Transparent" />
+                                            </Trigger>
+                                            <Trigger Property="IsSelected"  Value="false">
+                                                <Setter TargetName="Border" Property="Background"   Value="Transparent" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.GroupStyle>
+                        <GroupStyle HeaderTemplate="{StaticResource categoryTemplate}" ContainerStyle="{StaticResource MachinesContainerStyle}"/>
+                    </ListBox.GroupStyle>
+                </ListBox>
+            </StackPanel>
+
+            
+            <!-- List of scripts based on XMLFile2.xml content -->
+            <ListBox Name="ScriptsList" Grid.Column="1"   Grid.Row="0"    TextBlock.FontSize="9"  Margin="4"
+                     ItemsSource="{Binding Source={StaticResource cvs2}}"
+                     ItemTemplate="{StaticResource ScriptsTemplate}">
+                <ListBox.GroupStyle>
+                    <GroupStyle HeaderTemplate="{StaticResource ScriptsCategoryTemplate}" />
+                </ListBox.GroupStyle>
+            </ListBox>
+            
+            <Button Content="DryRun" Grid.Column="2" Height="23" HorizontalAlignment="Left" Margin="102,119,0,0" Name="button1" VerticalAlignment="Top" Width="75" Click="button_DryRun_Click" />
+            <Button Content="Run" Grid.Column="2" Height="23" HorizontalAlignment="Left" Margin="102,151,0,0" Name="button2" VerticalAlignment="Top" Width="75" Click="button_Run_Click" />
+            <Button Content="cmd.exe" Grid.Column="2" Height="23" HorizontalAlignment="Left" Margin="102,183,0,0" Name="button3" VerticalAlignment="Top" Width="75" Click="button_QuickAction_Ping_Click" />
+            <Button Content="Button" Grid.Column="2" Height="23" HorizontalAlignment="Left" Margin="110,255,0,0" Name="button4" VerticalAlignment="Top" Width="75" Click="button4_Click" />
+        </Grid>
+    </DockPanel>
+</Window>

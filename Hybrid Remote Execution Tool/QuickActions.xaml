@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="WpfApplication1.QuickActions"
+xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+Loaded="UserControl_Loaded">
+    <ToolBarTray>
+        <ToolBar>
+            <Button ToolTip="Remote Connection" >
+                <Image Source="Icons/computer.png"  Height="20" Width="20" />
+            </Button>
+        </ToolBar>
+    </ToolBarTray>
+</UserControl>

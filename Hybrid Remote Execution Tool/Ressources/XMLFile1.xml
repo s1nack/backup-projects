@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Hosts>
+  <Host Vessel="CHALLENGER">
+    <IP>1.1.1.1</IP>
+    <HostName>chapcpm01</HostName>
+  </Host>
+  <Host Vessel="CHALLENGER">
+    <IP>2.2.2.2</IP>
+    <HostName>chapcnav01</HostName>
+  </Host>
+  <Host Vessel="VANTAGE">
+    <IP>3.3.3.3</IP>
+    <HostName>vtgpcobs01</HostName>
+  </Host>
+</Hosts>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Scripts>
+  <Script Category="MISC">
+    <ScriptName>change_java_path_ottis</ScriptName>
+    <ScriptFile>D:\java-ottis.bat</ScriptFile>
+  </Script>
+  <Script Category="NETWORK">
+    <ScriptName>ipconfig_full</ScriptName>
+    <ScriptFile>D:\ipconfig-full.bat</ScriptFile>
+  </Script>
+  <Script Category="SYSTEM">
+    <ScriptName>update_privileges</ScriptName>
+    <ScriptFile>D:\update-perms.bat</ScriptFile>
+  </Script>
+</Scripts>

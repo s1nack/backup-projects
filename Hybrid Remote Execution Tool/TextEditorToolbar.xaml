@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="WpfApplication1.TextEditorToolbar"
+xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ToolBarTray>
+        <ToolBar>
+            <Button ToolTip="Add new machine" Click="AddMachineToolbar_Click">
+                <Image Source="Icons/computer.png"  Height="20" Width="20" />
+            </Button>
+            <Button ToolTip="New LDAP connection" Click="AddLdapToolbar_Click">
+                <Image Source="Icons/ActiveDirectory.png"  Height="20" Width="20" />
+            </Button>
+            <Button ToolTip="New script" Click="AddScriptToolbar_Click">
+                <Image Source="Icons/scripts.png"   Height="20" Width="20" />
+            </Button>
+            <Button ToolTip="Options" Click="OptionsToolbar_Click">
+                <Image Source="Icons/options.png"   Height="20" Width="20" />
+            </Button>
+            <Button ToolTip="Options">
+                <Image Source="Icons/output.png"    Height="20" Width="20" />
+            </Button>
+        </ToolBar>
+    </ToolBarTray>
+</UserControl>
