@@ -9,7 +9,7 @@ int startx = 0;
 int starty = 0;
 
 char *choices[] = { 
-			"CONNEXION SUPPORT OLFEO",
+			"CONNEXION SUPPORT REDACTED",
 			"ACCES LIGNE DE COMMANDES ",
 			"DIAGNOSTIC ET RESOLUTION",
 		  };
